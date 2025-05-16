@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{#room.id}}강의실 수정{{/room.id}}{{^room.id}}강의실 추가{{/room.id}}</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header class="site-header">…</header>
+<main class="page-wrapper">
+    <h1>{{#room.id}}강의실 수정{{/room.id}}{{^room.id}}강의실 추가{{/room.id}}</h1>
+    <form method="post" action="/admin/rooms{{#room.id}}/edit/{{room.id}}{{/room.id}}{{^room.id}}/add{{/room.id}}">
+        <div class="form-group">
+            <label for="building">건물</label>
+            <input id="building" name="building" type="text" required value="{{room.building}}">
+        </div>
+        <div class="form-group">
+            <label for="roomNumber">호수</label>
+            <input id="roomNumber" name="roomNumber" type="text" required value="{{room.roomNumber}}">
+        </div>
+        <div class="form-group">
+            <label for="capacity">정원</label>
+            <input id="capacity" name="capacity" type="number" required value="{{room.capacity}}">
+        </div>
+        <button type="submit" class="btn-login">저장</button>
+    </form>
+</main>
+<footer class="site-footer">…</footer>
+</body>
+</html>

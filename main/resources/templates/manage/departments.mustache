@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 메인</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header class="site-header">
+    <div class="container">
+        <div class="logo">석현대학교</div>
+        <div class="system-name">수강신청시스템</div>
+    </div>
+</header>
+<main class="page-wrapper">
+    <h2>[관리자 메인]</h2>
+    <ul>
+        {{#menuItems}}
+            <li><a href="/admin/{{path}}">{{label}}</a></li>
+        {{/menuItems}}
+        <li><a href="/logout">로그아웃</a></li>
+    </ul>
+</main>
+<footer class="site-footer">
+    <img src="/images/footer.png" alt="Seokhyun University Footer">
+</footer>
+</body>
+</html>

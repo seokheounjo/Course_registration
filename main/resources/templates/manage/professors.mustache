@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>교수 관리</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header class="site-header">
+    <!-- 네비게이션 생략 -->
+</header>
+
+<main class="page-wrapper">
+    <h1>교수 목록</h1>
+
+    <form method="get" action="/admin/professors" style="margin-bottom:1rem;">
+        <select name="deptId">
+            <option value="">전체</option>
+            {{#departments}}
+                <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+            {{/departments}}
+        </select>
+        <button type="submit">필터</button>
+        <a href="/admin/professors/add">추가</a>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>학과ID</th>
+            <th>액션</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#professors}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
+                <td>{{departmentId}}</td>
+                <td>
+                    <a href="/admin/professors/edit/{{id}}">수정</a> |
+                    <a href="/admin/professors/delete/{{id}}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                </td>
+            </tr>
+        {{/professors}}
+        </tbody>
+    </table>
+</main>
+
+<footer class="site-footer"></footer>
+</body>
+</html>

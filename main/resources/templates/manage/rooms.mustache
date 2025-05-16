@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>강의실 관리</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header class="site-header">…</header>
+<main class="page-wrapper">
+    <h1>강의실 목록</h1>
+    <a href="/admin/rooms/add">추가</a>
+    <table>
+        <thead>
+        <tr><th>ID</th><th>건물</th><th>호수</th><th>정원</th><th>액션</th></tr>
+        </thead>
+        <tbody>
+        {{#rooms}}
+            <tr>
+                <td>{{id}}</td><td>{{building}}</td><td>{{roomNumber}}</td><td>{{capacity}}</td>
+                <td>
+                    <a href="/admin/rooms/edit/{{id}}">수정</a> |
+                    <a href="/admin/rooms/delete/{{id}}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                </td>
+            </tr>
+        {{/rooms}}
+        </tbody>
+    </table>
+</main>
+<footer class="site-footer">…</footer>
+</body>
+</html>

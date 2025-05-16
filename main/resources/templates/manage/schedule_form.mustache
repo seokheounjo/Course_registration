@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{#schedule.id}}시간표 수정{{/schedule.id}}{{^schedule.id}}시간표 추가{{/schedule.id}}</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header class="site-header">…</header>
+<main class="page-wrapper">
+    <h1>{{#schedule.id}}시간표 수정{{/schedule.id}}{{^schedule.id}}시간표 추가{{/schedule.id}}</h1>
+    <form method="post" action="/admin/schedules{{#schedule.id}}/edit/{{schedule.id}}{{/schedule.id}}{{^schedule.id}}/add{{/schedule.id}}">
+        <div class="form-group">
+            <label for="subject">과목</label>
+            <select id="subject" name="subjectId" required>
+                {{#subjects}}
+                    <option value="{{id}}" {{#equals id ../schedule.subjectId}}selected{{/equals}}>{{name}}</option>
+                {{/subjects}}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="day">요일</label>
+            <input id="day" name="dayOfWeek" type="text" required value="{{schedule.dayOfWeek}}">
+        </div>
+        <div class="form-group">
+            <label for="start">시작시간</label>
+            <input id="start" name="startTime" type="time" required value="{{schedule.startTime}}">
+        </div>
+        <div class="form-group">
+            <label for="end">종료시간</label>
+            <input id="end" name="endTime" type="time" required value="{{schedule.endTime}}">
+        </div>
+        <div class="form-group">
+            <label for="room">강의실</label>
+            <select id="room" name="roomId" required>
+                {{#rooms}}
+                    <option value="{{id}}" {{#equals id ../schedule.roomId}}selected{{/equals}}>{{building}} {{roomNumber}}</option>
+                {{/rooms}}
+            </select>
+        </div>
+        <button type="submit" class="btn-login">저장</button>
+    </form>
+</main>
+<footer class="site-footer">…</footer>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>교수 등록</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h1>교수 등록</h1>
+<form action="/admin/professors/save" method="post">
+    <input type="hidden" name="id" value="{{professor.id}}">
+
+    <label for="name">이름:</label>
+    <input id="name" name="name" type="text" required value="{{professor.name}}">
+    <br>
+
+    <label for="email">이메일:</label>
+    <input id="email" name="email" type="email" required value="{{professor.email}}">
+    <br>
+
+    <label for="password">비밀번호:</label>
+    <input id="password" name="password" type="password" required value="{{professor.password}}">
+    <br>
+
+    <label for="department">학과:</label>
+    <select id="department" name="departmentId" required>
+        <option value="">학과 선택</option>
+        {{#departments}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+        {{/departments}}
+    </select>
+    <br><br>
+
+    <button type="submit">저장</button>
+    <a href="/admin/professors"><button type="button">취소</button></a>
+</form>
+</body>
+</html>

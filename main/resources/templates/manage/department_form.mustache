@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>학과 관리</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header class="site-header">…</header>
+<main class="page-wrapper">
+    <h1>학과 목록</h1>
+    <form method="get" action="/admin/departments" style="margin-bottom:1rem;">
+        <input type="text" name="keyword" placeholder="학과명 검색" value="{{keyword}}">
+        <button type="submit">검색</button>
+        <a href="/admin/departments/add">추가</a>
+    </form>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th><th>이름</th><th>사무실</th><th>액션</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#departments}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{name}}</td>
+                <td>{{office}}</td>
+                <td>
+                    <a href="/admin/departments/edit/{{id}}">수정</a> |
+                    <a href="/admin/departments/delete/{{id}}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                </td>
+            </tr>
+        {{/departments}}
+        </tbody>
+    </table>
+</main>
+<footer class="site-footer">…</footer>
+</body>
+</html>
