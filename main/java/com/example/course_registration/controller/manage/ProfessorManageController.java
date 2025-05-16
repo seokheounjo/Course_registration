@@ -1,8 +1,7 @@
 package com.example.course_registration.controller.manage;
 
-import com.example.course_registration.domain.Professor;
+import com.example.course_registration.entity.Professor;
 import com.example.course_registration.entity.Department;
-
 import com.example.course_registration.repository.DepartmentRepository;
 import com.example.course_registration.repository.ProfessorRepository;
 import jakarta.transaction.Transactional;
@@ -28,7 +27,7 @@ public class ProfessorManageController {
     public String list(Model model) {
         List<Professor> professors = professorRepository.findAll();
         model.addAttribute("professors", professors);
-        return "professors";
+        return "manage/professors"; // 정확한 뷰 경로 지정
     }
 
     // 교수 등록 폼
@@ -37,7 +36,7 @@ public class ProfessorManageController {
         model.addAttribute("professor", new Professor());
         List<Department> departments = departmentRepository.findAll();
         model.addAttribute("departments", departments);
-        return "professor_form";
+        return "manage/professor_form";
     }
 
     // 교수 수정 폼
@@ -47,7 +46,7 @@ public class ProfessorManageController {
         model.addAttribute("professor", professor);
         List<Department> departments = departmentRepository.findAll();
         model.addAttribute("departments", departments);
-        return "professor_form";
+        return "manage/professor_form";
     }
 
     // 교수 저장 (등록/수정)
@@ -56,7 +55,7 @@ public class ProfessorManageController {
         Department department = departmentRepository.findById(departmentId).orElseThrow();
         professor.setDepartment(department);
         professorRepository.save(professor);
-        return "redirect:/admin/professors";
+        return "redirect:/admin/professors"; // 저장 후 리디렉션
     }
 
     // 교수 삭제
@@ -64,6 +63,6 @@ public class ProfessorManageController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
         professorRepository.deleteById(id); // ON DELETE CASCADE가 설정되어 있어야 함
-        return "redirect:/admin/professors";
+        return "redirect:/admin/professors"; // 삭제 후 리디렉션
     }
 }

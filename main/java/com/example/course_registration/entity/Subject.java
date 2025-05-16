@@ -1,12 +1,8 @@
 package com.example.course_registration.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @Table(name = "subject")
 public class Subject {
 
@@ -14,22 +10,66 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     private Integer credits;
-
-    @Column(nullable = false)
     private Integer capacity;
-
-    @Column(nullable = false)
     private String semester;
 
-    @Column(name = "professor_id", nullable = false)
-    private Long professorId;
+    // 학과와 다대일 매핑: subject.department_id → Department.id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
-    @Column(name = "department_id", nullable = false)
-    private Long departmentId;
+    public Subject() {}
 
+    // --- getters & setters ---
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getCredits() {
+        return credits;
+    }
+
+    public void setCredits(Integer credits) {
+        this.credits = credits;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(Integer capacity) {
+        this.capacity = capacity;
+    }
+
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    /** ★ 이 메서드를 추가해야 컨트롤러에서 subject.setDepartment(...) 호출이 가능합니다 */
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 }

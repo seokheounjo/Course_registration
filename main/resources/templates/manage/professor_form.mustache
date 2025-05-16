@@ -2,37 +2,47 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>교수 등록</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>{{#professor.id}}교수 수정{{/professor.id}}{{^professor.id}}교수 추가{{/professor.id}}</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>교수 등록</h1>
-<form action="/admin/professors/save" method="post">
-    <input type="hidden" name="id" value="{{professor.id}}">
+<main class="page-wrapper">
+    <h1>{{#professor.id}}교수 수정{{/professor.id}}{{^professor.id}}교수 추가{{/professor.id}}</h1>
+    <form method="post" action="/admin/professors/save">
+        <!-- 수정일 때만 숨은 id 필드에 값 채우기 -->
+        {{#professor.id}}
+            <input type="hidden" name="id" value="{{id}}">
+        {{/professor.id}}
 
-    <label for="name">이름:</label>
-    <input id="name" name="name" type="text" required value="{{professor.name}}">
-    <br>
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input id="name" name="name" type="text" required value="{{#professor}}{{name}}{{/professor}}">
+        </div>
 
-    <label for="email">이메일:</label>
-    <input id="email" name="email" type="email" required value="{{professor.email}}">
-    <br>
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input id="email" name="email" type="email" required value="{{#professor}}{{email}}{{/professor}}">
+        </div>
 
-    <label for="password">비밀번호:</label>
-    <input id="password" name="password" type="password" required value="{{professor.password}}">
-    <br>
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input id="password" name="password" type="password" {{^professor.id}}required{{/professor.id}}>
+            <small>{{#professor.id}}* 변경 시에만 입력하세요{{/professor.id}}</small>
+        </div>
 
-    <label for="department">학과:</label>
-    <select id="department" name="departmentId" required>
-        <option value="">학과 선택</option>
-        {{#departments}}
-            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
-        {{/departments}}
-    </select>
-    <br><br>
+        <div class="form-group">
+            <label for="department">학과</label>
+            <select id="department" name="departmentId" required>
+                <option value="" disabled {{^professor.id}}selected{{/professor.id}}>선택하세요</option>
+                {{#departments}}
+                    <option value="{{id}}" {{#professor}}{{#equals id ../professor.department.id}}selected{{/equals}}{{/professor}}>{{name}}</option>
+                {{/departments}}
+            </select>
+        </div>
 
-    <button type="submit">저장</button>
-    <a href="/admin/professors"><button type="button">취소</button></a>
-</form>
+        <button type="submit">저장</button>
+        <a href="/admin/professors">취소</a>
+    </form>
+</main>
 </body>
 </html>

@@ -25,10 +25,10 @@ public class DepartmentManageController {
         String kw = (keyword == null ? "" : keyword.trim());
         List<Department> list = kw.isEmpty()
                 ? repo.findAll()
-                : repo.findByNameContaining(kw);
+                : repo.findByNameContaining(kw); // 이 메서드가 실제로 존재해야 함
         model.addAttribute("departments", list);
         model.addAttribute("keyword", kw);
-        return "manage/departments";
+        return "manage/departments"; // 정확한 뷰 경로 지정
     }
 
     @GetMapping("/add")
@@ -40,7 +40,7 @@ public class DepartmentManageController {
     @PostMapping("/add")
     public String addSubmit(Department department) {
         repo.save(department);
-        return "redirect:/admin/departments";
+        return "redirect:/admin/departments"; // 저장 후 리디렉션
     }
 
     @GetMapping("/edit/{id}")
@@ -54,12 +54,12 @@ public class DepartmentManageController {
     public String editSubmit(@PathVariable Long id, Department department) {
         department.setId(id);
         repo.save(department);
-        return "redirect:/admin/departments";
+        return "redirect:/admin/departments"; // 수정 후 리디렉션
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         repo.deleteById(id);
-        return "redirect:/admin/departments";
+        return "redirect:/admin/departments"; // 삭제 후 리디렉션
     }
 }
