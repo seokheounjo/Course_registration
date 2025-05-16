@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>수강 신청 시스템 - 로그인</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<!-- 상단 네비게이션 -->
+<header class="site-header">
+    <div class="container">
+        <div class="logo">석현대학교</div>
+        <div class="system-name">수강신청시스템</div>
+    </div>
+</header>
+
+<!-- 로그인 폼 -->
+<main class="login-wrapper">
+    <h1>
+        수강 신청 시스템<br>
+        <span class="login-subtitle">LOGIN</span>
+    </h1>
+    <form action="/login" method="post">
+        <div class="form-group">
+            <label for="studentId">아이디(학번 또는 관리자ID)</label>
+            <input id="studentId" type="text" name="studentId" required autofocus>
+        </div>
+        <div class="form-group">
+            <label for="password">비밀번호</label>
+            <input id="password" type="password" name="password" required>
+        </div>
+
+        {{#error}}
+            <div class="error">자격 증명에 실패하였습니다.</div>
+        {{/error}}
+        {{#logout}}
+            <div class="error">로그아웃 되었습니다.</div>
+        {{/logout}}
+
+        <button type="submit" class="btn-login">로그인</button>
+    </form>
+</main>
+
+<!-- 푸터 -->
+<footer class="site-footer">
+    <img src="/images/footer.png" alt="Seokhyun University Footer">
+</footer>
+</body>
+</html>
