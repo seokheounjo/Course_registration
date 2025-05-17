@@ -1,17 +1,9 @@
 <h2>교수 미배정 과목 목록</h2>
-<a href="/admin/subjects">← 전체 과목 목록으로</a>
+<a href="/admin/subjects">← 전체 목록</a>
 
 <table border="1">
     <thead>
-    <tr>
-        <th>과목명</th>
-        <th>학과</th>
-        <th>학점</th>
-        <th>수용 인원</th>
-        <th>학기</th>
-        <th>상태</th>
-        <th>관리</th>
-    </tr>
+    <tr><th>과목명</th><th>학과</th><th>학점</th><th>정원</th><th>학기</th><th>관리</th></tr>
     </thead>
     <tbody>
     {{#subjects}}
@@ -21,10 +13,7 @@
             <td>{{credits}}</td>
             <td>{{capacity}}</td>
             <td>{{semester}}</td>
-            <td><span style="color:red;">등록 필요</span></td>
-            <td>
-                <a href="/admin/subjects/{{id}}/edit">배정하기</a>
-            </td>
+            <td><a href="/admin/subjects/{{id}}/edit">배정하기</a></td>
         </tr>
     {{/subjects}}
     </tbody>

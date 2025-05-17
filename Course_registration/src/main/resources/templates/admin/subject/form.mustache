@@ -1,25 +1,54 @@
-<!-- src/main/resources/templates/admin/subject/form.mustache -->
-<h2>{{#subject.id}}과목 수정{{/subject.id}}{{^subject.id}}과목 등록{{/subject.id}}</h2>
+{{#message}}
+    <div style="color:red;">{{message}}</div>
+{{/message}}
 
-<form action="/admin/subjects{{#subject.id}}/{{subject.id}}/edit{{/subject.id}}" method="post">
-    과목명: <input type="text"  name="name"     value="{{subject.name}}" ><br/>
-    학점:   <input type="number" name="credits"  value="{{subject.credits}}" ><br/>
-    정원:   <input type="number" name="capacity" value="{{subject.capacity}}" ><br/>
-    학기:   <input type="text"   name="semester" value="{{subject.semester}}" ><br/>
+<h2>{{#subject.id}}과목 수정{{/subject.id}}{{^subject.id}}새 과목 등록{{/subject.id}}</h2>
 
-    담당 교수:
-    <select name="professor.id">
-        {{#professors}}
-            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
-        {{/professors}}
-    </select><br/>
+<form action="{{#subject.id}}/admin/subjects/{{subject.id}}/edit{{/subject.id}}{{^subject.id}}/admin/subjects{{/subject.id}}"
+      method="post">
 
-    소속 학과:
-    <select name="department.id">
-        {{#departments}}
-            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
-        {{/departments}}
-    </select><br/>
+    <div>
+        <label>과목명</label>
+        <input type="text" name="name" value="{{subject.name}}" required>
+    </div>
 
-    <button type="submit">저장</button>
+    <div>
+        <label>학점</label>
+        <input type="number" name="credits" value="{{subject.credits}}" required>
+    </div>
+
+    <div>
+        <label>정원</label>
+        <input type="number" name="capacity" value="{{subject.capacity}}">
+    </div>
+
+    <div>
+        <label>학기</label>
+        <input type="text" name="semester" value="{{subject.semester}}">
+    </div>
+
+    <div>
+        <label>담당 교수</label>
+        <select name="professorId">
+            <option value="">-- 교수 선택 --</option>
+            {{#professors}}
+                <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+            {{/professors}}
+        </select>
+    </div>
+
+    <div>
+        <label>소속 학과</label>
+        <select name="departmentId" required>
+            <option value="">-- 학과 선택 --</option>
+            {{#departments}}
+                <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+            {{/departments}}
+        </select>
+    </div>
+
+    <div>
+        <button type="submit">저장</button>
+        <a href="/admin/subjects">목록으로</a>
+    </div>
 </form>
