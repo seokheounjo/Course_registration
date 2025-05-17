@@ -1,9 +1,9 @@
 // controller 수정: 신청된 과목은 신청 완료로 구분
 package com.example.Course_registration.controller.student;
 
-import com.example.Course_registration.repository.student.EnrollmentRepository;
-import com.example.Course_registration.repository.student.SubjectRepository;
-import com.example.Course_registration.entity.student.Subject;
+import com.example.Course_registration.repository.SubjectRepository;
+import com.example.Course_registration.repository.EnrollmentRepository;
+import com.example.Course_registration.entity.Subject;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

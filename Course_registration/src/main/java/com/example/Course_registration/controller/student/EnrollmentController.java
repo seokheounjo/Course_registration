@@ -1,6 +1,6 @@
 package com.example.Course_registration.controller.student;
 
-import com.example.Course_registration.Service.student.EnrollmentService;
+import com.example.Course_registration.service.student.EnrollmentService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

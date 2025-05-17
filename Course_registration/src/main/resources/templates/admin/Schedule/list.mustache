@@ -1,0 +1,33 @@
+<h2>시간표 목록</h2>
+<a href="/admin/schedules/new">새 시간표 등록</a>
+<table>
+    <thead>
+    <tr>
+        <th>과목명</th>
+        <th>교수</th>
+        <th>요일</th>
+        <th>시작 시간</th>
+        <th>종료 시간</th>
+        <th>강의실</th>
+        <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#schedules}}
+        <tr>
+            <td>{{subject.name}}</td>
+            <td>{{subject.professor.name}}</td>
+            <td>{{dayOfWeek}}</td>
+            <td>{{startTime}}</td>
+            <td>{{endTime}}</td>
+            <td>{{room.building}} {{room.roomNumber}}</td>
+            <td>
+                <a href="/admin/schedules/{{id}}/edit">수정</a>
+                <form action="/admin/schedules/{{id}}/delete" method="post" style="display:inline;">
+                    <button type="submit">삭제</button>
+                </form>
+            </td>
+        </tr>
+    {{/schedules}}
+    </tbody>
+</table>

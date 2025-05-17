@@ -1,0 +1,25 @@
+<!-- src/main/resources/templates/admin/subject/form.mustache -->
+<h2>{{#subject.id}}과목 수정{{/subject.id}}{{^subject.id}}과목 등록{{/subject.id}}</h2>
+
+<form action="/admin/subjects{{#subject.id}}/{{subject.id}}/edit{{/subject.id}}" method="post">
+    과목명: <input type="text"  name="name"     value="{{subject.name}}" ><br/>
+    학점:   <input type="number" name="credits"  value="{{subject.credits}}" ><br/>
+    정원:   <input type="number" name="capacity" value="{{subject.capacity}}" ><br/>
+    학기:   <input type="text"   name="semester" value="{{subject.semester}}" ><br/>
+
+    담당 교수:
+    <select name="professor.id">
+        {{#professors}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+        {{/professors}}
+    </select><br/>
+
+    소속 학과:
+    <select name="department.id">
+        {{#departments}}
+            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+        {{/departments}}
+    </select><br/>
+
+    <button type="submit">저장</button>
+</form>

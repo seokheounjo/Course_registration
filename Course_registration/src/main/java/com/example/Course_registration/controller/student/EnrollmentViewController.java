@@ -1,11 +1,11 @@
 // controller: /student/enrollments 수강 내역 페이지
 package com.example.Course_registration.controller.student;
 
-import com.example.Course_registration.Service.student.EnrollmentService;
-import com.example.Course_registration.repository.student.EnrollmentRepository;
-import com.example.Course_registration.repository.student.SubjectRepository;
-import com.example.Course_registration.entity.student.Enrollment;
-import com.example.Course_registration.entity.student.Subject;
+import com.example.Course_registration.service.student.EnrollmentService;
+import com.example.Course_registration.repository.SubjectRepository;
+import com.example.Course_registration.repository.EnrollmentRepository;
+import com.example.Course_registration.entity.Enrollment;
+import com.example.Course_registration.entity.Subject;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,12 +70,11 @@ public class EnrollmentViewController {
         Map<Subject, String> subjectInfo = new LinkedHashMap<>();
 
         for (Enrollment e : enrollments) {
-            subjectRepository.findById(e.getSubjectId()).ifPresent(subject -> {
-                subjectInfo.put(subject, e.getEnrolledAt().toString());
-            });
+            subjectInfo.put(e.getSubject(), e.getEnrolledAt().toString());
         }
 
         model.addAttribute("subjectInfo", subjectInfo);
         return "student/student_enrollments";
     }
+
 }

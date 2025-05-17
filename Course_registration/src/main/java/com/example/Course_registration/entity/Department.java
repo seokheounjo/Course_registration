@@ -8,6 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Department {
+    @Transient
+    private boolean selected;
+    public boolean isSelected() { return selected; }
+    public void setSelected(boolean selected) { this.selected = selected; }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

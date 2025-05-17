@@ -3,7 +3,7 @@ package com.example.Course_registration.security;
 import com.example.Course_registration.entity.Admin;
 //import com.example.Course_registration.entity.Professor;
 import com.example.Course_registration.entity.Student;
-import com.example.Course_registration.Service.LoginService;
+import com.example.Course_registration.service.LoginService;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

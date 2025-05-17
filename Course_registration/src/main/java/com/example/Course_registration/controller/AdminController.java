@@ -14,4 +14,11 @@ public class AdminController {
         model.addAttribute("message", "관리자입니다.");
         return "admin_home";
     }
+
+    @GetMapping("/dashboard")
+    public String adminDashboard() {
+        return "admin/admin_dashboard";
+    }
+
+
 }
