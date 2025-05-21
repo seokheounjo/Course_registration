@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>석현대학교 - 학생 페이지</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<!-- 상단 네비게이션 -->
+<header class="site-header">
+    <div class="container header-container">
+        <div class="left-header">
+            <div class="logo">석현대학교</div>
+            <div class="system-name">수강신청시스템</div>
+        </div>
+        <div class="user-menu">
+            <span class="user-info">{{student.name}}님 환영합니다</span>
+            <a href="/logout" class="logout-btn">로그아웃</a>
+        </div>
+    </div>
+</header>
+
+<!-- 학생 메인 콘텐츠 -->
+<div class="main-content">
+    <h1 class="page-title">학생 메인 페이지</h1>
+
+    <div class="student-menu">
+        <div class="menu-item">
+            <div class="menu-icon">🔍</div>
+            <h2 class="menu-title">수강 조회</h2>
+            <p class="menu-description">신청한 수업 내역을 확인하고 관리합니다.</p>
+            <a href="/student/courses" class="menu-button">바로가기</a>
+        </div>
+
+        <div class="menu-item">
+            <div class="menu-icon">📝</div>
+            <h2 class="menu-title">수강 신청하기</h2>
+            <p class="menu-description">새로운 과목을 검색하고 신청합니다.</p>
+            <a href="/student/enroll" class="menu-button">바로가기</a>
+        </div>
+
+        <div class="menu-item">
+            <div class="menu-icon">📊</div>
+            <h2 class="menu-title">시간표 확인</h2>
+            <p class="menu-description">내 수업 시간표를 확인합니다.</p>
+            <a href="/student/timetable" class="menu-button">바로가기</a>
+        </div>
+    </div>
+</div>
+
+<!-- 푸터 이미지 -->
+{{> footer}}
+</body>
+</html>

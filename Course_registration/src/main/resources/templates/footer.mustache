@@ -1,0 +1,124 @@
+<!-- templates/footer.mustache -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="contact-info">
+            <h3 class="section-title">고객 문의</h3>
+            <div class="info-item">
+                <span class="info-label">연락처</span>
+                <span>010-111-222</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">이메일</span>
+                <span>myname@seoulhyun.ac.kr</span>
+            </div>
+            <div class="contact-links">
+                <a href="/contact" class="contact-link">문의하기</a>
+                <a href="/faq" class="contact-link">자주묻는질문</a>
+            </div>
+        </div>
+
+        <div class="about-info">
+            <h3 class="section-title">사업 소개</h3>
+            <div class="info-item">
+                <span class="info-label">기관명</span>
+                <span>석현대학교</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">주요 서비스</span>
+                <span>온라인 수강신청 시스템</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">설립연도</span>
+                <span>2025년</span>
+            </div>
+        </div>
+
+        <div class="additional-info">
+            <h3 class="section-title">기타 문의</h3>
+            <div class="info-item">
+                <span class="info-label">고객센터</span>
+                <span>평일 09:00 - 18:00</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">점심시간</span>
+                <span>12:00 - 13:00</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">휴무일</span>
+                <span>토/일요일, 공휴일</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright">
+        © 2025 SEOKHYUN UNIVERSITY. All Rights Reserved.
+    </div>
+</footer>
+
+<style>
+    .site-footer {
+        width: 100%;
+        background: #fff;
+        margin-top: auto;
+        padding: 20px;
+    }
+
+    .footer-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .contact-info, .about-info, .additional-info {
+        flex: 1;
+        padding: 0 15px;
+    }
+
+    .section-title {
+        color: #1a237e;
+        border-bottom: 2px solid #8bc34a;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .info-item {
+        margin-bottom: 10px;
+    }
+
+    .info-label {
+        color: #666;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .contact-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .contact-link {
+        text-decoration: none;
+        color: white;
+        background-color: #1a237e;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .contact-link:hover {
+        background-color: #8bc34a;
+    }
+
+    .copyright {
+        text-align: center;
+        margin-top: 20px;
+        color: #888;
+        font-size: 0.9em;
+        padding: 10px;
+        background-color: #f4f4f4;
+    }
+</style>

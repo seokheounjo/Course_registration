@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>석현대학교 - 과목 및 시간표 관리</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        /* 테이블 컨테이너 스타일 수정 */
+        .table-container {
+            width: 100%;
+            margin-bottom: 20px;
+            /* 수직 스크롤을 위한 고정 높이 설정 */
+            height: 500px;  /* 명확한 높이 제한 */
+            overflow-y: scroll; /* 항상 수직 스크롤 표시 */
+            overflow-x: auto;   /* 필요시 수평 스크롤 */
+            border: 1px solid #ddd; /* 테이블 컨테이너 경계 추가 */
+            border-radius: 4px;
+        }
+
+        /* 테이블 헤더 고정 */
+        table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #1a237e;
+            color: white;
+            z-index: 10;
+        }
+
+        /* 테이블 자체 너비를 100%로 설정하고 자동 레이아웃 적용 */
+        table {
+            width: 100%;
+            table-layout: auto;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        /* 셀 너비 최적화 */
+        th, td {
+            white-space: nowrap;
+            padding: 8px 6px;
+        }
+
+        /* 테이블 행에 경계선 추가 */
+        tr {
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f8f8;
+        }
+
+        /* ID 열은 작게 */
+        th:first-child, td:first-child {
+            width: 40px;
+            max-width: 40px;
+        }
+
+        /* 과목코드 열 */
+        th:nth-child(2), td:nth-child(2) {
+            width: 80px;
+            max-width: 80px;
+        }
+
+        /* 과목명 열 */
+        th:nth-child(3), td:nth-child(3) {
+            width: 150px;
+            max-width: 150px;
+        }
+
+        /* 학점 열 */
+        th:nth-child(4), td:nth-child(4) {
+            width: 40px;
+            max-width: 40px;
+            text-align: center;
+        }
+
+        /* 학과 열 */
+        th:nth-child(5), td:nth-child(5) {
+            width: 100px;
+            max-width: 100px;
+        }
+
+        /* 요일 열 */
+        th:nth-child(6), td:nth-child(6) {
+            width: 60px;
+            max-width: 60px;
+            text-align: center;
+        }
+
+        /* 시작/종료 시간 */
+        th:nth-child(7), td:nth-child(7),
+        th:nth-child(8), td:nth-child(8) {
+            width: 80px;
+            max-width: 80px;
+            text-align: center;
+        }
+
+        /* 강의실 */
+        th:nth-child(9), td:nth-child(9) {
+            width: 100px;
+            max-width: 100px;
+        }
+
+        /* 담당교수 */
+        th:nth-child(10), td:nth-child(10) {
+            width: 100px;
+            max-width: 100px;
+        }
+
+        /* 정원 */
+        th:nth-child(11), td:nth-child(11) {
+            width: 60px;
+            max-width: 60px;
+            text-align: center;
+        }
+
+        /* 강의계획서 */
+        th:nth-child(12), td:nth-child(12) {
+            width: 80px;
+            max-width: 80px;
+            text-align: center;
+        }
+
+        /* 관리 버튼 */
+        th:nth-child(13), td:nth-child(13) {
+            width: 110px;
+            max-width: 110px;
+            text-align: center;
+        }
+
+        /* 긴 텍스트 처리 */
+        td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 스크롤바 스타일 커스터마이징 */
+        .table-container::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+
+        .alert-danger {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+
+        /* 작은 화면 대응 */
+        @media (max-width: 1200px) {
+            .btn {
+                padding: 5px 8px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- 상단 네비게이션 -->
+<header class="site-header">
+    <div class="container header-container">
+        <div class="left-header">
+            <a href="/admin" style="text-decoration: none; color: white;">
+                <div class="logo">석현대학교</div>
+                <div class="system-name">수강신청시스템</div>
+            </a>
+        </div>
+        <div class="user-menu">
+            <span class="user-info">관리자님 환영합니다</span>
+            <a href="/logout" class="logout-btn">로그아웃</a>
+        </div>
+    </div>
+</header>
+
+<!-- 메인 콘텐츠 -->
+<div class="main-content container">
+    <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 class="page-title">과목 및 시간표 관리</h1>
+        <div>
+            <a href="/integrated/new" class="btn btn-primary">새 과목 및 시간표 추가</a>
+            <a href="/admin" class="btn" style="background-color: #555; color: white;">관리자 메인으로</a>
+        </div>
+    </div>
+
+    {{#success}}
+        <div class="alert alert-success">
+            {{success}}
+        </div>
+    {{/success}}
+
+    {{#error}}
+        <div class="alert alert-danger">
+            {{error}}
+        </div>
+    {{/error}}
+
+    <!-- 스크롤 가능한 테이블 컨테이너 -->
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>과목코드</th>
+                <th>과목명</th>
+                <th>학점</th>
+                <th>학과</th>
+                <th>요일</th>
+                <th>시작</th>
+                <th>종료</th>
+                <th>강의실</th>
+                <th>교수</th>
+                <th>정원</th>
+                <th>계획서</th>
+                <th>관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#timetables}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{subjectCode}}</td>
+                    <td title="{{subjectName}}">{{subjectName}}</td>
+                    <td>{{credits}}</td>
+                    <td title="{{department}}">{{department}}</td>
+                    <td>{{day}}</td>
+                    <td>{{startTime}}</td>
+                    <td>{{endTime}}</td>
+                    <td title="{{room}}">{{room}}</td>
+                    <td title="{{professorName}}">{{professorName}}</td>
+                    <td>{{capacity}}</td>
+                    <td>
+                        {{#syllabusFileName}}
+                            <a href="/integrated/syllabus/{{id}}" class="btn btn-info" style="padding: 2px 6px; font-size: 0.75rem;">보기</a>
+                        {{/syllabusFileName}}
+                        {{^syllabusFileName}}
+                            -
+                        {{/syllabusFileName}}
+                    </td>
+                    <td>
+                        <a href="/integrated/{{id}}/edit" class="btn btn-info" style="padding: 3px 6px;">수정</a>
+                        <a href="/integrated/{{id}}/delete" class="btn btn-danger" style="padding: 3px 6px;" onclick="return confirm('정말 삭제하시겠습니까? 연결된 과목 정보도 함께 삭제됩니다.');">삭제</a>
+                    </td>
+                </tr>
+            {{/timetables}}
+            {{^timetables}}
+                <tr>
+                    <td colspan="13" style="text-align: center;">등록된 과목이 없습니다.</td>
+                </tr>
+            {{/timetables}}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 푸터 이미지 -->
+{{> footer}}
+</body>
+</html>
