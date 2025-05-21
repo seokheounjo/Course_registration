@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.registrationweb.RegistrationwebApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-05-18T01:13:27.749Z" hostname="DESKTOP-HI1A644" time="0.533">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.example.registrationweb.RegistrationwebApplicationTests" time="0.533"/>
+  <system-out><![CDATA[10:13:26.613 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.registrationweb.RegistrationwebApplicationTests]: RegistrationwebApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+10:13:26.670 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.registrationweb.RegistrationwebApplication for test class com.example.registrationweb.RegistrationwebApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.2)
+
+2025-05-18T10:13:26.916+09:00  INFO 23712 --- [    Test worker] c.e.r.RegistrationwebApplicationTests    : Starting RegistrationwebApplicationTests using Java 17.0.15 with PID 23712 (started by user in C:\Users\user\Downloads\registrationweb\registrationweb)
+2025-05-18T10:13:26.916+09:00  INFO 23712 --- [    Test worker] c.e.r.RegistrationwebApplicationTests    : No active profile set, falling back to 1 default profile: "default"
+2025-05-18T10:13:27.393+09:00  WARN 23712 --- [    Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 16e31f14-b732-4177-8bfa-69f3f646153e
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2025-05-18T10:13:27.471+09:00  INFO 23712 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@2e13f304, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@787508ca, org.springframework.security.web.context.SecurityContextHolderFilter@6af90849, org.springframework.security.web.header.HeaderWriterFilter@152c4495, org.springframework.security.web.authentication.logout.LogoutFilter@e95595b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4fa4f485, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@80b122b, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3d24420b, org.springframework.security.web.access.ExceptionTranslationFilter@39f5b723, org.springframework.security.web.access.intercept.AuthorizationFilter@40c2ce52]
+2025-05-18T10:13:27.740+09:00  INFO 23712 --- [    Test worker] c.e.r.RegistrationwebApplicationTests    : Started RegistrationwebApplicationTests in 0.968 seconds (process running for 1.674)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

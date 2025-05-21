@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>석현대학교 - 과목 목록</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<!-- 상단 네비게이션 -->
+<header class="site-header">
+    <div class="container header-container">
+        <div class="left-header">
+            <a href="/admin" style="text-decoration: none; color: white;">
+                <div class="logo">석현대학교</div>
+                <div class="system-name">수강신청시스템</div>
+            </a>
+        </div>
+        <div class="user-menu">
+            <span class="user-info">관리자님 환영합니다</span>
+            <a href="/logout" class="logout-btn">로그아웃</a>
+        </div>
+    </div>
+</header>
+
+<!-- 메인 콘텐츠 -->
+<div class="main-content container">
+    <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 class="page-title">과목 목록</h1>
+        <div>
+            <a href="/subjects/new" class="btn btn-primary">새 과목 추가</a>
+            <a href="/admin" class="btn" style="background-color: #555; color: white;">관리자 메인으로</a>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>과목 코드</th>
+            <th>과목명</th>
+            <th>학점</th>
+            <th>학과</th>
+            <th>담당교수</th>
+            <th>관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#subjects}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{code}}</td>
+                <td>{{name}}</td>
+                <td>{{credits}}</td>
+                <td>{{department}}</td>
+                <td>{{professorName}}</td>
+                <td>
+                    <a href="/subjects/{{id}}/edit" class="btn btn-info">수정</a>
+                    <a href="/subjects/{{id}}/delete" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                </td>
+            </tr>
+        {{/subjects}}
+        </tbody>
+    </table>
+</div>
+
+<!-- 푸터 이미지 -->
+{{> footer}}
+</body>
+</html>
