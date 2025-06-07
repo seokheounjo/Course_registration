@@ -1,0 +1,341 @@
+# 보험 수식 추출 시스템 구현 계획
+
+## 1. 프로젝트 개요
+- 목적: 보험 PDF 문서에서 수식을 90% 이상의 정확도로 추출하고, 실행 가능한 형태로 DB에 저장
+- 핵심 요구사항:
+  - 수식을 DB에서 불러와 변수값만 입력하면 결과 계산 가능
+  - 수식 관련 변수 설명 텍스트도 함께 저장
+  - 복잡한 보험 수식(책임준비금, 보험료 계산 등) 정확히 처리
+
+## 2. 기술 스택 및 아키텍처
+
+### 2.1 수식 추출 파이프라인
+```
+PDF → 이미지 변환 → 수식 영역 검출 → OCR/수식 인식 → 파싱 → 실행가능 코드 변환 → DB 저장
+```
+
+### 2.2 핵심 기술
+- PDF 처리: PyMuPDF (기존 사용)
+- 수식 검출: YOLOv5 또는 LayoutParser (수식 영역 검출용)
+- 수식 인식:
+  - Mathpix API (높은 정확도, 유료)
+  - Pix2Text (오픈소스 대안)
+  - LaTeX-OCR (오픈소스)
+- 수식 파싱: SymPy (LaTeX → Python 변환)
+- 실행 엔진: Python eval() 또는 NumExpr
+
+## 3. 데이터베이스 스키마 설계
+
+```sql
+-- 수식 테이블
+CREATE TABLE formulas (
+    id INTEGER PRIMARY KEY,
+    document_id VARCHAR(255),
+    page_number INTEGER,
+    formula_latex TEXT,           -- 원본 LaTeX
+    formula_python TEXT,          -- 실행 가능한 Python 코드
+    formula_image BLOB,           -- 수식 이미지
+    variables JSON,               -- 변수 정보 {"name": "description", ...}
+    formula_type VARCHAR(100),    -- 수식 분류 (보험료계산, 준비금계산 등)
+    confidence FLOAT,
+    created_at TIMESTAMP
+);
+
+-- 변수 설명 테이블
+CREATE TABLE formula_variables (
+    id INTEGER PRIMARY KEY,
+    formula_id INTEGER,
+    variable_name VARCHAR(50),
+    variable_description TEXT,
+    variable_type VARCHAR(50),    -- number, percentage, array 등
+    default_value TEXT,
+    constraints JSON,             -- 제약사항 {"min": 0, "max": 100}
+    FOREIGN KEY (formula_id) REFERENCES formulas(id)
+);
+
+-- 수식 컨텍스트 테이블
+CREATE TABLE formula_contexts (
+    id INTEGER PRIMARY KEY,
+    formula_id INTEGER,
+    context_before TEXT,          -- 수식 전 텍스트
+    context_after TEXT,           -- 수식 후 텍스트
+    section_title TEXT,           -- 섹션 제목
+    FOREIGN KEY (formula_id) REFERENCES formulas(id)
+);
+```
+
+## 4. 수식 처리 상세 구현
+
+### 4.1 수식 검출 강화 (formula_extractor.py 개선)
+```python
+class EnhancedFormulaExtractor:
+    def __init__(self, config):
+        self.config = config
+        # 수식 인식 모델 초기화
+        self.formula_recognizer = self._init_formula_recognizer()
+        
+    def extract_formulas(self, image_path, layout_regions):
+        formulas = []
+        
+        # 1. 레이아웃 기반 수식 검출
+        formula_regions = self._detect_formula_regions_ml(image_path)
+        
+        # 2. 규칙 기반 수식 검출 (보완)
+        rule_based_regions = self._detect_formula_regions_rules(image_path)
+        
+        # 3. 병합 및 중복 제거
+        all_regions = self._merge_regions(formula_regions + rule_based_regions)
+        
+        # 4. 각 영역에서 수식 추출
+        for region in all_regions:
+            formula = self._extract_single_formula_enhanced(image_path, region)
+            if formula:
+                formulas.append(formula)
+                
+        return formulas
+```
+
+### 4.2 수식 인식 및 변환
+```python
+class FormulaRecognizer:
+    def recognize_formula(self, image):
+        # 1. 이미지 전처리
+        processed_img = self._preprocess(image)
+        
+        # 2. 수식 인식 (여러 방법 앙상블)
+        latex_results = []
+        
+        # 방법 1: Pix2Text
+        if self.pix2text_available:
+            result1 = self.pix2text.recognize(processed_img)
+            latex_results.append(result1)
+            
+        # 방법 2: 사용자 정의 모델
+        if self.custom_model:
+            result2 = self.custom_model.predict(processed_img)
+            latex_results.append(result2)
+            
+        # 3. 결과 앙상블 및 후처리
+        final_latex = self._ensemble_results(latex_results)
+        
+        # 4. LaTeX 검증 및 수정
+        validated_latex = self._validate_and_fix_latex(final_latex)
+        
+        return validated_latex
+```
+
+### 4.3 실행 가능한 코드 변환
+```python
+class FormulaConverter:
+    def latex_to_python(self, latex_formula):
+        """LaTeX 수식을 실행 가능한 Python 함수로 변환"""
+        
+        # 1. SymPy로 파싱
+        try:
+            sympy_expr = parse_latex(latex_formula)
+        except:
+            # 실패시 수동 파싱
+            sympy_expr = self._manual_parse(latex_formula)
+            
+        # 2. 변수 추출
+        variables = list(sympy_expr.free_symbols)
+        
+        # 3. Python 함수 생성
+        func_code = f"""
+def formula_{hash(latex_formula)}({', '.join(str(v) for v in variables)}):
+    '''
+    원본 LaTeX: {latex_formula}
+    '''
+    import numpy as np
+    from math import *
+    
+    result = {sympy_expr}
+    return result
+"""
+        
+        return {
+            'python_code': func_code,
+            'variables': [str(v) for v in variables],
+            'sympy_expr': str(sympy_expr)
+        }
+```
+
+### 4.4 보험 특화 수식 처리
+```python
+class InsuranceFormulaProcessor:
+    def __init__(self):
+        # 보험 용어 사전
+        self.insurance_terms = {
+            'P': '보험료',
+            'V': '책임준비금',
+            'M': '순보험료',
+            'N': '연금현가',
+            'D': '현가',
+            'q': '위험률',
+            'i': '이율'
+        }
+        
+        # 보험 수식 패턴
+        self.formula_patterns = {
+            'premium': r'P\s*=.*',
+            'reserve': r'V\s*=.*',
+            'annuity': r'[aä]\s*=.*'
+        }
+        
+    def process_insurance_formula(self, formula_data):
+        # 1. 수식 타입 분류
+        formula_type = self._classify_formula_type(formula_data['latex'])
+        
+        # 2. 변수 의미 추출
+        variables_with_meaning = self._extract_variable_meanings(
+            formula_data['variables'],
+            formula_data['context']
+        )
+        
+        # 3. 보험 특화 검증
+        validation_result = self._validate_insurance_formula(
+            formula_data['python_code'],
+            formula_type
+        )
+        
+        return {
+            'type': formula_type,
+            'variables': variables_with_meaning,
+            'validation': validation_result
+        }
+```
+
+## 5. 정확도 향상 전략
+
+### 5.1 멀티스테이지 검출
+1. **1차 검출**: 넓은 범위로 가능한 모든 수식 영역 검출
+2. **2차 필터링**: 신뢰도 기반 필터링
+3. **3차 검증**: 수식 구조 분석으로 최종 확인
+
+### 5.2 앙상블 방법
+- 여러 OCR 엔진 결과 결합
+- 신뢰도 가중 평균
+- 투표 방식 적용
+
+### 5.3 후처리 강화
+```python
+def post_process_formula(latex):
+    # 1. 일반적인 OCR 오류 수정
+    corrections = {
+        r'\\times': '×',
+        r'\\div': '÷',
+        r'_\{([^}]+)\}': r'_{\1}',  # 첨자 수정
+        r'\^\{([^}]+)\}': r'^{\1}'   # 지수 수정
+    }
+    
+    # 2. 보험 수식 특화 수정
+    insurance_corrections = {
+        r'([PVMNDq])(\d)': r'\1_{\2}',  # 변수 첨자
+        r'a\s*\[(\d+)\]': r'a_{\ddot{\1}}',  # 연금 기호
+    }
+    
+    # 3. 균형 검사 (괄호, 중괄호)
+    balanced = check_balance(latex)
+    
+    return corrected_latex
+```
+
+## 6. 실행 및 테스트 계획
+
+### 6.1 단위 테스트
+```python
+def test_formula_extraction():
+    # 샘플 수식 이미지
+    test_cases = [
+        {
+            'image': 'simple_fraction.png',
+            'expected': r'\frac{a}{b}',
+            'tolerance': 0.95
+        },
+        {
+            'image': 'insurance_premium.png',
+            'expected': r'P = \frac{M_x}{N_x}',
+            'tolerance': 0.90
+        }
+    ]
+    
+    for case in test_cases:
+        result = extract_formula(case['image'])
+        similarity = calculate_similarity(result, case['expected'])
+        assert similarity >= case['tolerance']
+```
+
+### 6.2 통합 테스트
+- 실제 보험 PDF 문서로 테스트
+- 수식 실행 결과 검증
+- 변수 대입 테스트
+
+## 7. 성능 최적화
+
+### 7.1 배치 처리
+- 여러 수식을 한 번에 처리
+- GPU 활용 극대화
+
+### 7.2 캐싱
+- 인식된 수식 결과 캐싱
+- 유사 수식 재사용
+
+## 8. 모니터링 및 로깅
+
+### 8.1 정확도 추적
+```python
+class AccuracyMonitor:
+    def track_extraction(self, original, extracted):
+        # 편집 거리 계산
+        distance = edit_distance(original, extracted)
+        
+        # 구조적 유사도
+        structural_sim = structural_similarity(original, extracted)
+        
+        # 로그 저장
+        log_entry = {
+            'timestamp': datetime.now(),
+            'accuracy': structural_sim,
+            'edit_distance': distance,
+            'formula_type': classify_formula(original)
+        }
+        
+        self.save_log(log_entry)
+```
+
+## 9. 배포 및 운영
+
+### 9.1 Docker 컨테이너화
+```dockerfile
+FROM python:3.9
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-kor \
+    libgl1-mesa-glx
+    
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . /app
+WORKDIR /app
+CMD ["python", "main.py"]
+```
+
+### 9.2 API 서버 구축
+- FastAPI로 REST API 제공
+- 수식 추출 엔드포인트
+- 수식 실행 엔드포인트
+
+## 10. 향후 개선 사항
+
+1. **딥러닝 모델 학습**
+   - 보험 수식 전용 데이터셋 구축
+   - 커스텀 모델 학습
+
+2. **실시간 처리**
+   - 스트리밍 방식 구현
+   - 점진적 수식 인식
+
+3. **다국어 지원**
+   - 한글 수식 표현 지원
+   - 중국어, 일본어 확장
