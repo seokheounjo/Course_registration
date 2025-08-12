@@ -7,6 +7,5 @@ README*.md
 Dockerfile
 .dockerignore
 .gradle
-gradle/wrapper/gradle-wrapper.jar
 data/
 uploads/

@@ -14,9 +14,9 @@ EC2_KEY_NAME="course-registration-key"
 SECURITY_GROUP_NAME="course-registration-sg"
 RDS_INSTANCE_ID="course-registration-db"
 
-# 1. ECR 리포지토리 생성
-echo "1. Creating ECR repository..."
-aws ecr create-repository --repository-name $ECR_REPO_NAME --region $REGION || echo "ECR repository already exists"
+# 1. DockerHub 설정 확인 (ECR 대신 DockerHub 사용)
+echo "1. Using DockerHub instead of ECR..."
+echo "Make sure your DockerHub repository is created: [username]/course-registration"
 
 # 2. Security Group 생성
 echo "2. Creating Security Group..."
@@ -129,8 +129,8 @@ echo "EC2 Public IP: $PUBLIC_IP"
 echo ""
 echo "=== GitHub Secrets Configuration ==="
 echo "Add these secrets to your GitHub repository:"
-echo "AWS_ACCESS_KEY_ID: [Your AWS Access Key ID]"
-echo "AWS_SECRET_ACCESS_KEY: [Your AWS Secret Access Key]"
+echo "DOCKERHUB_USERNAME: [Your DockerHub username]"
+echo "DOCKERHUB_PASSWORD: [Your DockerHub password or access token]"
 echo "EC2_SSH_KEY: [Contents of ${EC2_KEY_NAME}.pem file]"
 echo "EC2_HOSTNAME: $PUBLIC_IP"
 echo "DB_HOST: $RDS_ENDPOINT"

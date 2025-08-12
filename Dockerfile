@@ -2,11 +2,14 @@ FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-# Copy gradle files
-COPY build.gradle settings.gradle gradlew ./
-COPY gradle/ gradle/
+# Copy gradle wrapper files (including the jar)
+COPY gradlew ./
+COPY gradle/wrapper/ gradle/wrapper/
 
-# Download dependencies
+# Copy build files
+COPY build.gradle settings.gradle ./
+
+# Make gradlew executable and download dependencies
 RUN chmod +x gradlew && ./gradlew dependencies --no-daemon
 
 # Copy source code
