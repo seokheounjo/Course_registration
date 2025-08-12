@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>석현대학교 - 수강 조회</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .credit-summary {
+            background-color: #e8f5e9;
+            border: 2px solid #388e3c;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .credit-title {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .credit-value {
+            font-weight: bold;
+            color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단 네비게이션 -->
+<header class="site-header">
+    <div class="container header-container">
+        <div class="left-header">
+            <a href="/student" style="text-decoration: none; color: white;">
+                <div class="logo">석현대학교</div>
+                <div class="system-name">수강신청시스템</div>
+            </a>
+        </div>
+        <div class="user-menu">
+            <span class="user-info">{{student.name}}님 환영합니다</span>
+            <a href="/logout" class="logout-btn">로그아웃</a>
+        </div>
+    </div>
+</header>
+
+<!-- 메인 콘텐츠 -->
+<div class="main-content container">
+    <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 class="page-title">수강 신청 내역</h1>
+        <div>
+            <a href="/student/enroll" class="btn btn-primary">수강 신청하기</a>
+            <a href="/student" class="btn" style="background-color: #555; color: white;">학생 메인으로</a>
+        </div>
+    </div>
+
+    {{#successMessage}}
+        <div class="alert alert-success" style="background-color: #dff0d8; color: #3c763d; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+            {{successMessage}}
+        </div>
+    {{/successMessage}}
+
+    {{#errorMessage}}
+        <div class="alert alert-danger" style="background-color: #f2dede; color: #a94442; padding: 10px; margin-bottom: 20px; border-radius: 4px;">
+            {{errorMessage}}
+        </div>
+    {{/errorMessage}}
+
+    <!-- 신청 학점 요약 정보 추가 -->
+    <div class="credit-summary">
+        <span class="credit-title">신청 학점:</span>
+        <span class="credit-value" id="total-credits">0</span>
+        <span>/</span>
+        <span class="credit-value">18</span>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>과목명</th>
+            <th>담당교수</th>
+            <th>요일</th>
+            <th>시간</th>
+            <th>강의실</th>
+            <th>학점</th>
+            <th>관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#enrollments}}
+            <tr data-credits="{{subject.credits}}">
+                <td>{{subjectName}}</td>
+                <td>{{professorName}}</td>
+                <td>{{day}}</td>
+                <td>{{startTime}} - {{endTime}}</td>
+                <td>{{room}}</td>
+                <td>{{subject.credits}}</td>
+                <td>
+                    <a href="/student/courses/{{id}}/cancel" class="btn btn-danger" onclick="return confirm('정말 수강 취소하시겠습니까?');">수강 취소</a>
+                </td>
+            </tr>
+        {{/enrollments}}
+        {{^enrollments}}
+            <tr>
+                <td colspan="7" style="text-align: center;">수강 신청 내역이 없습니다.</td>
+            </tr>
+        {{/enrollments}}
+        </tbody>
+    </table>
+</div>
+
+<!-- 푸터 이미지 -->
+{{> footer}}
+
+<script>
+    // 총 학점 계산 및 표시
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('tr[data-credits]');
+        let totalCredits = 0;
+
+        rows.forEach(function(row) {
+            const credits = parseInt(row.getAttribute('data-credits')) || 0;
+            totalCredits += credits;
+        });
+
+        const totalCreditsElement = document.getElementById('total-credits');
+        if (totalCreditsElement) {
+            totalCreditsElement.textContent = totalCredits;
+
+            // 학점에 따른 색상 변경
+            if (totalCredits > 18) {
+                totalCreditsElement.style.color = '#d32f2f'; // 빨간색 (초과)
+                document.querySelector('.credit-summary').style.backgroundColor = '#ffebee';
+                document.querySelector('.credit-summary').style.borderColor = '#d32f2f';
+            } else if (totalCredits === 18) {
+                totalCreditsElement.style.color = '#f57f17'; // 주황색 (최대)
+                document.querySelector('.credit-summary').style.backgroundColor = '#fff9c4';
+                document.querySelector('.credit-summary').style.borderColor = '#fbc02d';
+            }
+        }
+    });
+</script>
+</body>
+</html>

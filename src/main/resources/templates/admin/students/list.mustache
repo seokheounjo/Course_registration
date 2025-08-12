@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>석현대학교 - 학생 목록</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<!-- 상단 네비게이션 -->
+<header class="site-header">
+    <div class="container header-container">
+        <div class="left-header">
+            <a href="/admin" style="text-decoration: none; color: white;">
+                <div class="logo">석현대학교</div>
+                <div class="system-name">수강신청시스템</div>
+            </a>
+        </div>
+        <div class="user-menu">
+            <span class="user-info">관리자님 환영합니다</span>
+            <a href="/logout" class="logout-btn">로그아웃</a>
+        </div>
+    </div>
+</header>
+
+<!-- 메인 콘텐츠 -->
+<div class="main-content container">
+    <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 class="page-title">학생 목록</h1>
+        <div>
+            <a href="/admin/students/new" class="btn btn-primary">새 학생 추가</a>
+            <a href="/admin" class="btn" style="background-color: #555; color: white;">관리자 메인으로</a>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>학번</th>
+            <th>이름</th>
+            <th>학과</th>
+            <th>학년</th>
+            <th>관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#students}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{studentId}}</td>
+                <td>{{name}}</td>
+                <td>{{department}}</td>
+                <td>{{#grade}}{{grade}}{{/grade}}{{^grade}}-{{/grade}}</td>
+                <td>
+                    <a href="/admin/students/{{id}}/edit" class="btn btn-info">수정</a>
+                    <a href="/admin/students/{{id}}/delete" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                </td>
+            </tr>
+        {{/students}}
+        </tbody>
+    </table>
+</div>
+
+<!-- 푸터 이미지 -->
+{{> footer}}
+</body>
+</html>

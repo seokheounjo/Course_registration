@@ -1,0 +1,12 @@
+target/
+build/
+.git
+.gitignore
+README*.md
+*.md
+Dockerfile
+.dockerignore
+.gradle
+gradle/wrapper/gradle-wrapper.jar
+data/
+uploads/
