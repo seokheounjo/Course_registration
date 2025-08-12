@@ -25,7 +25,7 @@ public class DataInitializer {
             // 4. 시간표 데이터 로드
             timetableService.loadSampleData();
 
-            System.out.println("샘플 데이터 로드 완료");
+            System.out.println("샘플 데이터 로드 완료"); 
         };
     }
 }
