@@ -94,12 +94,12 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
           # Install Docker if not exists
           if ! command -v docker &> /dev/null; then
-            sudo yum update -y
-            sudo yum install -y docker
+            sudo apt update -y
+            sudo apt install -y docker.io
             sudo systemctl start docker
             sudo systemctl enable docker
-            sudo usermod -a -G docker ec2-user
-            newgrp docker
+            sudo usermod -a -G docker ubuntu
+            sudo newgrp docker
           fi
           
           # Stop and remove existing container
