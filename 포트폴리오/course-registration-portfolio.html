@@ -869,24 +869,48 @@ spec:
                     </tbody>
                 </table>
 
-                <div class="content-grid" style="margin-top: 2rem;">
-                    <div style="background: #f0f9ff; padding: 2rem; border-radius: 1rem;">
-                        <h3 style="color: #1e40af; margin-bottom: 1rem;">🌐 서비스 접근 정보</h3>
-                        <div style="font-family: monospace; font-size: 0.9rem;">
-                            <p><strong>EC2:</strong> http://23.22.154.180</p>
-                            <p><strong>EKS:</strong> ArgoCD UI 접근 가능</p>
-                            <p><strong>DB:</strong> AWS RDS MySQL</p>
+                <div style="background: #f0f9ff; padding: 2rem; border-radius: 1rem; margin-top: 2rem; border-left: 4px solid #3b82f6;">
+                    <h3 style="color: #1e40af; margin-bottom: 1.5rem;">🌐 실제 서비스 접근 - 지금 바로 체험해보세요!</h3>
+                    <div style="font-family: monospace; font-size: 1rem; margin-bottom: 2rem;">
+                        <p style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                            <strong>🚀 EC2 배포:</strong> <a href="http://23.22.154.180" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: bold;">http://23.22.154.180</a>
+                        </p>
+                        <p style="background: white; padding: 1rem; border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                            <strong>🎯 EKS 배포:</strong> ArgoCD GitOps 관리 (내부 네트워크)
+                        </p>
+                        <p style="background: white; padding: 1rem; border-radius: 0.5rem;">
+                            <strong>🗄️ 데이터베이스:</strong> AWS RDS MySQL (실시간 연동)
+                        </p>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; border: 2px solid #dc2626;">
+                            <h4 style="color: #dc2626; margin-bottom: 1rem; text-align: center;">👨‍💼 관리자 계정</h4>
+                            <div style="font-family: monospace; background: #fef2f2; padding: 1rem; border-radius: 0.4rem; text-align: center; margin-bottom: 1rem;">
+                                <strong>ID:</strong> admin<br>
+                                <strong>PW:</strong> admin
+                            </div>
+                            <p style="font-size: 0.9rem; color: #6b7280; text-align: center;">📊 DB 현황 대시보드, 학생/교수/과목 관리</p>
+                        </div>
+                        
+                        <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; border: 2px solid #059669;">
+                            <h4 style="color: #059669; margin-bottom: 1rem; text-align: center;">🎓 학생 계정 (학년별)</h4>
+                            <div style="font-family: monospace; background: #f0fdf4; padding: 1rem; border-radius: 0.4rem; font-size: 0.9rem;">
+                                <strong>1학년:</strong> 20231002 / 20231002<br>
+                                <strong>2학년:</strong> 20231012 / 20231012<br>
+                                <strong>3학년:</strong> 20231001 / 20231001<br>
+                                <strong>4학년:</strong> 20231000 / 20231000<br>
+                                <strong>석사:</strong> 20231011 / 20231011<br>
+                                <strong>박사:</strong> 20231008 / 20231008
+                            </div>
+                            <p style="font-size: 0.9rem; color: #6b7280; text-align: center; margin-top: 1rem;">🔍 수강신청, 시간표 조회, 과목 검색</p>
                         </div>
                     </div>
                     
-                    <div style="background: #f0fdf4; padding: 2rem; border-radius: 1rem;">
-                        <h3 style="color: #047857; margin-bottom: 1rem;">📊 실시간 모니터링</h3>
-                        <ul style="list-style: none;">
-                            <li>✅ 데이터베이스 현황 대시보드</li>
-                            <li>✅ ArgoCD 배포 상태 추적</li>
-                            <li>✅ GitHub Actions 빌드 로그</li>
-                            <li>✅ Kubernetes 리소스 모니터링</li>
-                        </ul>
+                    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 0.8rem; text-align: center; border: 2px solid #f59e0b; margin-top: 2rem;">
+                        <p style="color: #92400e; font-weight: 600; margin: 0; font-size: 1.1rem;">
+                            💡 <strong>체험 추천:</strong> 관리자 로그인 → "📊 데이터베이스 현황" 클릭 → 실시간 AWS RDS 통계 확인!
+                        </p>
                     </div>
                 </div>
             </div>
@@ -965,7 +989,25 @@ spec:
                     엔터프라이즈급 발전 가능
                 </div>
             </div>
-            <div style="margin-top: 2rem; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 1rem; backdrop-filter: blur(10px);">
+            <div style="margin-top: 2rem; padding: 2rem; background: rgba(255,255,255,0.15); border-radius: 1rem; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2);">
+                <h3 style="margin-bottom: 1.5rem; color: #fef3c7; text-align: center; font-size: 1.3rem;">🚀 실제 서비스 체험하기</h3>
+                <div style="background: rgba(255,255,255,0.9); color: #1f2937; padding: 1.5rem; border-radius: 0.8rem; margin-bottom: 1.5rem;">
+                    <p style="text-align: center; margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600;">
+                        <a href="http://23.22.154.180" target="_blank" style="color: #3b82f6; text-decoration: none; font-size: 1.2rem;">
+                            🌐 http://23.22.154.180
+                        </a>
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-family: monospace; font-size: 0.9rem;">
+                        <div style="background: #fef2f2; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                            <strong style="color: #dc2626;">👨‍💼 관리자</strong><br>
+                            admin / admin
+                        </div>
+                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                            <strong style="color: #059669;">🎓 학생(4학년)</strong><br>
+                            20231000 / 20231000
+                        </div>
+                    </div>
+                </div>
                 <h3 style="margin-bottom: 1rem;">📂 프로젝트 정보</h3>
                 <p><strong>GitHub:</strong> https://github.com/seokheounjo/Course_registration</p>
                 <p><strong>개발자:</strong> 조석현</p>

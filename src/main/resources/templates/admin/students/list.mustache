@@ -33,38 +33,6 @@
         </div>
     </div>
 
-    <!-- DB 현황 대시보드 -->
-    <div class="db-status-dashboard" style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-        <h3 style="margin-top: 0; color: #495057; border-bottom: 2px solid #007bff; padding-bottom: 10px;">📊 데이터베이스 현황</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-            <div class="status-card" style="background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #28a745;">
-                <div style="font-size: 24px; font-weight: bold; color: #28a745;">{{dbStatus.studentCount}}</div>
-                <div style="color: #6c757d; font-size: 14px;">총 학생 수</div>
-            </div>
-            <div class="status-card" style="background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #17a2b8;">
-                <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">{{dbStatus.professorCount}}</div>
-                <div style="color: #6c757d; font-size: 14px;">총 교수 수</div>
-            </div>
-            <div class="status-card" style="background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #ffc107;">
-                <div style="font-size: 24px; font-weight: bold; color: #ffc107;">{{dbStatus.subjectCount}}</div>
-                <div style="color: #6c757d; font-size: 14px;">총 과목 수</div>
-            </div>
-            <div class="status-card" style="background: white; padding: 15px; border-radius: 6px; border-left: 4px solid #dc3545;">
-                <div style="font-size: 24px; font-weight: bold; color: #dc3545;">{{dbStatus.enrollmentCount}}</div>
-                <div style="color: #6c757d; font-size: 14px;">총 수강신청 수</div>
-            </div>
-        </div>
-        <div style="margin-top: 15px; padding: 10px; background: white; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <span style="color: #495057; font-weight: 500;">🗄️ DB 연결상태: </span>
-                <span style="color: #28a745; font-weight: bold;">{{dbStatus.connectionStatus}}</span>
-                <span style="color: #6c757d; margin-left: 10px;">({{dbStatus.databaseType}})</span>
-            </div>
-            <div style="color: #6c757d; font-size: 14px;">
-                총 레코드: <strong>{{dbStatus.totalRecords}}</strong>개
-            </div>
-        </div>
-    </div>
 
     <table>
         <thead>

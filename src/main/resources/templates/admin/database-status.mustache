@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>석현대학교 - 데이터베이스 현황</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        /* DB 현황 전용 스타일 */
+        .db-dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .db-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid var(--card-color);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card.students { --card-color: #28a745; }
+        .stat-card.professors { --card-color: #17a2b8; }
+        .stat-card.subjects { --card-color: #ffc107; }
+        .stat-card.enrollments { --card-color: #dc3545; }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--card-color);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--card-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .connection-status {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid #28a745;
+            margin-bottom: 2rem;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .management-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .mgmt-link {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--link-color);
+        }
+
+        .mgmt-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .mgmt-link.students-mgmt { --link-color: #28a745; }
+        .mgmt-link.professors-mgmt { --link-color: #17a2b8; }
+        .mgmt-link.subjects-mgmt { --link-color: #ffc107; }
+        .mgmt-link.admin-mgmt { --link-color: #6f42c1; }
+
+        .mgmt-icon {
+            font-size: 2rem;
+            color: var(--link-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .mgmt-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .db-stats-grid,
+            .management-links {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .stat-icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 상단 네비게이션 -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="left-header">
+                <a href="/admin" style="text-decoration: none; color: white;">
+                    <div class="logo">석현대학교</div>
+                    <div class="system-name">수강신청시스템</div>
+                </a>
+            </div>
+            <div class="user-menu">
+                <span class="user-info">관리자님 환영합니다</span>
+                <a href="/logout" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 콘텐츠 -->
+    <div class="main-content container">
+        <div class="db-dashboard">
+            <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1 class="page-title">📊 데이터베이스 현황 대시보드</h1>
+                <a href="/admin" class="btn" style="background-color: #6c757d; color: white; text-decoration: none; padding: 0.8rem 1.5rem; border-radius: 5px;">← 관리자 메인</a>
+            </div>
+
+            <!-- DB 통계 카드 (가로 4개) -->
+            <div class="db-stats-grid">
+                <div class="stat-card students">
+                    <div class="stat-icon">👨‍🎓</div>
+                    <div class="stat-number">{{dbStatus.studentCount}}</div>
+                    <div class="stat-label">총 학생 수</div>
+                </div>
+                
+                <div class="stat-card professors">
+                    <div class="stat-icon">👨‍🏫</div>
+                    <div class="stat-number">{{dbStatus.professorCount}}</div>
+                    <div class="stat-label">총 교수 수</div>
+                </div>
+                
+                <div class="stat-card subjects">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-number">{{dbStatus.subjectCount}}</div>
+                    <div class="stat-label">총 과목 수</div>
+                </div>
+                
+                <div class="stat-card enrollments">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-number">{{dbStatus.enrollmentCount}}</div>
+                    <div class="stat-label">총 수강신청 수</div>
+                </div>
+            </div>
+
+            <!-- 연결 상태 -->
+            <div class="connection-status">
+                <div class="status-header">
+                    <h3 style="margin: 0; color: #333;">🗄️ 데이터베이스 연결 상태</h3>
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span style="color: #28a745; font-weight: bold;">{{dbStatus.connectionStatus}}</span>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 1rem;">
+                    <div>
+                        <strong>데이터베이스 타입:</strong>
+                        <span style="color: #17a2b8;">{{dbStatus.databaseType}}</span>
+                    </div>
+                    <div>
+                        <strong>총 레코드 수:</strong>
+                        <span style="color: #ffc107; font-weight: bold;">{{dbStatus.totalRecords}}개</span>
+                    </div>
+                    <div>
+                        <strong>마지막 업데이트:</strong>
+                        <span style="color: #6c757d;">실시간</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 관리 바로가기 링크 -->
+            <div class="management-links">
+                <a href="/admin/students" class="mgmt-link students-mgmt">
+                    <div class="mgmt-icon">👨‍🎓</div>
+                    <div class="mgmt-title">학생 관리</div>
+                </a>
+                
+                <a href="/professors" class="mgmt-link professors-mgmt">
+                    <div class="mgmt-icon">👨‍🏫</div>
+                    <div class="mgmt-title">교수 관리</div>
+                </a>
+                
+                <a href="/integrated" class="mgmt-link subjects-mgmt">
+                    <div class="mgmt-icon">📚</div>
+                    <div class="mgmt-title">과목 관리</div>
+                </a>
+                
+                <a href="/admin" class="mgmt-link admin-mgmt">
+                    <div class="mgmt-icon">⚙️</div>
+                    <div class="mgmt-title">시스템 관리</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 푸터 이미지 -->
+    {{> footer}}
+
+    <script>
+        // 실시간 업데이트 (30초마다)
+        setInterval(function() {
+            location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>
