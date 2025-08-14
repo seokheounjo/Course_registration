@@ -99,22 +99,21 @@ jobs:
             sudo systemctl start docker
             sudo systemctl enable docker
             sudo usermod -a -G docker ubuntu
-            sudo newgrp docker
           fi
           
           # Stop and remove existing container
-          docker stop course-registration || true
-          docker rm course-registration || true
+          sudo docker stop course-registration || true
+          sudo docker rm course-registration || true
           
           # Pull and run new image
-          docker pull '$DOCKERHUB_USERNAME'/course-registration:latest
-          docker run -d --name course-registration -p 80:8087 \
+          sudo docker pull '$DOCKERHUB_USERNAME'/course-registration:latest
+          sudo docker run -d --name course-registration -p 80:8087 \
             -e SPRING_PROFILES_ACTIVE=prod \
             -e DB_HOST=${{ secrets.DB_HOST }} \
             -e DB_PORT=${{ secrets.DB_PORT }} \
             -e DB_NAME=${{ secrets.DB_NAME }} \
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -v /home/ec2-user/uploads:/app/uploads \
+            -v /home/ubuntu/uploads:/app/uploads \
             '$DOCKERHUB_USERNAME'/course-registration:latest
         '
