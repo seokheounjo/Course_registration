@@ -23,6 +23,8 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: "prod"
+        - name: SPRING_SQL_INIT_MODE
+          value: "never"
         - name: DB_HOST
           value: "course-registration-db.cizym24smdxb.us-east-1.rds.amazonaws.com"
         - name: DB_PORT
