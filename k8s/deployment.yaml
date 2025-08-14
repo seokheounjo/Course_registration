@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: course-registration
+  namespace: course-registration
+  labels:
+    app: course-registration
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: course-registration
+  template:
+    metadata:
+      labels:
+        app: course-registration
+    spec:
+      containers:
+      - name: course-registration
+        image: seokheounjo/course-registration:latest
+        ports:
+        - containerPort: 8087
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: DB_HOST
+          value: "course-registration-db.cizym24smdxb.us-east-1.rds.amazonaws.com"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_NAME
+          value: "registrationdb"
+        - name: DB_USERNAME
+          value: "admin"
+        - name: DB_PASSWORD
+          value: "YourPassword123!"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8087
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8087
+          initialDelaySeconds: 30
+          periodSeconds: 15

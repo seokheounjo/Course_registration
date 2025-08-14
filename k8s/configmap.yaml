@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: course-registration-config
+  namespace: course-registration
+data:
+  application.properties: |
+    spring.mustache.prefix=classpath:/templates/
+    spring.mustache.suffix=.mustache
+    spring.mustache.cache=true
+    server.address=0.0.0.0
+    server.port=8087
+    
+    spring.application.name=registrationweb
+    
+    # Character encoding settings
+    server.servlet.encoding.charset=UTF-8
+    server.servlet.encoding.enabled=true
+    server.servlet.encoding.force=true
+    
+    # Mustache settings
+    spring.mustache.charset=UTF-8
+    
+    # File upload settings
+    spring.servlet.multipart.enabled=true
+    spring.servlet.multipart.max-file-size=10MB
+    spring.servlet.multipart.max-request-size=10MB
+    file.upload.directory=uploads/syllabus
