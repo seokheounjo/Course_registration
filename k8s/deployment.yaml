@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: course-registration
-        image: seokheounjo/course-registration:latest
+        image: procof/course-registration:latest
         ports:
         - containerPort: 8087
         env:
