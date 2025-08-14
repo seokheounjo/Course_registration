@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수강신청 시스템 웹 프로젝트 포트폴리오</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: '나눔스퀘어', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: #f5f5f5;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            background: #f5f5f5;
+        }
+
+        /* 공통 디자인 요소 */
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .section-number {
+            background: #FF5A54;
+            color: white;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            font-family: '나눔스퀘어 Bold', sans-serif;
+            clip-path: polygon(0 0, 80% 0, 100% 100%, 0 100%);
+            margin-right: 2rem;
+        }
+
+        .section-title {
+            background: #474747;
+            color: white;
+            padding: 1.5rem 3rem;
+            font-size: 2.2rem;
+            font-weight: bold;
+            font-family: '나눔스퀘어 Bold', sans-serif;
+            clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%);
+            flex: 1;
+        }
+
+        .content-area {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            min-height: 60vh;
+        }
+
+        /* 타이틀 슬라이드 */
+        .title-slide {
+            background: linear-gradient(135deg, #FF5A54 0%, #C0504D 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .title-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .info-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #FFE5E5;
+        }
+
+        .info-card p {
+            font-size: 1.1rem;
+        }
+
+        /* 목차 스타일 */
+        .toc-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .toc-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 5px solid #FFE5E5;
+        }
+
+        .toc-item .number {
+            color: #FFE5E5;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .toc-item .title {
+            font-size: 1.1rem;
+        }
+
+        /* 컨텐츠 스타일링 */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .content-section h3 {
+            color: #FF5A54;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #FF5A54;
+            padding-bottom: 0.5rem;
+        }
+
+        .bullet-list {
+            list-style: none;
+        }
+
+        .bullet-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+            border-left: 4px solid #FF5A54;
+        }
+
+        .bullet-list li::before {
+            content: "▶";
+            color: #FF5A54;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #FF5A54, #C0504D);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(255, 90, 84, 0.3);
+        }
+
+        .highlight-box h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .tech-item {
+            background: #f0f0f0;
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #474747;
+        }
+
+        .tech-item strong {
+            color: #474747;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .feature-category {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #FF5A54;
+        }
+
+        .feature-category h4 {
+            color: #474747;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .feature-tag {
+            background: #FF5A54;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .api-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .entity-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .entity-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-top: 4px solid #474747;
+            text-align: center;
+        }
+
+        .entity-box h4 {
+            color: #474747;
+            margin-bottom: 1rem;
+        }
+
+        .entity-box ul {
+            list-style: none;
+            font-size: 0.9rem;
+        }
+
+        .entity-box ul li {
+            padding: 0.2rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* 네비게이션 */
+        .nav-container {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: #FF5A54;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 90, 84, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: #C0504D;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 90, 84, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-indicator {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(71, 71, 71, 0.9);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 1rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content-grid,
+            .title-info,
+            .tech-grid,
+            .toc-container,
+            .entity-diagram {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .section-number {
+                width: 100%;
+                height: 60px;
+                clip-path: none;
+                border-radius: 10px;
+            }
+            
+            .section-title {
+                clip-path: none;
+                border-radius: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-indicator">
+        <span id="current-slide">1</span> / <span id="total-slides">10</span>
+    </div>
+
+    <div class="presentation-container" id="presentation">
+        <!-- 슬라이드 1: 타이틀 -->
+        <div class="slide title-slide">
+            <h1>수강신청 시스템 웹 프로젝트</h1>
+            <p class="subtitle">Spring Boot 기반 웹 수강신청 관리 시스템</p>
+            <div class="title-info">
+                <div class="info-card">
+                    <h3>👨‍💻 개발자</h3>
+                    <p>주성현</p>
+                </div>
+                <div class="info-card">
+                    <h3>📅 개발 기간</h3>
+                    <p>2025년 5월 15일 ~ 20일</p>
+                </div>
+                <div class="info-card">
+                    <h3>🛠️ 기술스택</h3>
+                    <p>Spring Boot + JPA + Mustache</p>
+                </div>
+                <div class="info-card">
+                    <h3>📧 문의</h3>
+                    <p>heyjoo42@gmail.com</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 2: 목차 -->
+        <div class="slide title-slide">
+            <h1>📋 목차</h1>
+            <div class="toc-container">
+                <div class="toc-item">
+                    <div class="number">1</div>
+                    <div class="title">프로젝트 개요</div>
+                </div>
+                <div class="toc-item">
+                    <div class="number">2</div>
+                    <div class="title">주요 기능</div>
+                </div>
+                <div class="toc-item">
+                    <div class="number">3</div>
+                    <div class="title">기술 스택</div>
+                </div>
+                <div class="toc-item">
+                    <div class="number">4</div>
+                    <div class="title">시스템 아키텍처</div>
+                </div>
+                <div class="toc-item">
+                    <div class="number">5</div>
+                    <div class="title">데이터베이스 설계</div>
+                </div>
+                <div class="toc-item">
+                    <div class="number">6</div>
+                    <div class="title">핵심 구현사항</div>
+                </div>
+                <div class="toc-item">
+                    <div class="number">7</div>
+                    <div class="title">동시성 제어</div>
+                </div>
+                <div class="toc-item">
+                    <div class="number">8</div>
+                    <div class="title">프로젝트 성과</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 3: 프로젝트 개요 -->
+        <div class="slide">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <div class="section-title">프로젝트 개요</div>
+            </div>
+            <div class="content-area">
+                <div class="content-grid">
+                    <div class="content-section">
+                        <h3>프로젝트 목표</h3>
+                        <ul class="bullet-list">
+                            <li>대학교 수강신청 시스템 웹 애플리케이션 개발</li>
+                            <li>학생과 관리자 역할 분리된 시스템 구현</li>
+                            <li>실시간 수강신청 및 관리 기능 제공</li>
+                            <li>직관적이고 사용자 친화적인 웹 인터페이스 구축</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h3>핵심 특징</h3>
+                        <ul class="bullet-list">
+                            <li>역할 기반 접근 제어 (학생/관리자)</li>
+                            <li>실시간 수강신청 및 취소</li>
+                            <li>고급 과목 검색 및 필터링</li>
+                            <li>개인별 시간표 시각화</li>
+                            <li>관리자 시스템 관리 기능</li>
+                        </ul>
+                        <div class="highlight-box">
+                            <h4>개발 목적</h4>
+                            <p>Spring Boot 기술을 활용한 실무 중심의 웹 애플리케이션 개발 역량 향상</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 4: 주요 기능 -->
+        <div class="slide">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <div class="section-title">주요 기능</div>
+            </div>
+            <div class="content-area">
+                <div class="feature-grid">
+                    <div class="feature-category">
+                        <h4>🎓 학생 기능</h4>
+                        <div class="feature-list">
+                            <span class="feature-tag">로그인/인증</span>
+                            <span class="feature-tag">수강신청</span>
+                            <span class="feature-tag">수강취소</span>
+                            <span class="feature-tag">과목검색</span>
+                            <span class="feature-tag">시간표조회</span>
+                            <span class="feature-tag">비밀번호변경</span>
+                        </div>
+                    </div>
+                    <div class="feature-category">
+                        <h4>👨‍💼 관리자 기능</h4>
+                        <div class="feature-list">
+                            <span class="feature-tag">학생관리</span>
+                            <span class="feature-tag">과목관리</span>
+                            <span class="feature-tag">수강관리</span>
+                            <span class="feature-tag">시스템관리</span>
+                            <span class="feature-tag">데이터분석</span>
+                        </div>
+                    </div>
+                    <div class="feature-category">
+                        <h4>🔍 고급 검색 기능</h4>
+                        <div class="feature-list">
+                            <span class="feature-tag">학년별</span>
+                            <span class="feature-tag">학과별</span>
+                            <span class="feature-tag">과목명</span>
+                            <span class="feature-tag">과목코드</span>
+                            <span class="feature-tag">학점</span>
+                            <span class="feature-tag">교수명</span>
+                            <span class="feature-tag">요일별</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 5: 기술 스택 -->
+        <div class="slide">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <div class="section-title">기술 스택</div>
+            </div>
+            <div class="content-area">
+                <div class="content-grid">
+                    <div class="content-section">
+                        <h3>백엔드 기술</h3>
+                        <div class="tech-grid">
+                            <div class="tech-item">
+                                <strong>Java 17</strong><br>
+                                최신 LTS 버전
+                            </div>
+                            <div class="tech-item">
+                                <strong>Spring Boot 3.1.0</strong><br>
+                                웹 애플리케이션 프레임워크
+                            </div>
+                            <div class="tech-item">
+                                <strong>Spring Data JPA</strong><br>
+                                데이터 접근 추상화 계층
+                            </div>
+                            <div class="tech-item">
+                                <strong>Hibernate</strong><br>
+                                ORM 구현체
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-section">
+                        <h3>프론트엔드 & 데이터베이스</h3>
+                        <div class="tech-grid">
+                            <div class="tech-item">
+                                <strong>Mustache</strong><br>
+                                서버사이드 템플릿 엔진
+                            </div>
+                            <div class="tech-item">
+                                <strong>H2 Database</strong><br>
+                                인메모리 데이터베이스
+                            </div>
+                            <div class="tech-item">
+                                <strong>Gradle</strong><br>
+                                빌드 도구
+                            </div>
+                            <div class="tech-item">
+                                <strong>Lombok</strong><br>
+                                코드 간소화 라이브러리
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 6: 시스템 아키텍처 -->
+        <div class="slide">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <div class="section-title">시스템 아키텍처</div>
+            </div>
+            <div class="content-area">
+                <div class="content-section">
+                    <h3>MVC 아키텍처 패턴</h3>
+                    <ul class="bullet-list">
+                        <li><strong>Controller 계층</strong>: HTTP 요청 처리 및 응답 관리</li>
+                        <li><strong>Service 계층</strong>: 비즈니스 로직 구현</li>
+                        <li><strong>Repository 계층</strong>: 데이터 접근 로직</li>
+                        <li><strong>Entity 계층</strong>: 데이터베이스 엔티티 매핑</li>
+                        <li><strong>DTO 계층</strong>: 데이터 전송 객체</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <h4>아키텍처 장점</h4>
+                        <p>계층별 책임 분리로 유지보수성과 확장성을 확보하고, Spring Boot의 DI를 통한 느슨한 결합 구현</p>
+                    </div>
+
+                    <div class="api-code">
+Controller → Service → Repository → Entity
+    ↓           ↓           ↓          ↓
+HTTP 요청   비즈니스    데이터 접근   DB 매핑
+처리 및     로직 구현   로직 구현    객체 관리
+응답 관리</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 7: 데이터베이스 설계 -->
+        <div class="slide">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <div class="section-title">데이터베이스 설계</div>
+            </div>
+            <div class="content-area">
+                <div class="entity-diagram">
+                    <div class="entity-box">
+                        <h4>🎓 Student/User</h4>
+                        <ul>
+                            <li>studentId (PK)</li>
+                            <li>username</li>
+                            <li>birth</li>
+                            <li>password</li>
+                            <li>role</li>
+                            <li>year</li>
+                            <li>department</li>
+                        </ul>
+                    </div>
+                    <div class="entity-box">
+                        <h4>📚 Subject</h4>
+                        <ul>
+                            <li>id (PK)</li>
+                            <li>year</li>
+                            <li>department</li>
+                            <li>subjectName</li>
+                            <li>subjectCode</li>
+                            <li>courseType</li>
+                            <li>credit</li>
+                            <li>weekday</li>
+                            <li>period</li>
+                            <li>professor</li>
+                            <li>capacity</li>
+                            <li>syllabus</li>
+                            <li>summary</li>
+                        </ul>
+                    </div>
+                    <div class="entity-box">
+                        <h4>✅ Enrollment</h4>
+                        <ul>
+                            <li>id (PK)</li>
+                            <li>student (FK)</li>
+                            <li>subject (FK)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <h4>엔티티 관계</h4>
+                    <p>Student(1) ←→ (N) Enrollment (N) ←→ (1) Subject<br>
+                    다대다 관계를 중간 엔티티로 해결하여 수강신청 정보 관리</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 8: 핵심 구현사항 -->
+        <div class="slide">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <div class="section-title">핵심 구현사항</div>
+            </div>
+            <div class="content-area">
+                <div class="content-grid">
+                    <div class="content-section">
+                        <h3>인증 및 세션 관리</h3>
+                        <ul class="bullet-list">
+                            <li>HttpSession 기반 사용자 인증</li>
+                            <li>역할 기반 접근 제어 (RBAC)</li>
+                            <li>세션 타임아웃 관리</li>
+                            <li>비밀번호 암호화 처리</li>
+                        </ul>
+                    </div>
+                    <div class="content-section">
+                        <h3>데이터 검색 및 필터링</h3>
+                        <ul class="bullet-list">
+                            <li>JPA 쿼리 메소드를 활용한 동적 검색</li>
+                            <li>다중 조건 필터링 구현</li>
+                            <li>페이징 처리</li>
+                            <li>정렬 기능</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="api-code">
+// 동적 검색 쿼리 예시
+List&lt;Subject&gt; findByYearAndDepartmentAndSubjectNameContaining(
+    String year, String department, String subjectName);
+
+// 컨트롤러에서의 세션 관리
+@GetMapping("/student/home")
+public String studentHome(HttpSession session, Model model) {
+    String studentId = (String) session.getAttribute("studentId");
+    // 인증 확인 및 데이터 처리
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 9: 동시성 제어 -->
+        <div class="slide">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <div class="section-title">동시성 제어 및 트랜잭션</div>
+            </div>
+            <div class="content-area">
+                <div class="content-section">
+                    <h3>트랜잭션 관리</h3>
+                    <ul class="bullet-list">
+                        <li><strong>@Transactional</strong> 애노테이션을 통한 선언적 트랜잭션</li>
+                        <li>서비스 계층에서 트랜잭션 경계 설정</li>
+                        <li>데이터 일관성 보장</li>
+                        <li>롤백 처리를 통한 데이터 무결성 유지</li>
+                    </ul>
+                    
+                    <div class="highlight-box">
+                        <h4>수강신청 프로세스</h4>
+                        <p>중복 신청 방지 → 정원 확인 → 수강 등록 → 트랜잭션 커밋</p>
+                    </div>
+
+                    <div class="api-code">
+@Transactional
+public boolean enrollStudent(String studentId, Long subjectId) {
+    // 1. 중복 신청 검사
+    if (enrollmentRepository.existsByStudentIdAndSubjectId(studentId, subjectId)) {
+        return false;
+    }
+    
+    // 2. 정원 확인 로직
+    Subject subject = subjectRepository.findById(subjectId);
+    long currentEnrollment = enrollmentRepository.countBySubjectId(subjectId);
+    
+    if (currentEnrollment >= subject.getCapacity()) {
+        return false;
+    }
+    
+    // 3. 수강 등록
+    Enrollment enrollment = new Enrollment(student, subject);
+    enrollmentRepository.save(enrollment);
+    return true;
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 슬라이드 10: 프로젝트 성과 -->
+        <div class="slide title-slide">
+            <h1>🏆 프로젝트 성과</h1>
+            <div class="title-info">
+                <div class="info-card">
+                    <h3>🎯 구현 완료</h3>
+                    <p>학생/관리자 모든 핵심 기능 구현</p>
+                </div>
+                <div class="info-card">
+                    <h3>⚡ 성능 최적화</h3>
+                    <p>JPA 최적화 및 효율적인 쿼리 구현</p>
+                </div>
+                <div class="info-card">
+                    <h3>🔒 보안 구현</h3>
+                    <p>세션 기반 인증 및 권한 관리</p>
+                </div>
+                <div class="info-card">
+                    <h3>📱 사용자 경험</h3>
+                    <p>직관적인 UI/UX 및 반응형 웹</p>
+                </div>
+            </div>
+            <div class="highlight-box" style="margin-top: 2rem; background: rgba(255,255,255,0.2);">
+                <h4>🎉 감사합니다!</h4>
+                <p><strong>Spring Boot 기반 수강신청 시스템 웹 프로젝트</strong><br>
+                Java 17 • Spring Boot 3.1.0 • JPA • Mustache • H2 Database</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-container">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">
+            ← 이전
+        </button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">
+            다음 →
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const presentation = document.getElementById('presentation');
+        const currentSlideEl = document.getElementById('current-slide');
+        const totalSlidesEl = document.getElementById('total-slides');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        totalSlidesEl.textContent = totalSlides;
+
+        function updateSlide() {
+            presentation.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            currentSlideEl.textContent = currentSlide + 1;
+            
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+            
+            window.location.hash = `slide-${currentSlide + 1}`;
+        }
+
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 0 && newSlide < totalSlides) {
+                currentSlide = newSlide;
+                updateSlide();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                changeSlide(-1);
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                changeSlide(1);
+            } else if (e.key === 'Home') {
+                currentSlide = 0;
+                updateSlide();
+            } else if (e.key === 'End') {
+                currentSlide = totalSlides - 1;
+                updateSlide();
+            }
+        });
+
+        let startX = 0;
+        let endX = 0;
+
+        presentation.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        presentation.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    changeSlide(1);
+                } else {
+                    changeSlide(-1);
+                }
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            updateSlide();
+        });
+
+        updateSlide();
+    </script>
+</body>
+</html>
