@@ -10,7 +10,7 @@ echo "=== Course Registration AWS Deployment Script ==="
 # 변수 설정
 REGION="ap-northeast-2"
 ECR_REPO_NAME="course-registration"
-EC2_KEY_NAME="course-registration-key"
+EC2_KEY_NAME="calender"
 SECURITY_GROUP_NAME="course-registration-sg"
 RDS_INSTANCE_ID="course-registration-db"
 
@@ -91,14 +91,8 @@ RDS_ENDPOINT=$(aws rds describe-db-instances \
 
 echo "RDS Endpoint: $RDS_ENDPOINT"
 
-# 5. EC2 키 페어 생성 (이미 있으면 스킵)
-echo "5. Creating EC2 Key Pair..."
-aws ec2 create-key-pair \
-  --key-name $EC2_KEY_NAME \
-  --region $REGION \
-  --query 'KeyMaterial' --output text > ${EC2_KEY_NAME}.pem || echo "Key pair already exists"
-
-chmod 600 ${EC2_KEY_NAME}.pem 2>/dev/null || echo "Key file not created (may already exist)"
+# 5. EC2 키 페어 확인 (calender 키 사용)
+echo "5. Using existing EC2 Key Pair: $EC2_KEY_NAME"
 
 # 6. EC2 인스턴스 생성 (t2.micro, Free Tier)
 echo "6. Creating EC2 instance..."
