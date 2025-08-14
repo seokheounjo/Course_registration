@@ -2,6 +2,7 @@ package com.example.registrationweb.controller;
 
 import com.example.registrationweb.model.Student;
 import com.example.registrationweb.service.StudentService;
+import com.example.registrationweb.service.DatabaseStatusService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class AdminStudentController {
 
     private final StudentService studentService;
+    private final DatabaseStatusService databaseStatusService;
 
-    public AdminStudentController(StudentService studentService) {
+    public AdminStudentController(StudentService studentService, DatabaseStatusService databaseStatusService) {
         this.studentService = studentService;
+        this.databaseStatusService = databaseStatusService;
     }
 
     @GetMapping
@@ -25,6 +28,7 @@ public class AdminStudentController {
         }
 
         model.addAttribute("students", studentService.getAllStudents());
+        model.addAttribute("dbStatus", databaseStatusService.getDatabaseStatus());
         return "admin/students/list";
     }
 
