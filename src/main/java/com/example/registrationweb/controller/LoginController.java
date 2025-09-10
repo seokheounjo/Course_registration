@@ -67,4 +67,14 @@ public class LoginController {
         session.invalidate();
         return "redirect:/login";
     }
+
+    @GetMapping("/contact")
+    public String contactPage() {
+        return "redirect:/portfolio.html";
+    }
+
+    @GetMapping("/faq")
+    public String faqPage() {
+        return "redirect:/faq.html";
+    }
 }
