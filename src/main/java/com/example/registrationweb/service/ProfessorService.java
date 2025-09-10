@@ -6,6 +6,10 @@ import com.example.registrationweb.model.Timetable;
 import com.example.registrationweb.repository.ProfessorRepository;
 import com.example.registrationweb.repository.SubjectRepository;
 import com.example.registrationweb.repository.TimetableRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,5 +95,35 @@ public class ProfessorService {
             return professorRepository.save(professor);
         }
         return null;
+    }
+
+    // 페이지네이션과 정렬을 지원하는 교수 목록 조회
+    @Transactional(readOnly = true)
+    public Page<Professor> getAllProfessors(int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return professorRepository.findAll(pageable);
+    }
+
+    // 복합 검색 (이름, 학과로 검색)
+    @Transactional(readOnly = true)
+    public Page<Professor> searchProfessors(String name, String department, 
+                                          int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        // 빈 문자열을 null로 처리
+        String nameParam = (name != null && !name.trim().isEmpty()) ? name : null;
+        String departmentParam = (department != null && !department.trim().isEmpty()) ? department : null;
+        
+        return professorRepository.findProfessorsWithFilters(nameParam, departmentParam, pageable);
+    }
+
+    // 학과별 교수 조회 (페이지네이션)
+    @Transactional(readOnly = true)
+    public Page<Professor> getProfessorsByDepartment(String department, int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return professorRepository.findByDepartmentContainingIgnoreCase(department, pageable);
     }
 }

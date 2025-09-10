@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>석현대학교 - 학생 목록</title>
+    <title>석현대학교 - 교수 목록</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -26,34 +26,24 @@
 <!-- 메인 콘텐츠 -->
 <div class="main-content container">
     <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h1 class="page-title">학생 목록 (총 {{totalItems}}명)</h1>
+        <h1 class="page-title">교수 목록 (총 {{totalItems}}명)</h1>
         <div>
-            <a href="/admin/students/new" class="btn btn-primary">새 학생 추가</a>
+            <a href="/admin/professors/new" class="btn btn-primary">새 교수 추가</a>
             <a href="/admin" class="btn" style="background-color: #555; color: white;">관리자 메인으로</a>
         </div>
     </div>
 
     <!-- 검색 폼 -->
     <div class="search-container" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-        <form method="get" action="/admin/students" style="display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
-            <div style="display: flex; flex-direction: column;">
-                <label for="grade" style="margin-bottom: 5px; font-weight: bold;">학년:</label>
-                <select id="grade" name="grade" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                    <option value="">전체</option>
-                    <option value="1" {{#searchGrade}}{{#equals searchGrade "1"}}selected{{/equals}}{{/searchGrade}}>1학년</option>
-                    <option value="2" {{#searchGrade}}{{#equals searchGrade "2"}}selected{{/equals}}{{/searchGrade}}>2학년</option>
-                    <option value="3" {{#searchGrade}}{{#equals searchGrade "3"}}selected{{/equals}}{{/searchGrade}}>3학년</option>
-                    <option value="4" {{#searchGrade}}{{#equals searchGrade "4"}}selected{{/equals}}{{/searchGrade}}>4학년</option>
-                </select>
-            </div>
+        <form method="get" action="/admin/professors" style="display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
             <div style="display: flex; flex-direction: column;">
                 <label for="name" style="margin-bottom: 5px; font-weight: bold;">이름:</label>
-                <input type="text" id="name" name="name" value="{{searchName}}" placeholder="학생 이름" 
+                <input type="text" id="name" name="name" value="{{searchName}}" placeholder="교수 이름" 
                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
             </div>
             <div style="display: flex; flex-direction: column;">
-                <label for="studentId" style="margin-bottom: 5px; font-weight: bold;">학번:</label>
-                <input type="text" id="studentId" name="studentId" value="{{searchStudentId}}" placeholder="학번" 
+                <label for="department" style="margin-bottom: 5px; font-weight: bold;">학과:</label>
+                <input type="text" id="department" name="department" value="{{searchDepartment}}" placeholder="학과명" 
                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
             </div>
             <div style="display: flex; flex-direction: column;">
@@ -66,7 +56,7 @@
             </div>
             <div style="display: flex; gap: 10px;">
                 <button type="submit" class="btn btn-primary">검색</button>
-                <a href="/admin/students" class="btn" style="background-color: #6c757d; color: white;">초기화</a>
+                <a href="/admin/professors" class="btn" style="background-color: #6c757d; color: white;">초기화</a>
             </div>
             <!-- 숨겨진 정렬 필드 -->
             <input type="hidden" name="sortBy" value="{{sortBy}}">
@@ -78,57 +68,47 @@
         <thead>
         <tr>
             <th>
-                <a href="?sortBy=id&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
+                <a href="?sortBy=id&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&department={{searchDepartment}}" 
                    style="color: inherit; text-decoration: none;">
                     ID {{#equals sortBy "id"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
                 </a>
             </th>
             <th>
-                <a href="?sortBy=studentId&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
-                   style="color: inherit; text-decoration: none;">
-                    학번 {{#equals sortBy "studentId"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
-                </a>
-            </th>
-            <th>
-                <a href="?sortBy=name&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
+                <a href="?sortBy=name&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&department={{searchDepartment}}" 
                    style="color: inherit; text-decoration: none;">
                     이름 {{#equals sortBy "name"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
                 </a>
             </th>
             <th>
-                <a href="?sortBy=department&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
+                <a href="?sortBy=department&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&department={{searchDepartment}}" 
                    style="color: inherit; text-decoration: none;">
                     학과 {{#equals sortBy "department"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
                 </a>
             </th>
-            <th>
-                <a href="?sortBy=grade&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
-                   style="color: inherit; text-decoration: none;">
-                    학년 {{#equals sortBy "grade"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
-                </a>
-            </th>
+            <th>이메일</th>
+            <th>전화번호</th>
             <th>관리</th>
         </tr>
         </thead>
         <tbody>
-        {{#students}}
+        {{#professors}}
             <tr>
                 <td>{{id}}</td>
-                <td>{{studentId}}</td>
                 <td>{{name}}</td>
                 <td>{{department}}</td>
-                <td>{{#grade}}{{grade}}학년{{/grade}}{{^grade}}-{{/grade}}</td>
+                <td>{{email}}</td>
+                <td>{{phone}}</td>
                 <td>
-                    <a href="/admin/students/{{id}}/edit" class="btn btn-info">수정</a>
-                    <a href="/admin/students/{{id}}/delete" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
+                    <a href="/admin/professors/{{id}}/edit" class="btn btn-info">수정</a>
+                    <a href="/admin/professors/{{id}}/delete" class="btn btn-danger" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</a>
                 </td>
             </tr>
-        {{/students}}
-        {{^students}}
+        {{/professors}}
+        {{^professors}}
             <tr>
                 <td colspan="6" style="text-align: center; padding: 40px; color: #666;">검색 결과가 없습니다.</td>
             </tr>
-        {{/students}}
+        {{/professors}}
         </tbody>
     </table>
 
@@ -137,7 +117,7 @@
     <div class="pagination" style="margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 10px;">
         <!-- 이전 페이지 -->
         {{#currentPage}}
-        <a href="?page={{#minus currentPage 1}}{{/minus}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
+        <a href="?page={{#minus currentPage 1}}{{/minus}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&name={{searchName}}&department={{searchDepartment}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">이전</a>
         {{/currentPage}}
         {{^currentPage}}
@@ -147,12 +127,12 @@
         <!-- 페이지 번호 -->
         <span style="margin: 0 20px; font-weight: bold;">
             {{#plus currentPage 1}}{{/plus}} / {{totalPages}} 페이지 
-            ({{#plus currentPage 1}}{{/plus}} - {{#multiply size currentPage}}{{#plus . size}}{{/plus}}{{/multiply}} / {{totalItems}}개)
+            ({{totalItems}}개 중 {{#multiply size currentPage}}{{#plus . 1}}{{/plus}}{{/multiply}} - {{#multiply size currentPage}}{{#plus . size}}{{/plus}}{{/multiply}})
         </span>
 
         <!-- 다음 페이지 -->
         {{#hasNext}}
-        <a href="?page={{#plus currentPage 1}}{{/plus}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
+        <a href="?page={{#plus currentPage 1}}{{/plus}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&name={{searchName}}&department={{searchDepartment}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">다음</a>
         {{/hasNext}}
         {{^hasNext}}

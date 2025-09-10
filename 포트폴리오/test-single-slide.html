@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16:9 화면 테스트</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f3f4f6;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 2rem;
+            box-sizing: border-box;
+        }
+        
+        .slide-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            text-align: center;
+            color: #1e40af;
+            flex-shrink: 0;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            flex: 1;
+            min-height: 0;
+        }
+        
+        .content-section {
+            background: #f8fafc;
+            border-radius: 0.8rem;
+            border-left: 4px solid #3b82f6;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            min-height: 0;
+        }
+        
+        .section-title {
+            color: #1e40af;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            flex-shrink: 0;
+        }
+        
+        .code-block {
+            background: #1f2937;
+            color: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 0.8rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.3;
+            white-space: pre-line;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .description {
+            background: #e0f2fe;
+            padding: 0.6rem;
+            margin-top: 0.6rem;
+            border-radius: 0.4rem;
+            border-left: 3px solid #0288d1;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        
+        .bottom-section {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.8rem;
+            margin-top: 1rem;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <h2 class="slide-title">🎨 Frontend & Database Configuration 테스트</h2>
+        
+        <div class="content-grid">
+            <div class="content-section">
+                <h3 class="section-title">🖥️ JavaScript 실시간 검증</h3>
+                <div class="code-block">
+// 학점 계산
+const MAX_CREDITS = 18;
+function calculateTotalCredits() {
+    let total = 0;
+    enrollments.forEach(e => total += e.credits);
+    return total;
+}
+
+// 시간 충돌 검사
+function hasTimeConflict(course) {
+    for (let existing of enrollments) {
+        if (existing.day === course.day) {
+            // 시간 겹침 검사 로직
+            return checkOverlap();
+        }
+    }
+    return false;
+}</div>
+                <div class="description">
+                    <strong>⚡ 실시간 검증:</strong> 클라이언트 사이드에서 즉시 피드백
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3 class="section-title">🗄️ 환경별 DB 설정</h3>
+                <div class="code-block">
+# application.properties (개발용 - H2)
+spring.datasource.url=jdbc:h2:mem:registrationdb
+spring.jpa.hibernate.ddl-auto=create
+
+# application-prod.properties (프로덕션 - MySQL) 
+spring.datasource.url=jdbc:mysql://${DB_HOST}/${DB_NAME}
+spring.jpa.hibernate.ddl-auto=update</div>
+                <div class="description">
+                    <strong>🔄 환경 분리:</strong> Profile 기반 자동 설정
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-section">
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; text-align: center;">
+                <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                    <div style="font-size: 1.5rem;">🎨</div>
+                    <strong>Mustache</strong>
+                </div>
+                <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                    <div style="font-size: 1.5rem;">⚡</div>
+                    <strong>JavaScript</strong>
+                </div>
+                <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                    <div style="font-size: 1.5rem;">🍃</div>
+                    <strong>Spring Boot</strong>
+                </div>
+                <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                    <div style="font-size: 1.5rem;">🗄️</div>
+                    <strong>MySQL</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

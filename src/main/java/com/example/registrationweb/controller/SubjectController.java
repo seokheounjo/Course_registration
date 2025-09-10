@@ -104,7 +104,9 @@ public class SubjectController {
                 subject.setName(subjectData[1]);
                 subject.setCredits(Integer.parseInt(subjectData[2]));
                 subject.setDepartment(subjectData[3]);
-                subject.setProfessorId(Long.parseLong(subjectData[4]));
+                // Professor ID로 Professor 객체를 찾아서 설정
+                Long professorId = Long.parseLong(subjectData[4]);
+                subject.setProfessor(professorService.getProfessorById(professorId));
                 subject.setTargetGrade(subjectData[5]);
                 
                 subjectService.saveSubject(subject);
