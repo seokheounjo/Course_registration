@@ -32,13 +32,16 @@ public class TimetableController {
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "day") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(defaultValue = "") String subjectName,
+            @RequestParam(defaultValue = "") String day,
+            @RequestParam(defaultValue = "") String room,
             Model model, HttpSession session) {
         // 로그인 확인 (관리자만 접근 가능)
         if (!"admin".equals(session.getAttribute("user"))) {
             return "redirect:/login";
         }
 
-        Page<Timetable> timetablesPage = timetableService.getAllTimetables(page, size, sortBy, sortDir);
+        Page<Timetable> timetablesPage = timetableService.searchTimetables(subjectName, day, room, page, size, sortBy, sortDir);
         
         model.addAttribute("timetablesPage", timetablesPage);
         model.addAttribute("timetables", timetablesPage.getContent());
@@ -58,6 +61,11 @@ public class TimetableController {
         model.addAttribute("currentPageDisplay", page + 1);
         model.addAttribute("startItem", page * size + 1);
         model.addAttribute("endItem", Math.min((page + 1) * size, (int) timetablesPage.getTotalElements()));
+        
+        // 검색 파라미터 유지
+        model.addAttribute("searchSubjectName", subjectName);
+        model.addAttribute("searchDay", day);
+        model.addAttribute("searchRoom", room);
         
         return "timetable/list";
     }

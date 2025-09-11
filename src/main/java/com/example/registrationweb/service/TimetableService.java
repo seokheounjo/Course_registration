@@ -45,6 +45,27 @@ public class TimetableService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Timetable> searchTimetables(String subjectName, String day, String room, int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        if ((subjectName == null || subjectName.trim().isEmpty()) && 
+            (day == null || day.trim().isEmpty()) && 
+            (room == null || room.trim().isEmpty())) {
+            return timetableRepository.findAll(pageable);
+        }
+        
+        // 과목명으로 검색할 경우 Subject와 조인 필요
+        if (subjectName != null && !subjectName.trim().isEmpty()) {
+            return timetableRepository.findBySubjectNameContainingIgnoreCaseOrDayContainingIgnoreCaseOrRoomContainingIgnoreCase(
+                subjectName, day != null ? day : "", room != null ? room : "", pageable);
+        } else {
+            return timetableRepository.findByDayContainingIgnoreCaseOrRoomContainingIgnoreCase(
+                day != null ? day : "", room != null ? room : "", pageable);
+        }
+    }
+
+    @Transactional(readOnly = true)
     public Timetable getTimetableById(Long id) {
         return timetableRepository.findById(id).orElse(null);
     }

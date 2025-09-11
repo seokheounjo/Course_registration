@@ -33,15 +33,76 @@
         </div>
     </div>
 
+    <!-- 검색 폼 -->
+    <div class="search-container" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <form method="get" action="/timetable" style="display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
+            <div>
+                <input type="text" id="subjectName" name="subjectName" value="{{searchSubjectName}}" placeholder="과목명" 
+                       style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
+            </div>
+            <div>
+                <input type="text" id="day" name="day" value="{{searchDay}}" placeholder="요일" 
+                       style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
+            </div>
+            <div>
+                <input type="text" id="room" name="room" value="{{searchRoom}}" placeholder="강의실" 
+                       style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
+            </div>
+            <div>
+                <select id="size" name="size" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <option value="10">10개씩</option>
+                    <option value="20" selected>20개씩</option>
+                    <option value="50">50개씩</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-primary">검색</button>
+                <a href="/timetable" class="btn" style="background-color: #6c757d; color: white;">초기화</a>
+            </div>
+            <input type="hidden" name="sortBy" value="{{sortBy}}">
+            <input type="hidden" name="sortDir" value="{{sortDir}}">
+        </form>
+    </div>
+
     <table>
         <thead>
         <tr>
-            <th>ID</th>
-            <th>과목명</th>
-            <th>요일</th>
-            <th>시작 시간</th>
-            <th>종료 시간</th>
-            <th>강의실</th>
+            <th>
+                <a href="?sortBy=id&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&subjectName={{searchSubjectName}}&day={{searchDay}}&room={{searchRoom}}" 
+                   style="color: inherit; text-decoration: none;">
+                    ID
+                </a>
+            </th>
+            <th>
+                <a href="?sortBy=subjectName&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&subjectName={{searchSubjectName}}&day={{searchDay}}&room={{searchRoom}}" 
+                   style="color: inherit; text-decoration: none;">
+                    과목명
+                </a>
+            </th>
+            <th>
+                <a href="?sortBy=day&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&subjectName={{searchSubjectName}}&day={{searchDay}}&room={{searchRoom}}" 
+                   style="color: inherit; text-decoration: none;">
+                    요일
+                </a>
+            </th>
+            <th>
+                <a href="?sortBy=startTime&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&subjectName={{searchSubjectName}}&day={{searchDay}}&room={{searchRoom}}" 
+                   style="color: inherit; text-decoration: none;">
+                    시작 시간
+                </a>
+            </th>
+            <th>
+                <a href="?sortBy=endTime&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&subjectName={{searchSubjectName}}&day={{searchDay}}&room={{searchRoom}}" 
+                   style="color: inherit; text-decoration: none;">
+                    종료 시간
+                </a>
+            </th>
+            <th>
+                <a href="?sortBy=room&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&subjectName={{searchSubjectName}}&day={{searchDay}}&room={{searchRoom}}" 
+                   style="color: inherit; text-decoration: none;">
+                    강의실
+                </a>
+            </th>
             <th>담당교수</th>
             <th>관리</th>
         </tr>
@@ -75,7 +136,7 @@
     <div class="pagination" style="margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 10px;">
         <!-- 이전 페이지 -->
         {{#hasPrevious}}
-        <a href="?page={{previousPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}" 
+        <a href="?page={{previousPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&subjectName={{searchSubjectName}}&day={{searchDay}}&room={{searchRoom}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">이전</a>
         {{/hasPrevious}}
         {{^hasPrevious}}
@@ -90,7 +151,7 @@
 
         <!-- 다음 페이지 -->
         {{#hasNext}}
-        <a href="?page={{nextPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}" 
+        <a href="?page={{nextPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&subjectName={{searchSubjectName}}&day={{searchDay}}&room={{searchRoom}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">다음</a>
         {{/hasNext}}
         {{^hasNext}}
