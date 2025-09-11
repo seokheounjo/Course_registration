@@ -4,6 +4,10 @@ import com.example.registrationweb.model.Professor;
 import com.example.registrationweb.model.Subject;
 import com.example.registrationweb.repository.ProfessorRepository;
 import com.example.registrationweb.repository.SubjectRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,13 @@ public class SubjectService {
     @Transactional(readOnly = true)
     public List<Subject> getAllSubjects() {
         return subjectRepository.findAll();
+    }
+    
+    @Transactional(readOnly = true)
+    public Page<Subject> getAllSubjects(int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return subjectRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)

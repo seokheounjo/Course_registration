@@ -4,6 +4,7 @@ import com.example.registrationweb.model.Subject;
 import com.example.registrationweb.service.ProfessorService;
 import com.example.registrationweb.service.SubjectService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +22,29 @@ public class SubjectController {
     }
 
     @GetMapping
-    public String listSubjects(Model model, HttpSession session) {
+    public String listSubjects(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            Model model, HttpSession session) {
         // 로그인 확인 (관리자만 접근 가능)
         if (!"admin".equals(session.getAttribute("user"))) {
             return "redirect:/login";
         }
 
-        model.addAttribute("subjects", subjectService.getAllSubjects());
+        Page<Subject> subjectsPage = subjectService.getAllSubjects(page, size, sortBy, sortDir);
+        
+        model.addAttribute("subjectsPage", subjectsPage);
+        model.addAttribute("subjects", subjectsPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", subjectsPage.getTotalPages());
+        model.addAttribute("totalItems", subjectsPage.getTotalElements());
+        model.addAttribute("size", size);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        
         return "subjects/list";
     }
 
