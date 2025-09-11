@@ -190,11 +190,14 @@ public class StudentController {
         }
 
         // 수강 신청
+        System.out.println("DEBUG CONTROLLER: Starting enrollment - Student: " + student.getName() + " (ID: " + student.getId() + "), Timetable: " + timetableId);
         Enrollment enrollment = enrollmentService.enrollSubject(student.getId(), timetableId);
 
         if (enrollment != null) {
+            System.out.println("DEBUG CONTROLLER: Enrollment successful - ID: " + enrollment.getId());
             redirectAttributes.addFlashAttribute("successMessage", "수강 신청이 완료되었습니다.");
         } else {
+            System.out.println("DEBUG CONTROLLER: Enrollment failed");
             redirectAttributes.addFlashAttribute("errorMessage", "수강 신청에 실패했습니다. 이미 수강 중이거나 시간이 겹치는 과목입니다.");
         }
 
@@ -338,5 +341,24 @@ public class StudentController {
         model.addAttribute("student", student);
 
         return "student/timetable";
+    }
+    
+    // 디버그용 API - enrollment 데이터 조회
+    @GetMapping("/api/debug/enrollments")
+    @ResponseBody
+    public List<Enrollment> debugEnrollments(HttpSession session) {
+        if (!"student".equals(session.getAttribute("user"))) {
+            return List.of();
+        }
+        
+        Student student = studentService.getStudentByStudentId((String) session.getAttribute("username"));
+        if (student == null) {
+            return List.of();
+        }
+        
+        List<Enrollment> enrollments = enrollmentService.getEnrollmentsByStudentId(student.getId());
+        System.out.println("DEBUG API: Found " + enrollments.size() + " enrollments for student " + student.getName());
+        
+        return enrollments;
     }
 }
