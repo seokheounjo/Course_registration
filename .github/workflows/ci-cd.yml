@@ -102,7 +102,7 @@ jobs:
           echo "Installing MySQL client only..."
           export DEBIAN_FRONTEND=noninteractive
           sudo apt-get update -qq
-          sudo apt-get install -y -qq mysql-client-core-8.0 --no-install-recommends
+          sudo apt-get install -y -qq mysql-client --no-install-recommends
         fi
         
         if ! command -v java &> /dev/null; then
