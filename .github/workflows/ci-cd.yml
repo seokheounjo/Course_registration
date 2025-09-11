@@ -37,6 +37,17 @@ jobs:
       
     - name: Build application
       run: ./gradlew build -x test
+      
+    - name: Create Release with JAR
+      if: github.ref == 'refs/heads/main'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # Create or update release
+        gh release delete latest --yes 2>/dev/null || true
+        gh release create latest build/libs/registrationweb-0.0.1-SNAPSHOT.jar \
+          --title "Latest Build" \
+          --notes "Auto-generated release with latest JAR file"
 
   deploy:
     needs: test
@@ -74,13 +85,23 @@ jobs:
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-          # Install Git and Java if not exists
-          sudo apt update -y
-          sudo apt install -y git openjdk-17-jdk
+          # Clean up disk space first
+          sudo apt clean
+          sudo apt autoremove -y
+          sudo rm -rf /var/cache/apt/*
+          sudo rm -rf /tmp/*
+          sudo docker system prune -af || true
           
           # Stop existing application
           sudo pkill -f "java.*registrationweb" || true
           sudo pkill -f "course-registration" || true
+          
+          # Check if Java is already installed
+          if ! java -version 2>/dev/null; then
+            # Install minimal Java without GUI components
+            sudo apt update
+            sudo apt install -y --no-install-recommends openjdk-17-jre-headless
+          fi
           
           # Clone or update repository
           if [ -d "/home/ubuntu/Course_registration" ]; then
@@ -89,16 +110,20 @@ jobs:
             git reset --hard origin/main
           else
             cd /home/ubuntu
-            git clone https://github.com/seokheounjo/Course_registration.git
+            git clone --depth 1 https://github.com/seokheounjo/Course_registration.git
             cd Course_registration
           fi
           
-          # Make gradlew executable and build
-          chmod +x gradlew
-          ./gradlew build -x test
+          # Use pre-built JAR from GitHub Actions instead of building on EC2
+          wget -O app.jar https://github.com/seokheounjo/Course_registration/releases/latest/download/registrationweb-0.0.1-SNAPSHOT.jar || {
+            # Fallback: build on EC2 if download fails
+            chmod +x gradlew
+            ./gradlew build -x test
+            cp build/libs/registrationweb-0.0.1-SNAPSHOT.jar app.jar
+          }
           
           # Run new application
-          nohup java -jar build/libs/registrationweb-0.0.1-SNAPSHOT.jar \
+          nohup java -jar app.jar \
             --spring.profiles.active=prod \
             --spring.datasource.url=jdbc:mysql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC \
             --spring.datasource.username=${{ secrets.DB_USERNAME }} \
@@ -109,8 +134,9 @@ jobs:
           sleep 10
           
           # Check if application started
-          if pgrep -f "registrationweb" > /dev/null; then
+          if pgrep -f "registrationweb\|app.jar" > /dev/null; then
             echo "Application started successfully"
+            tail -5 /tmp/app.log
           else
             echo "Application failed to start. Log:"
             tail -20 /tmp/app.log
