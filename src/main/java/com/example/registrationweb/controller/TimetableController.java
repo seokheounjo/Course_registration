@@ -50,6 +50,15 @@ public class TimetableController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         
+        // 페이지네이션을 위한 추가 계산
+        model.addAttribute("hasPrevious", page > 0);
+        model.addAttribute("hasNext", page < timetablesPage.getTotalPages() - 1);
+        model.addAttribute("previousPage", Math.max(0, page - 1));
+        model.addAttribute("nextPage", Math.min(timetablesPage.getTotalPages() - 1, page + 1));
+        model.addAttribute("currentPageDisplay", page + 1);
+        model.addAttribute("startItem", page * size + 1);
+        model.addAttribute("endItem", Math.min((page + 1) * size, (int) timetablesPage.getTotalElements()));
+        
         return "timetable/list";
     }
 

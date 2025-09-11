@@ -26,7 +26,7 @@
 <!-- 메인 콘텐츠 -->
 <div class="main-content container">
     <div class="header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h1 class="page-title">시간표 목록</h1>
+        <h1 class="page-title">시간표 목록 (총 {{totalItems}}개)</h1>
         <div>
             <a href="/timetable/new" class="btn btn-primary">새 시간표 추가</a>
             <a href="/admin" class="btn" style="background-color: #555; color: white;">관리자 메인으로</a>
@@ -62,8 +62,42 @@
                 </td>
             </tr>
         {{/timetables}}
+        {{^timetables}}
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 40px; color: #666;">등록된 시간표가 없습니다.</td>
+            </tr>
+        {{/timetables}}
         </tbody>
     </table>
+
+    <!-- 페이지네이션 -->
+    {{#totalPages}}
+    <div class="pagination" style="margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+        <!-- 이전 페이지 -->
+        {{#hasPrevious}}
+        <a href="?page={{previousPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}" 
+           class="btn" style="background-color: #f8f9fa; color: #333;">이전</a>
+        {{/hasPrevious}}
+        {{^hasPrevious}}
+        <span class="btn" style="background-color: #e9ecef; color: #6c757d; cursor: not-allowed;">이전</span>
+        {{/hasPrevious}}
+
+        <!-- 페이지 번호 -->
+        <span style="margin: 0 20px; font-weight: bold;">
+            {{currentPageDisplay}} / {{totalPages}} 페이지 
+            ({{startItem}} - {{endItem}} / {{totalItems}}개)
+        </span>
+
+        <!-- 다음 페이지 -->
+        {{#hasNext}}
+        <a href="?page={{nextPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}" 
+           class="btn" style="background-color: #f8f9fa; color: #333;">다음</a>
+        {{/hasNext}}
+        {{^hasNext}}
+        <span class="btn" style="background-color: #e9ecef; color: #6c757d; cursor: not-allowed;">다음</span>
+        {{/hasNext}}
+    </div>
+    {{/totalPages}}
 </div>
 
 <!-- 푸터 이미지 -->

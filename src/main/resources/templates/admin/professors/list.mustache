@@ -36,29 +36,25 @@
     <!-- 검색 폼 -->
     <div class="search-container" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
         <form method="get" action="/admin/professors" style="display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
-            <div style="display: flex; flex-direction: column;">
-                <label for="name" style="margin-bottom: 5px; font-weight: bold;">이름:</label>
+            <div>
                 <input type="text" id="name" name="name" value="{{searchName}}" placeholder="교수 이름" 
                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
             </div>
-            <div style="display: flex; flex-direction: column;">
-                <label for="department" style="margin-bottom: 5px; font-weight: bold;">학과:</label>
+            <div>
                 <input type="text" id="department" name="department" value="{{searchDepartment}}" placeholder="학과명" 
                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
             </div>
-            <div style="display: flex; flex-direction: column;">
-                <label for="size" style="margin-bottom: 5px; font-weight: bold;">페이지 크기:</label>
+            <div>
                 <select id="size" name="size" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                    <option value="10" {{#equals size 10}}selected{{/equals}}>10개씩</option>
-                    <option value="20" {{#equals size 20}}selected{{/equals}}>20개씩</option>
-                    <option value="50" {{#equals size 50}}selected{{/equals}}>50개씩</option>
+                    <option value="10">10개씩</option>
+                    <option value="20" selected>20개씩</option>
+                    <option value="50">50개씩</option>
                 </select>
             </div>
             <div style="display: flex; gap: 10px;">
                 <button type="submit" class="btn btn-primary">검색</button>
                 <a href="/admin/professors" class="btn" style="background-color: #6c757d; color: white;">초기화</a>
             </div>
-            <!-- 숨겨진 정렬 필드 -->
             <input type="hidden" name="sortBy" value="{{sortBy}}">
             <input type="hidden" name="sortDir" value="{{sortDir}}">
         </form>
@@ -70,19 +66,19 @@
             <th>
                 <a href="?sortBy=id&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&department={{searchDepartment}}" 
                    style="color: inherit; text-decoration: none;">
-                    ID {{#equals sortBy "id"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
+                    ID
                 </a>
             </th>
             <th>
                 <a href="?sortBy=name&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&department={{searchDepartment}}" 
                    style="color: inherit; text-decoration: none;">
-                    이름 {{#equals sortBy "name"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
+                    이름
                 </a>
             </th>
             <th>
                 <a href="?sortBy=department&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&department={{searchDepartment}}" 
                    style="color: inherit; text-decoration: none;">
-                    학과 {{#equals sortBy "department"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
+                    학과
                 </a>
             </th>
             <th>이메일</th>

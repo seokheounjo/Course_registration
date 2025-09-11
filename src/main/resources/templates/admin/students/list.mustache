@@ -36,28 +36,24 @@
     <!-- 검색 폼 -->
     <div class="search-container" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
         <form method="get" action="/admin/students" style="display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
-            <div style="display: flex; flex-direction: column;">
-                <label for="grade" style="margin-bottom: 5px; font-weight: bold;">학년:</label>
+            <div>
                 <select id="grade" name="grade" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                    <option value="">전체</option>
+                    <option value="">전체 학년</option>
                     <option value="1">1학년</option>
                     <option value="2">2학년</option>
                     <option value="3">3학년</option>
                     <option value="4">4학년</option>
                 </select>
             </div>
-            <div style="display: flex; flex-direction: column;">
-                <label for="name" style="margin-bottom: 5px; font-weight: bold;">이름:</label>
+            <div>
                 <input type="text" id="name" name="name" value="{{searchName}}" placeholder="학생 이름" 
                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
             </div>
-            <div style="display: flex; flex-direction: column;">
-                <label for="studentId" style="margin-bottom: 5px; font-weight: bold;">학번:</label>
+            <div>
                 <input type="text" id="studentId" name="studentId" value="{{searchStudentId}}" placeholder="학번" 
                        style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
             </div>
-            <div style="display: flex; flex-direction: column;">
-                <label for="size" style="margin-bottom: 5px; font-weight: bold;">페이지 크기:</label>
+            <div>
                 <select id="size" name="size" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                     <option value="10">10개씩</option>
                     <option value="20" selected>20개씩</option>
@@ -68,7 +64,6 @@
                 <button type="submit" class="btn btn-primary">검색</button>
                 <a href="/admin/students" class="btn" style="background-color: #6c757d; color: white;">초기화</a>
             </div>
-            <!-- 숨겨진 정렬 필드 -->
             <input type="hidden" name="sortBy" value="{{sortBy}}">
             <input type="hidden" name="sortDir" value="{{sortDir}}">
         </form>
