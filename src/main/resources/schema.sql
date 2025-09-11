@@ -65,6 +65,19 @@ CREATE TABLE IF NOT EXISTS registrations (
     UNIQUE (student_id, subject_id)
 );
 
+CREATE TABLE IF NOT EXISTS enrollments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    student_id BIGINT NOT NULL,
+    subject_id BIGINT NOT NULL,
+    timetable_id BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+    FOREIGN KEY (timetable_id) REFERENCES timetables(id) ON DELETE CASCADE,
+    UNIQUE (student_id, subject_id)
+);
+
 CREATE TABLE IF NOT EXISTS syllabi (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     subject_id BIGINT NOT NULL,
@@ -84,3 +97,6 @@ CREATE INDEX idx_subjects_target_grade ON subjects(target_grade);
 CREATE INDEX idx_timetables_subject ON timetables(subject_id);
 CREATE INDEX idx_registrations_student ON registrations(student_id);
 CREATE INDEX idx_registrations_subject ON registrations(subject_id);
+CREATE INDEX idx_enrollments_student ON enrollments(student_id);
+CREATE INDEX idx_enrollments_subject ON enrollments(subject_id);
+CREATE INDEX idx_enrollments_timetable ON enrollments(timetable_id);
