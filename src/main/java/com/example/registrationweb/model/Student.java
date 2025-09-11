@@ -19,6 +19,9 @@ public class Student {
     @NotBlank(message = "이름은 필수 입력 항목입니다")
     private String name;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
     private String department;
 
     @NotBlank(message = "비밀번호는 필수 입력 항목입니다")
@@ -30,10 +33,11 @@ public class Student {
     public Student() {
     }
 
-    public Student(Long id, String studentId, String name, String department, String password, String grade) {
+    public Student(Long id, String studentId, String name, String email, String department, String password, String grade) {
         this.id = id;
         this.studentId = studentId;
         this.name = name;
+        this.email = email;
         this.department = department;
         this.password = password;
         this.grade = grade;
@@ -61,6 +65,14 @@ public class Student {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDepartment() {

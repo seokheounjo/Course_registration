@@ -42,13 +42,16 @@ CREATE TABLE IF NOT EXISTS subjects (
 CREATE TABLE IF NOT EXISTS timetables (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     subject_id BIGINT NOT NULL,
-    day_of_week VARCHAR(10) NOT NULL,
+    professor_id BIGINT,
+    class_day VARCHAR(10) NOT NULL,
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
-    classroom VARCHAR(50),
+    room VARCHAR(50),
+    capacity INT DEFAULT 30,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+    FOREIGN KEY (professor_id) REFERENCES professors(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS registrations (

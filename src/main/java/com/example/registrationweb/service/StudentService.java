@@ -21,9 +21,9 @@ public class StudentService {
 
         // 초기 데이터 로드 (DB가 비어있을 경우에만)
         if (studentRepository.count() == 0) {
-            saveStudent(new Student(null, "20250095", "김규석", "컴퓨터공학과", "20250095", "1"));
-            saveStudent(new Student(null, "20250096", "김철수", "전자공학과", "20250096", "2"));
-            saveStudent(new Student(null, "20250097", "이영희", "경영학과", "20250097", "3"));
+            saveStudent(new Student(null, "20250095", "김규석", "s20250095@univ.ac.kr", "컴퓨터공학과", "20250095", "1"));
+            saveStudent(new Student(null, "20250096", "김철수", "s20250096@univ.ac.kr", "전자공학과", "20250096", "2"));
+            saveStudent(new Student(null, "20250097", "이영희", "s20250097@univ.ac.kr", "경영학과", "20250097", "3"));
         }
     }
 
