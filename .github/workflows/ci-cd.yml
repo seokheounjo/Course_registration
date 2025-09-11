@@ -110,6 +110,14 @@ jobs:
           sudo apt-get install -y -qq openjdk-17-jre-headless --no-install-recommends
         fi
         
+        # Install MySQL client first
+        if ! command -v mysql &> /dev/null; then
+          echo "Installing MySQL client..."
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq mysql-client --no-install-recommends
+        fi
+        
         # Update RDS with new data
         echo "Updating RDS database..."
         mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} -e "DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};" 2>/dev/null
