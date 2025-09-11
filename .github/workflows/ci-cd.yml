@@ -62,24 +62,39 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y mysql-client
     
-    - name: Upload data to RDS directly
+    - name: Upload data to RDS via EC2
       env:
+        PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+        HOSTNAME: ${{ secrets.EC2_HOSTNAME }}
+        USER_NAME: ubuntu
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_USERNAME: ${{ secrets.DB_USERNAME }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_NAME: ${{ secrets.DB_NAME }}
       run: |
-        echo "Connecting to RDS and uploading data..."
-        # First, recreate the database schema
-        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} -e "DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};"
+        echo "Uploading data to RDS via EC2..."
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         
-        # Upload schema
-        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < src/main/resources/schema.sql
+        # Transfer SQL files to EC2
+        scp -o StrictHostKeyChecking=no -i private_key src/main/resources/schema.sql ${USER_NAME}@${HOSTNAME}:/tmp/
+        scp -o StrictHostKeyChecking=no -i private_key src/main/resources/data.sql ${USER_NAME}@${HOSTNAME}:/tmp/
         
-        # Upload data
-        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < src/main/resources/data.sql
-        
-        echo "Data uploaded successfully to RDS!"
+        # Execute RDS commands from EC2
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} "
+          # Install MySQL client if not present
+          if ! command -v mysql &> /dev/null; then
+            sudo apt update && sudo apt install -y mysql-client
+          fi
+          
+          # Recreate database
+          mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} -e 'DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};'
+          
+          # Upload schema and data
+          mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < /tmp/schema.sql
+          mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < /tmp/data.sql
+          
+          echo 'Data uploaded successfully to RDS via EC2!'
+        "
 
   deploy:
     needs: upload-data-to-rds
