@@ -40,10 +40,10 @@
                 <label for="grade" style="margin-bottom: 5px; font-weight: bold;">학년:</label>
                 <select id="grade" name="grade" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                     <option value="">전체</option>
-                    <option value="1" {{#searchGrade}}{{#equals searchGrade "1"}}selected{{/equals}}{{/searchGrade}}>1학년</option>
-                    <option value="2" {{#searchGrade}}{{#equals searchGrade "2"}}selected{{/equals}}{{/searchGrade}}>2학년</option>
-                    <option value="3" {{#searchGrade}}{{#equals searchGrade "3"}}selected{{/equals}}{{/searchGrade}}>3학년</option>
-                    <option value="4" {{#searchGrade}}{{#equals searchGrade "4"}}selected{{/equals}}{{/searchGrade}}>4학년</option>
+                    <option value="1">1학년</option>
+                    <option value="2">2학년</option>
+                    <option value="3">3학년</option>
+                    <option value="4">4학년</option>
                 </select>
             </div>
             <div style="display: flex; flex-direction: column;">
@@ -59,9 +59,9 @@
             <div style="display: flex; flex-direction: column;">
                 <label for="size" style="margin-bottom: 5px; font-weight: bold;">페이지 크기:</label>
                 <select id="size" name="size" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                    <option value="10" {{#equals size 10}}selected{{/equals}}>10개씩</option>
-                    <option value="20" {{#equals size 20}}selected{{/equals}}>20개씩</option>
-                    <option value="50" {{#equals size 50}}selected{{/equals}}>50개씩</option>
+                    <option value="10">10개씩</option>
+                    <option value="20" selected>20개씩</option>
+                    <option value="50">50개씩</option>
                 </select>
             </div>
             <div style="display: flex; gap: 10px;">
@@ -80,31 +80,31 @@
             <th>
                 <a href="?sortBy=id&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
                    style="color: inherit; text-decoration: none;">
-                    ID {{#equals sortBy "id"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
+                    ID
                 </a>
             </th>
             <th>
                 <a href="?sortBy=studentId&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
                    style="color: inherit; text-decoration: none;">
-                    학번 {{#equals sortBy "studentId"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
+                    학번
                 </a>
             </th>
             <th>
                 <a href="?sortBy=name&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
                    style="color: inherit; text-decoration: none;">
-                    이름 {{#equals sortBy "name"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
+                    이름
                 </a>
             </th>
             <th>
                 <a href="?sortBy=department&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
                    style="color: inherit; text-decoration: none;">
-                    학과 {{#equals sortBy "department"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
+                    학과
                 </a>
             </th>
             <th>
                 <a href="?sortBy=grade&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
                    style="color: inherit; text-decoration: none;">
-                    학년 {{#equals sortBy "grade"}}{{#equals sortDir "asc"}}↑{{/equals}}{{#equals sortDir "desc"}}↓{{/equals}}{{/equals}}
+                    학년
                 </a>
             </th>
             <th>관리</th>
@@ -136,23 +136,23 @@
     {{#totalPages}}
     <div class="pagination" style="margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 10px;">
         <!-- 이전 페이지 -->
-        {{#currentPage}}
-        <a href="?page={{#minus currentPage 1}}{{/minus}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
+        {{#hasPrevious}}
+        <a href="?page={{previousPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">이전</a>
-        {{/currentPage}}
-        {{^currentPage}}
+        {{/hasPrevious}}
+        {{^hasPrevious}}
         <span class="btn" style="background-color: #e9ecef; color: #6c757d; cursor: not-allowed;">이전</span>
-        {{/currentPage}}
+        {{/hasPrevious}}
 
         <!-- 페이지 번호 -->
         <span style="margin: 0 20px; font-weight: bold;">
-            {{#plus currentPage 1}}{{/plus}} / {{totalPages}} 페이지 
-            ({{#plus currentPage 1}}{{/plus}} - {{#multiply size currentPage}}{{#plus . size}}{{/plus}}{{/multiply}} / {{totalItems}}개)
+            {{currentPageDisplay}} / {{totalPages}} 페이지 
+            ({{startItem}} - {{endItem}} / {{totalItems}}개)
         </span>
 
         <!-- 다음 페이지 -->
         {{#hasNext}}
-        <a href="?page={{#plus currentPage 1}}{{/plus}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
+        <a href="?page={{nextPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&grade={{searchGrade}}&name={{searchName}}&studentId={{searchStudentId}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">다음</a>
         {{/hasNext}}
         {{^hasNext}}
