@@ -142,6 +142,15 @@ public class StudentController {
 
         // 현재 수강 중인 과목 정보도 가져와서 전달
         List<Enrollment> enrollments = enrollmentService.getEnrollmentsByStudentId(student.getId());
+        
+        // 디버깅 로그 추가
+        System.out.println("DEBUG: Student ID = " + student.getId());
+        System.out.println("DEBUG: Enrollments count = " + enrollments.size());
+        for (Enrollment e : enrollments) {
+            System.out.println("DEBUG: Enrollment - Subject: " + 
+                (e.getSubject() != null ? e.getSubject().getName() : "NULL") +
+                ", Timetable: " + (e.getTimetable() != null ? e.getTimetable().getDay() : "NULL"));
+        }
 
         model.addAttribute("timetables", timetables);
         model.addAttribute("enrollments", enrollments);
@@ -315,6 +324,16 @@ public class StudentController {
 
         // 수강 신청 내역 가져오기
         List<Enrollment> enrollments = enrollmentService.getEnrollmentsByStudentId(student.getId());
+        
+        // 디버깅 로그 추가
+        System.out.println("DEBUG TIMETABLE: Student ID = " + student.getId());
+        System.out.println("DEBUG TIMETABLE: Enrollments count = " + enrollments.size());
+        for (Enrollment e : enrollments) {
+            System.out.println("DEBUG TIMETABLE: Enrollment - Subject: " + 
+                (e.getSubject() != null ? e.getSubject().getName() : "NULL") +
+                ", Timetable: " + (e.getTimetable() != null ? e.getTimetable().getDay() : "NULL"));
+        }
+        
         model.addAttribute("enrollments", enrollments);
         model.addAttribute("student", student);
 
