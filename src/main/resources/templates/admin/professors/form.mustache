@@ -69,25 +69,25 @@
     <div class="form-container">
         <h2 class="form-title">교수 {{^isNew}}수정{{/isNew}}{{#isNew}}추가{{/isNew}}</h2>
 
-        <form method="post" action="{{^isNew}}/admin/professors/{{id}}{{/isNew}}{{#isNew}}/admin/professors{{/isNew}}">
+        <form method="post" action="{{^isNew}}/admin/professors/{{professor.id}}{{/isNew}}{{#isNew}}/admin/professors{{/isNew}}">
             <div class="form-group">
                 <label for="name">이름:</label>
-                <input type="text" id="name" name="name" value="{{name}}" class="form-control" required>
+                <input type="text" id="name" name="name" value="{{professor.name}}" class="form-control" required>
             </div>
 
             <div class="form-group">
                 <label for="department">학과:</label>
-                <input type="text" id="department" name="department" value="{{department}}" class="form-control" required>
+                <input type="text" id="department" name="department" value="{{professor.department}}" class="form-control" required>
             </div>
 
             <div class="form-group">
                 <label for="email">이메일:</label>
-                <input type="email" id="email" name="email" value="{{email}}" class="form-control" required>
+                <input type="email" id="email" name="email" value="{{professor.email}}" class="form-control" required>
             </div>
 
             <div class="form-group">
                 <label for="phone">전화번호:</label>
-                <input type="text" id="phone" name="phone" value="{{phone}}" class="form-control" required>
+                <input type="text" id="phone" name="phone" value="{{professor.phone}}" class="form-control" required>
             </div>
 
             <div class="form-buttons">
