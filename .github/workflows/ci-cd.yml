@@ -49,7 +49,7 @@ jobs:
         name: application-jar
         path: build/libs/registrationweb-0.0.1-SNAPSHOT.jar
 
-  upload-data-to-rds:
+  prepare-deployment:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -57,143 +57,100 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Install MySQL client
+    - name: Create deployment package
       run: |
-        sudo apt-get update
-        sudo apt-get install -y mysql-client
+        # Create minimal deployment package
+        mkdir -p deploy
+        cp build/libs/registrationweb-0.0.1-SNAPSHOT.jar deploy/app.jar
+        cp src/main/resources/schema.sql deploy/
+        cp src/main/resources/data.sql deploy/
+        
+        # Create deployment script
+        cat > deploy/deploy.sh << 'EOF'
+        #!/bin/bash
+        set -e
+        
+        echo "=== Minimal Deployment Script ==="
+        
+        # Stop existing application
+        sudo pkill -f "java.*app.jar" || true
+        
+        # Install only essential packages
+        if ! command -v mysql &> /dev/null; then
+          echo "Installing MySQL client only..."
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq mysql-client-core-8.0 --no-install-recommends
+        fi
+        
+        if ! command -v java &> /dev/null; then
+          echo "Installing minimal Java runtime..."
+          sudo apt-get install -y -qq openjdk-17-jre-headless --no-install-recommends
+        fi
+        
+        # Update RDS with new data
+        echo "Updating RDS database..."
+        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} -e "DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};" 2>/dev/null
+        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < schema.sql 2>/dev/null
+        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < data.sql 2>/dev/null
+        
+        # Start application with RDS connection
+        echo "Starting application..."
+        nohup java -Xmx256m -jar app.jar \
+          --spring.profiles.active=prod \
+          --spring.datasource.url=jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC \
+          --spring.datasource.username=${DB_USERNAME} \
+          --spring.datasource.password=${DB_PASSWORD} \
+          --server.port=8087 > app.log 2>&1 &
+        
+        # Wait and verify
+        sleep 15
+        if pgrep -f "app.jar" > /dev/null; then
+          echo "✅ Application started successfully"
+          tail -5 app.log
+        else
+          echo "❌ Application failed to start"
+          tail -20 app.log
+          exit 1
+        fi
+        EOF
+        
+        chmod +x deploy/deploy.sh
     
-    - name: Upload data to RDS via EC2
+    - name: Upload deployment package
+      uses: actions/upload-artifact@v4
+      with:
+        name: deployment-package
+        path: deploy/
+
+  deploy:
+    needs: prepare-deployment
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Download deployment package
+      uses: actions/download-artifact@v4
+      with:
+        name: deployment-package
+        path: deploy/
+        
+    - name: Deploy to EC2 (Minimal)
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         HOSTNAME: ${{ secrets.EC2_HOSTNAME }}
         USER_NAME: ubuntu
         DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: ${{ secrets.DB_PORT }}
+        DB_NAME: ${{ secrets.DB_NAME }}
         DB_USERNAME: ${{ secrets.DB_USERNAME }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-      run: |
-        echo "Uploading data to RDS via EC2..."
-        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        
-        # Transfer SQL files to EC2
-        scp -o StrictHostKeyChecking=no -i private_key src/main/resources/schema.sql ${USER_NAME}@${HOSTNAME}:/tmp/
-        scp -o StrictHostKeyChecking=no -i private_key src/main/resources/data.sql ${USER_NAME}@${HOSTNAME}:/tmp/
-        
-        # Execute RDS commands from EC2
-        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} "
-          # Install MySQL client if not present
-          if ! command -v mysql &> /dev/null; then
-            sudo apt update && sudo apt install -y mysql-client
-          fi
-          
-          # Recreate database
-          mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} -e 'DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};'
-          
-          # Upload schema and data
-          mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < /tmp/schema.sql
-          mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < /tmp/data.sql
-          
-          echo 'Data uploaded successfully to RDS via EC2!'
-        "
-
-  deploy:
-    needs: upload-data-to-rds
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        
-    - name: Cache Gradle packages
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-          
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      
-    - name: Deploy to EC2
-      env:
-        PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-        HOSTNAME: ${{ secrets.EC2_HOSTNAME }}
-        USER_NAME: ubuntu
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         
-        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-          # Clean up disk space first
-          sudo apt clean
-          sudo apt autoremove -y
-          sudo rm -rf /var/cache/apt/*
-          sudo rm -rf /tmp/*
-          sudo docker system prune -af || true
-          
-          # Stop existing application
-          sudo pkill -f "java.*registrationweb" || true
-          sudo pkill -f "course-registration" || true
-          
-          # Check if Java is already installed
-          if ! java -version 2>/dev/null; then
-            # Install minimal Java without GUI components
-            sudo apt update
-            sudo apt install -y --no-install-recommends openjdk-17-jre-headless
-          fi
-          
-          # Clone or update repository
-          if [ -d "/home/ubuntu/Course_registration" ]; then
-            cd /home/ubuntu/Course_registration
-            git fetch origin
-            git reset --hard origin/main
-          else
-            cd /home/ubuntu
-            git clone --depth 1 https://github.com/seokheounjo/Course_registration.git
-            cd Course_registration
-          fi
-          
-          # Download pre-built JAR from previous workflow step
-          # Since RDS already has the data, we just need the application
-          if [ -f "app.jar" ]; then
-            rm app.jar
-          fi
-          
-          # Simple fallback - build minimal JAR without data.sql execution
-          if [ -d "/home/ubuntu/Course_registration" ]; then
-            cd /home/ubuntu/Course_registration
-            chmod +x gradlew
-            ./gradlew clean build -x test --no-daemon --max-workers=1
-            cp build/libs/registrationweb-0.0.1-SNAPSHOT.jar app.jar
-          else
-            echo "Repository not found, using existing JAR or downloading"
-          fi
-          
-          # Run new application
-          nohup java -jar app.jar \
-            --spring.profiles.active=prod \
-            --spring.datasource.url=jdbc:mysql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC \
-            --spring.datasource.username=${{ secrets.DB_USERNAME }} \
-            --spring.datasource.password=${{ secrets.DB_PASSWORD }} \
-            --server.port=8087 > /tmp/app.log 2>&1 &
-            
-          # Wait a bit for startup
-          sleep 10
-          
-          # Check if application started
-          if pgrep -f "registrationweb\|app.jar" > /dev/null; then
-            echo "Application started successfully"
-            tail -5 /tmp/app.log
-          else
-            echo "Application failed to start. Log:"
-            tail -20 /tmp/app.log
-          fi
-        '
+        # Transfer only essential files
+        scp -o StrictHostKeyChecking=no -i private_key deploy/* ${USER_NAME}@${HOSTNAME}:/tmp/
+        
+        # Execute deployment script on EC2
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} \
+          "cd /tmp && DB_HOST=${DB_HOST} DB_PORT=${DB_PORT} DB_NAME=${DB_NAME} DB_USERNAME=${DB_USERNAME} DB_PASSWORD=${DB_PASSWORD} bash deploy.sh"
