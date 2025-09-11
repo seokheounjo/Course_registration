@@ -97,6 +97,15 @@ public class Subject {
         return professor != null ? professor.getId() : null;
     }
 
+    public void setProfessorId(Long professorId) {
+        if (professorId != null) {
+            this.professor = new Professor();
+            this.professor.setId(professorId);
+        } else {
+            this.professor = null;
+        }
+    }
+
     public String getProfessorName() {
         return professor != null ? professor.getName() : professorName;
     }
