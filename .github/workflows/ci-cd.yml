@@ -68,29 +68,22 @@ jobs:
     - name: Build application
       run: ./gradlew build -x test
       
-    - name: Login to DockerHub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/course-registration:latest
-          ${{ secrets.DOCKERHUB_USERNAME }}/course-registration:${{ github.sha }}
+    - name: Build Docker image locally
+      run: |
+        docker build -t course-registration:latest .
         
     - name: Deploy to EC2
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
         HOSTNAME: ${{ secrets.EC2_HOSTNAME }}
         USER_NAME: ubuntu
-        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        
+        # Save and transfer Docker image
+        docker save course-registration:latest | gzip > course-registration.tar.gz
+        scp -o StrictHostKeyChecking=no -i private_key course-registration.tar.gz ${USER_NAME}@${HOSTNAME}:/tmp/
+        
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
           # Install Docker if not exists
           if ! command -v docker &> /dev/null; then
@@ -104,9 +97,12 @@ jobs:
           # Stop and remove existing container
           sudo docker stop course-registration || true
           sudo docker rm course-registration || true
+          sudo docker rmi course-registration:latest || true
           
-          # Pull and run new image
-          sudo docker pull '$DOCKERHUB_USERNAME'/course-registration:latest
+          # Load new image
+          sudo docker load -i /tmp/course-registration.tar.gz
+          
+          # Run new container
           sudo docker run -d --name course-registration -p 80:8087 \
             -e SPRING_PROFILES_ACTIVE=prod \
             -e DB_HOST=${{ secrets.DB_HOST }} \
@@ -115,5 +111,8 @@ jobs:
             -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
             -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             -v /home/ubuntu/uploads:/app/uploads \
-            '$DOCKERHUB_USERNAME'/course-registration:latest
+            course-registration:latest
+            
+          # Clean up
+          rm /tmp/course-registration.tar.gz
         '
