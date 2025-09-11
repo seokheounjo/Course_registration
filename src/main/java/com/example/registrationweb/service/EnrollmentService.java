@@ -44,7 +44,7 @@ public class EnrollmentService {
     @Transactional(readOnly = true)
     public List<Enrollment> getEnrollmentsByStudentId(Long studentId) {
         Optional<Student> student = studentRepository.findById(studentId);
-        return student.map(enrollmentRepository::findByStudent)
+        return student.map(enrollmentRepository::findByStudentWithDetails)
                 .orElse(List.of());
     }
 
