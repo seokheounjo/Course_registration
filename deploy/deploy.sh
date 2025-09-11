@@ -26,9 +26,37 @@ if mysql -h "$DB_HOST" -P "$DB_PORT" -u "$DB_USERNAME" -p"$DB_PASSWORD" -e "SELE
     # Step 5: Start application with RDS
     echo "Step 5: Starting application with RDS..."
     
-    # Kill any existing Java processes
+    # Kill any existing Java processes more aggressively
+    echo "Terminating existing Java processes..."
+    
+    # First, try graceful termination
     pkill -f 'java.*app.jar' || true
-    sleep 2
+    sleep 3
+    
+    # Check if any processes are still running and force kill if necessary
+    REMAINING_PIDS=$(pgrep -f 'java.*app.jar' || true)
+    if [ ! -z "$REMAINING_PIDS" ]; then
+        echo "Force killing remaining Java processes: $REMAINING_PIDS"
+        pkill -9 -f 'java.*app.jar' || true
+        sleep 2
+    fi
+    
+    # Check if port 8087 is still in use and kill the process using it
+    PORT_PID=$(lsof -ti:8087 || true)
+    if [ ! -z "$PORT_PID" ]; then
+        echo "Killing process using port 8087: $PORT_PID"
+        kill -9 $PORT_PID || true
+        sleep 2
+    fi
+    
+    # Final verification that port 8087 is free
+    if lsof -ti:8087 > /dev/null 2>&1; then
+        echo "❌ Port 8087 is still in use after cleanup attempts"
+        lsof -i:8087
+        exit 1
+    fi
+    
+    echo "✅ Port 8087 is now available"
     
     # Start the application with proper Spring profiles and datasource configuration
     nohup java -Xmx512m -Xms256m -jar app.jar \
@@ -76,9 +104,37 @@ else
     echo "❌ RDS connection failed"
     echo "Starting with H2 fallback..."
     
-    # Kill any existing Java processes
+    # Kill any existing Java processes more aggressively
+    echo "Terminating existing Java processes..."
+    
+    # First, try graceful termination
     pkill -f 'java.*app.jar' || true
-    sleep 2
+    sleep 3
+    
+    # Check if any processes are still running and force kill if necessary
+    REMAINING_PIDS=$(pgrep -f 'java.*app.jar' || true)
+    if [ ! -z "$REMAINING_PIDS" ]; then
+        echo "Force killing remaining Java processes: $REMAINING_PIDS"
+        pkill -9 -f 'java.*app.jar' || true
+        sleep 2
+    fi
+    
+    # Check if port 8087 is still in use and kill the process using it
+    PORT_PID=$(lsof -ti:8087 || true)
+    if [ ! -z "$PORT_PID" ]; then
+        echo "Killing process using port 8087: $PORT_PID"
+        kill -9 $PORT_PID || true
+        sleep 2
+    fi
+    
+    # Final verification that port 8087 is free
+    if lsof -ti:8087 > /dev/null 2>&1; then
+        echo "❌ Port 8087 is still in use after cleanup attempts"
+        lsof -i:8087
+        exit 1
+    fi
+    
+    echo "✅ Port 8087 is now available"
     
     # Start with H2 database
     nohup java -jar app.jar \
