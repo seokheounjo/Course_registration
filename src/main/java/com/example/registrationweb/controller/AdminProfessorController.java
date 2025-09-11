@@ -35,13 +35,8 @@ public class AdminProfessorController {
 
         Page<Professor> professorsPage;
         
-        // 검색 조건이 있는 경우
-        if ((name != null && !name.trim().isEmpty()) ||
-            (department != null && !department.trim().isEmpty())) {
-            professorsPage = professorService.searchProfessors(name, department, page, size, sortBy, sortDir);
-        } else {
-            professorsPage = professorService.getAllProfessors(page, size, sortBy, sortDir);
-        }
+        // 모든 경우에 페이지네이션된 목록을 가져옴
+        professorsPage = professorService.getAllProfessors(page, size, sortBy, sortDir);
         
         model.addAttribute("professorsPage", professorsPage);
         model.addAttribute("professors", professorsPage.getContent());

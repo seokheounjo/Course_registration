@@ -36,14 +36,8 @@ public class AdminStudentController {
 
         Page<Student> studentsPage;
         
-        // 검색 조건이 있는 경우
-        if ((grade != null && !grade.trim().isEmpty()) ||
-            (name != null && !name.trim().isEmpty()) ||
-            (studentId != null && !studentId.trim().isEmpty())) {
-            studentsPage = studentService.searchStudents(grade, name, studentId, page, size, sortBy, sortDir);
-        } else {
-            studentsPage = studentService.getAllStudents(page, size, sortBy, sortDir);
-        }
+        // 모든 경우에 페이지네이션된 목록을 가져옴
+        studentsPage = studentService.getAllStudents(page, size, sortBy, sortDir);
         
         model.addAttribute("studentsPage", studentsPage);
         model.addAttribute("students", studentsPage.getContent());
