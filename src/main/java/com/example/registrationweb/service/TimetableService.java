@@ -34,7 +34,22 @@ public class TimetableService {
 
     @Transactional(readOnly = true)
     public List<Timetable> getAllTimetables() {
-        return timetableRepository.findAll();
+        List<Timetable> timetables = timetableRepository.findAllWithDetails();
+        
+        // Force loading of related entities
+        for (Timetable timetable : timetables) {
+            if (timetable.getSubject() != null) {
+                timetable.getSubject().getName(); // Force load
+                if (timetable.getSubject().getProfessor() != null) {
+                    timetable.getSubject().getProfessor().getName(); // Force load
+                }
+            }
+            if (timetable.getProfessor() != null) {
+                timetable.getProfessor().getName(); // Force load
+            }
+        }
+        
+        return timetables;
     }
     
     @Transactional(readOnly = true)

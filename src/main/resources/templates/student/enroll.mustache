@@ -597,13 +597,31 @@
     function displayEnrollmentsOnTimetable() {
         // 기존 등록된 과목 표시
         enrollments.forEach(function(enrollment) {
+            // 디버그 로그 추가
+            console.log("DEBUG PREVIEW: Processing enrollment:", enrollment);
+            
+            // 데이터 접근 방법 수정
+            const startTime = enrollment.startTime || (enrollment.timetable ? enrollment.timetable.startTime : null);
+            const endTime = enrollment.endTime || (enrollment.timetable ? enrollment.timetable.endTime : null);
+            const day = enrollment.day || (enrollment.timetable ? enrollment.timetable.day : null);
+            const subjectName = enrollment.subjectName || (enrollment.subject ? enrollment.subject.name : null);
+            const room = enrollment.room || (enrollment.timetable ? enrollment.timetable.room : null);
+            
+            if (!startTime || !endTime || !day || !subjectName) {
+                console.log("DEBUG PREVIEW: Missing data - startTime:", startTime, "endTime:", endTime, "day:", day, "subjectName:", subjectName);
+                return;
+            }
+
             // 시작 시간과 종료 시간을 시간 단위로 변환
-            const startHour = parseInt(enrollment.startTime.split(':')[0]);
-            const endHour = parseInt(enrollment.endTime.split(':')[0]);
+            const startHour = parseInt(startTime.split(':')[0]);
+            const endHour = parseInt(endTime.split(':')[0]);
 
             // 해당 요일의 접두사 가져오기
-            const prefix = dayPrefix[enrollment.day];
-            if (!prefix) return;
+            const prefix = dayPrefix[day];
+            if (!prefix) {
+                console.log("DEBUG PREVIEW: No prefix for day:", day);
+                return;
+            }
 
             // 시작 시간부터 종료 시간까지 각 시간 셀에 과목 추가
             for (let hour = startHour; hour < endHour; hour++) {
@@ -616,15 +634,17 @@
 
                     const courseName = document.createElement('div');
                     courseName.className = 'course-name';
-                    courseName.textContent = enrollment.subjectName;
+                    courseName.textContent = subjectName;
 
                     const courseRoom = document.createElement('div');
                     courseRoom.className = 'course-room';
-                    courseRoom.textContent = enrollment.room;
+                    courseRoom.textContent = room;
 
                     courseBlock.appendChild(courseName);
                     courseBlock.appendChild(courseRoom);
                     cell.appendChild(courseBlock);
+                    
+                    console.log("DEBUG PREVIEW: Added course to cell", cellId, subjectName);
                 }
             }
         });
