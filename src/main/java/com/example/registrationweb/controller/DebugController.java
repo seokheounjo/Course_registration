@@ -67,6 +67,20 @@ public class DebugController {
             if (student != null) {
                 List<Enrollment> enrollments = enrollmentService.getEnrollmentsByStudentId(student.getId());
                 result.put("existing_enrollments_count", enrollments.size());
+                
+                // 실제 enrollment 데이터 확인
+                if (!enrollments.isEmpty()) {
+                    Enrollment firstEnrollment = enrollments.get(0);
+                    Map<String, Object> enrollmentInfo = new HashMap<>();
+                    enrollmentInfo.put("id", firstEnrollment.getId());
+                    enrollmentInfo.put("student_id", firstEnrollment.getStudent() != null ? firstEnrollment.getStudent().getId() : "NULL");
+                    enrollmentInfo.put("subject_id", firstEnrollment.getSubject() != null ? firstEnrollment.getSubject().getId() : "NULL");
+                    enrollmentInfo.put("subject_name", firstEnrollment.getSubject() != null ? firstEnrollment.getSubject().getName() : "NULL");
+                    enrollmentInfo.put("timetable_id", firstEnrollment.getTimetable() != null ? firstEnrollment.getTimetable().getId() : "NULL");
+                    enrollmentInfo.put("timetable_day", firstEnrollment.getTimetable() != null ? firstEnrollment.getTimetable().getDay() : "NULL");
+                    enrollmentInfo.put("timetable_start", firstEnrollment.getTimetable() != null ? firstEnrollment.getTimetable().getStartTime() : "NULL");
+                    result.put("first_enrollment", enrollmentInfo);
+                }
             }
             
             // 테스트 수강신청 시도
