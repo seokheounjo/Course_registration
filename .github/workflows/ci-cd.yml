@@ -105,9 +105,9 @@ jobs:
         
         # Update RDS with new data
         echo "Updating RDS database..."
-        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} -e "DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};" 2>/dev/null
-        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < schema.sql 2>/dev/null
-        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < data.sql 2>/dev/null
+        mysql -h${DB_HOST} -P${DB_PORT} -u${DB_USERNAME} -p${DB_PASSWORD} -e "DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};"
+        mysql -h${DB_HOST} -P${DB_PORT} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < schema.sql
+        mysql -h${DB_HOST} -P${DB_PORT} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < data.sql
         
         # Start application with RDS connection
         echo "Starting application..."
