@@ -97,26 +97,11 @@ jobs:
         # Stop existing application
         sudo pkill -f "java.*app.jar" || true
         
-        # Install only essential packages
-        if ! command -v mysql &> /dev/null; then
-          echo "Installing MySQL client only..."
-          export DEBIAN_FRONTEND=noninteractive
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq mysql-client --no-install-recommends
-        fi
-        
-        if ! command -v java &> /dev/null; then
-          echo "Installing minimal Java runtime..."
-          sudo apt-get install -y -qq openjdk-17-jre-headless --no-install-recommends
-        fi
-        
-        # Install MySQL client first
-        if ! command -v mysql &> /dev/null; then
-          echo "Installing MySQL client..."
-          export DEBIAN_FRONTEND=noninteractive
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq mysql-client --no-install-recommends
-        fi
+        # Install essential packages
+        export DEBIAN_FRONTEND=noninteractive
+        echo "Installing required packages..."
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq mysql-client openjdk-17-jre-headless --no-install-recommends
         
         # Update RDS with new data
         echo "Updating RDS database..."
