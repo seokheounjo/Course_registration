@@ -687,7 +687,7 @@
                 <h2 class="slide-title">Backend 개발 - Entity & JPA 설계</h2>
                 <div class="content-grid">
                     <div class="content-section">
-                        <h3>데이터베이스 설계</h3>
+                        <h3><strong style="color: #e74c3c; font-size: 1.4rem;">🗄️ 핵심 기능: 데이터베이스 설계</strong></h3>
                         <div class="code-block">@Entity
 @Table(name = "students")
 public class Student {
@@ -715,7 +715,7 @@ public class Student {
                         </p>
                     </div>
                     <div class="content-section">
-                        <h3>수강신청 비즈니스 로직</h3>
+                        <h3><strong style="color: #e74c3c; font-size: 1.4rem;">🎯 핵심 기능: 수강신청 비즈니스 로직</strong></h3>
                         <div class="code-block">@Service
 @Transactional
 public class EnrollmentService {
@@ -802,7 +802,7 @@ public class EnrollmentService {
                 <h2 class="slide-title">Service & Controller - 핵심 비즈니스 로직</h2>
                 <div class="content-grid">
                     <div class="content-section">
-                        <h3>REST API 컨트롤러</h3>
+                        <h3><strong style="color: #e74c3c; font-size: 1.4rem;">🚀 핵심 기능: REST API 컨트롤러</strong></h3>
                         <div class="code-block multi-column">@Controller
 @RequestMapping("/student")
 public class StudentController {
@@ -861,7 +861,7 @@ public class StudentController {
 }</div>
                     </div>
                     <div class="content-section">
-                        <h3>복잡한 JPA 쿼리</h3>
+                        <h3><strong style="color: #e74c3c; font-size: 1.4rem;">⚡ 핵심 기능: 복잡한 JPA 쿼리</strong></h3>
                         <div class="code-block">@Repository
 public interface EnrollmentRepository extends JpaRepository&lt;Enrollment, Long&gt; {
     
@@ -935,7 +935,7 @@ public interface EnrollmentRepository extends JpaRepository&lt;Enrollment, Long&
                 <h2 class="slide-title">Frontend & Database Configuration</h2>
                 <div class="content-grid">
                     <div class="content-section">
-                        <h3>실시간 프론트엔드 검증</h3>
+                        <h3><strong style="color: #e74c3c; font-size: 1.4rem;">✅ 핵심 기능: 실시간 프론트엔드 검증</strong></h3>
                         <div class="code-block multi-column">/**
  * 수강신청 실시간 검증 모듈
  */
@@ -1076,7 +1076,7 @@ logging:
                 <h2 class="slide-title">Docker 컨테이너화 & 배포 준비</h2>
                 <div class="content-grid">
                     <div class="content-section">
-                        <h3>멀티스테이지 Docker 빌드</h3>
+                        <h3><strong style="color: #e74c3c; font-size: 1.4rem;">🐳 핵심 기능: 멀티스테이지 Docker 빌드</strong></h3>
                         <div class="code-block"># ==================================================
 # Multi-stage Docker Build for Course Registration System
 # ==================================================
@@ -1165,7 +1165,7 @@ ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"
                 <h2 class="slide-title">CI/CD 파이프라인 - 완전 자동화</h2>
                 <div class="content-grid">
                     <div class="content-section">
-                        <h3>GitHub Actions 워크플로우</h3>
+                        <h3><strong style="color: #e74c3c; font-size: 1.4rem;">🔄 핵심 기능: GitHub Actions CI/CD</strong></h3>
                         <div class="code-block"># GitHub Actions CI/CD Pipeline
 name: Course Registration CI/CD Pipeline
 
@@ -1438,7 +1438,7 @@ jobs:
 
     <!-- 시연 링크 및 복사 버튼 (마지막 슬라이드에서만 표시) -->
     <div class="demo-controls" id="demoControls">
-        <a href="http://23.22.154.180" target="_blank" class="demo-btn">
+        <a href="http://23.22.154.180:8087" target="_blank" class="demo-btn">
             🚀 실제 시연 사이트 열기
         </a>
         <button class="copy-btn" onclick="copyCredentials('20231000', '20231000')">
@@ -1448,7 +1448,7 @@ jobs:
             👨‍💼 관리자 계정 복사 (admin01/admin01)
         </button>
         <button class="copy-btn" onclick="copyWebsite()">
-            🌐 사이트 주소 복사 (http://23.22.154.180)
+            🌐 사이트 주소 복사 (http://23.22.154.180:8087)
         </button>
     </div>
 
@@ -1523,7 +1523,7 @@ jobs:
 
         // 웹사이트 주소 복사 함수
         async function copyWebsite() {
-            const website = 'http://23.22.154.180';
+            const website = 'http://23.22.154.180:8087';
             
             try {
                 await navigator.clipboard.writeText(website);
