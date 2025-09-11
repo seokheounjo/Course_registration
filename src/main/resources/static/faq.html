@@ -499,11 +499,11 @@
                 </div>
                 <div class="info-item">
                     <div class="label">핵심 기술</div>
-                    <div class="value">Spring Boot + Docker + K8s + ArgoCD</div>
+                    <div class="value">Spring Boot + Docker + GitHub Actions</div>
                 </div>
                 <div class="info-item">
                     <div class="label">배포 환경</div>
-                    <div class="value">AWS EC2 + EKS + RDS MySQL</div>
+                    <div class="value">AWS EC2 + RDS MySQL</div>
                 </div>
             </div>
         </div>
@@ -522,7 +522,7 @@
                         <ul class="bullet-list">
                             <li><strong>3.</strong> 프로젝트 개요 - 전체 과정 소개</li>
                             <li><strong>4.</strong> 기술 스택 - Backend, Cloud, DevOps</li>
-                            <li><strong>5.</strong> 시스템 아키텍처 - 이중 배포 전략</li>
+                            <li><strong>5.</strong> 시스템 아키텍처 - EC2 배포 전략</li>
                             <li><strong>6.</strong> Backend 개발 - Entity & JPA 설계</li>
                             <li><strong>7.</strong> Service & Controller - 핵심 비즈니스 로직</li>
                         </ul>
@@ -537,7 +537,7 @@
                     <div class="content-section">
                         <h3>도전과 해결</h3>
                         <ul class="bullet-list">
-                            <li><strong>11.</strong> AWS 인프라 & Kubernetes 배포</li>
+                            <li><strong>11.</strong> AWS 인프라 & EC2 배포</li>
                             <li><strong>12.</strong> 주요 도전과제 및 해결방안</li>
                             <li><strong>13.</strong> 프로젝트 성과 - 실제 서비스 운영</li>
                         </ul>
@@ -567,7 +567,7 @@
                             <li>Spring Boot 기반 Full-Stack 웹 개발</li>
                             <li>Docker 컨테이너화 및 AWS 인프라 구축</li>
                             <li>CI/CD 파이프라인 자동화 구현</li>
-                            <li>Kubernetes + GitOps 운영 환경 배포</li>
+                            <li>GitHub Actions CI/CD 자동 배포</li>
                             <li>실시간 모니터링 및 지속적 개선</li>
                         </ul>
                     </div>
@@ -576,7 +576,7 @@
                         <ul class="bullet-list">
                             <li>프론트엔드부터 인프라까지 전체 스택</li>
                             <li>개발 환경에서 프로덕션까지 완전 자동화</li>
-                            <li>이중 배포 전략 (EC2 + EKS)</li>
+                            <li>EC2 단일 배포 전략</li>
                             <li>실제 운영 환경 고려한 실무 수준 구현</li>
                         </ul>
                     </div>
@@ -608,17 +608,14 @@
                     <div class="tech-column">
                         <h4>Cloud & DevOps</h4>
                         <div class="tech-item">AWS EC2 (서버 인스턴스)</div>
-                        <div class="tech-item">AWS EKS (Kubernetes 관리)</div>
                         <div class="tech-item">AWS RDS (데이터베이스 관리)</div>
                         <div class="tech-item">Docker & DockerHub</div>
-                        <div class="tech-item">Kubernetes (컨테이너 오케스트레이션)</div>
                     </div>
                     <div class="tech-column">
                         <h4>CI/CD & GitOps</h4>
                         <div class="tech-item">GitHub Actions (CI/CD 파이프라인)</div>
-                        <div class="tech-item">ArgoCD (GitOps 자동 배포)</div>
                         <div class="tech-item">GitHub (소스코드 관리)</div>
-                        <div class="tech-item">Helm (Kubernetes 패키지 관리)</div>
+                        <div class="tech-item">SSH (Linux 서버 접근)</div>
                         <div class="tech-item">YAML 매니페스트</div>
                     </div>
                 </div>
@@ -650,25 +647,25 @@
                     </div>
                     <span class="flow-arrow">→</span>
                     <div class="flow-box">
-                        <h5>ArgoCD</h5>
-                        <p>GitOps<br>자동 배포</p>
+                        <h5>GitHub Actions</h5>
+                        <p>CI/CD<br>자동 배포</p>
                     </div>
                 </div>
                 <div class="content-grid">
                     <div class="content-section">
-                        <h3>이중 배포 환경</h3>
+                        <h3>EC2 배포 환경</h3>
                         <ul class="bullet-list">
-                            <li>AWS EC2 Direct 배포 (전통적 방식)</li>
-                            <li>AWS EKS Kubernetes 배포 (컨테이너 오케스트레이션)</li>
-                            <li>동일한 소스코드로 두 환경 동시 운영</li>
-                            <li>각 환경별 최적화된 배포 전략 적용</li>
+                            <li>AWS EC2 단일 서버 배포</li>
+                            <li>Spring Boot JAR 직접 실행</li>
+                            <li>GitHub Actions 자동 CI/CD 파이프라인</li>
+                            <li>간단하고 안정적인 배포 전략</li>
                         </ul>
                     </div>
                     <div class="content-section">
                         <h3>DevOps 자동화</h3>
                         <ul class="bullet-list">
                             <li>GitHub Actions CI/CD 파이프라인</li>
-                            <li>ArgoCD GitOps 지속적 배포</li>
+                            <li>SSH 원격 서버 관리</li>
                             <li>Docker 컨테이너화로 일관된 환경</li>
                             <li>Infrastructure as Code 실천</li>
                         </ul>
@@ -1247,7 +1244,7 @@ jobs:
                             <li>코드 푸시 시 자동 빌드 트리거</li>
                             <li>Gradle 빌드 및 테스트 실행</li>
                             <li>Docker 이미지 자동 생성 및 푸시</li>
-                            <li>ArgoCD를 통한 Kubernetes 자동 배포</li>
+                            <li>EC2 서버로 SSH 직접 배포</li>
                             <li>배포 상태 실시간 모니터링</li>
                         </ul>
                     </div>
@@ -1262,26 +1259,25 @@ jobs:
                 <span class="slide-number">9 / 14</span>
             </div>
             <div class="slide-content">
-                <h2 class="slide-title">AWS 인프라 & Kubernetes 배포</h2>
+                <h2 class="slide-title">AWS 인프라 & EC2 배포</h2>
                 <div class="content-grid">
                     <div class="content-section">
                         <h3>AWS 클라우드 인프라</h3>
                         <ul class="bullet-list">
-                            <li>AWS EKS (Elastic Kubernetes Service)</li>
-                            <li>AWS RDS PostgreSQL 관리형 데이터베이스</li>
+                            <li>AWS RDS MySQL 관리형 데이터베이스</li>
                             <li>AWS EC2 인스턴스 직접 배포</li>
                             <li>VPC 네트워킹 및 보안 그룹 설정</li>
                             <li>Application Load Balancer</li>
                         </ul>
                     </div>
                     <div class="content-section">
-                        <h3>Kubernetes 오케스트레이션</h3>
+                        <h3>EC2 서버 관리</h3>
                         <ul class="bullet-list">
-                            <li>Deployment로 Pod 관리</li>
-                            <li>Service로 네트워크 추상화</li>
-                            <li>ConfigMap으로 설정 관리</li>
-                            <li>Secret으로 민감 정보 보호</li>
-                            <li>ArgoCD GitOps 자동 동기화</li>
+                            <li>Spring Boot JAR 배포</li>
+                            <li>Nginx 리버스 프록시 설정</li>
+                            <li>환경변수 설정 관리</li>
+                            <li>SSH 기반 보안 접근</li>
+                            <li>GitHub Actions 자동 배포</li>
                         </ul>
                     </div>
                 </div>
@@ -1299,9 +1295,9 @@ jobs:
                 
                 <div class="error-case">
                     <div class="error-title">VPC 네트워킹 문제</div>
-                    <p><strong>문제:</strong> EKS 클러스터와 RDS가 서로 다른 VPC에 생성되어 통신 불가</p>
-                    <p><strong>에러:</strong> vpc-0106946af7a80228d (EKS) ↔ vpc-0a532f02a6fa732c6 (RDS)</p>
-                    <div class="error-solution">해결: VPC 피어링 연결 + 라우팅 테이블 업데이트로 cross-VPC 통신 구현</div>
+                    <p><strong>문제:</strong> EC2와 RDS 간 네트워크 보안 그룹 설정 문제</p>
+                    <p><strong>에러:</strong> MySQL 연결 실패 및 타임아웃</p>
+                    <div class="error-solution">해결: 보안 그룹 인바운드 규칙 수정으로 3306 포트 EC2 접근 허용</div>
                 </div>
 
                 <div class="error-case">
@@ -1348,12 +1344,12 @@ jobs:
                         </tr>
                         <tr>
                             <td><strong>컨테이너 오케스트레이션</strong></td>
-                            <td>Kubernetes + ArgoCD 운영</td>
+                            <td>GitHub Actions CI/CD 관리</td>
                             <td class="improvement-metric">클라우드 네이티브</td>
                         </tr>
                         <tr>
-                            <td><strong>이중 배포 환경</strong></td>
-                            <td>EC2 + EKS 동시 운영</td>
+                            <td><strong>EC2 단일 배포 환경</strong></td>
+                            <td>EC2 안정적 단일 운영</td>
                             <td class="improvement-metric">운영 안정성</td>
                         </tr>
                         <tr>
@@ -1387,9 +1383,9 @@ jobs:
                         
                         <h3 style="margin-top: 2rem;">보안 및 운영 개선</h3>
                         <ul class="bullet-list">
-                            <li>Kubernetes RBAC 권한 관리</li>
-                            <li>Vault Secrets 관리 도입</li>
-                            <li>네트워크 정책 마이크로서비스 격리</li>
+                            <li>SSL 인증서 및 HTTPS 적용</li>
+                            <li>로드 밸런서 도입</li>
+                            <li>Redis 캐싱 시스템 구축</li>
                             <li>자동화 백업 및 재해복구</li>
                         </ul>
                     </div>
