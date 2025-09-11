@@ -74,7 +74,14 @@ public class AdminProfessorController {
             return "redirect:/login";
         }
 
-        model.addAttribute("professor", new Professor());
+        Professor professor = new Professor();
+        // 빈 문자열로 초기화하여 null 값 방지
+        professor.setName("");
+        professor.setDepartment("");
+        professor.setEmail("");
+        professor.setPhone("");
+        
+        model.addAttribute("professor", professor);
         model.addAttribute("isNew", true);
 
         return "admin/professors/form";
