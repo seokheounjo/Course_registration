@@ -55,9 +55,24 @@ public class EnrollmentService {
         System.out.println("DEBUG ENROLLMENT: Found " + enrollments.size() + " enrollments for student ID " + studentId);
         
         for (Enrollment enrollment : enrollments) {
+            // 강제로 lazy loading 트리거
+            if (enrollment.getSubject() != null) {
+                enrollment.getSubject().getName(); // Force load
+                if (enrollment.getSubject().getProfessor() != null) {
+                    enrollment.getSubject().getProfessor().getName(); // Force load
+                }
+            }
+            if (enrollment.getTimetable() != null) {
+                enrollment.getTimetable().getDay(); // Force load
+                enrollment.getTimetable().getStartTime(); // Force load
+                enrollment.getTimetable().getEndTime(); // Force load
+                enrollment.getTimetable().getRoom(); // Force load
+            }
+            
             System.out.println("DEBUG ENROLLMENT: - Subject: " + 
                 (enrollment.getSubject() != null ? enrollment.getSubject().getName() : "NULL") +
-                ", Timetable: " + (enrollment.getTimetable() != null ? enrollment.getTimetable().getDay() : "NULL"));
+                ", Timetable: " + (enrollment.getTimetable() != null ? enrollment.getTimetable().getDay() : "NULL") +
+                ", StartTime: " + (enrollment.getTimetable() != null ? enrollment.getTimetable().getStartTime() : "NULL"));
         }
         
         return enrollments;

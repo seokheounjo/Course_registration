@@ -519,8 +519,11 @@
     console.log("DEBUG: - Enrollment found:", {
         id: "{{id}}",
         subject: "{{subject.name}}",
+        subjectId: "{{subject.id}}",
         day: "{{timetable.day}}",
-        startTime: "{{timetable.startTime}}"
+        startTime: "{{timetable.startTime}}",
+        hasSubject: "{{#subject}}true{{/subject}}{{^subject}}false{{/subject}}",
+        hasTimetable: "{{#timetable}}true{{/timetable}}{{^timetable}}false{{/timetable}}"
     });
     {{/enrollments}}
     {{^enrollments}}

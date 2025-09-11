@@ -11,12 +11,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
-    @Query("SELECT DISTINCT e FROM Enrollment e " +
-           "LEFT JOIN FETCH e.subject s " +
-           "LEFT JOIN FETCH s.professor " +
-           "LEFT JOIN FETCH e.timetable t " +
+    @Query("SELECT e FROM Enrollment e " +
+           "JOIN FETCH e.subject s " +
+           "JOIN FETCH e.timetable t " +
+           "LEFT JOIN FETCH s.professor p " +
            "WHERE e.student.id = :studentId")
     List<Enrollment> findByStudentWithDetails(@Param("studentId") Long studentId);
+    
+    // 추가 테스트용 메서드
+    @Query("SELECT e FROM Enrollment e WHERE e.student.id = :studentId")
+    List<Enrollment> findByStudentIdSimple(@Param("studentId") Long studentId);
     
     List<Enrollment> findByStudent(Student student);
 
