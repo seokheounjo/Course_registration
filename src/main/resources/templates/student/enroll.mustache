@@ -533,10 +533,20 @@
     // 요일별 시간표 셀 ID 접두사
     const dayPrefix = {
         "월요일": "mon",
-        "화요일": "tue",
+        "화요일": "tue", 
         "수요일": "wed",
         "목요일": "thu",
-        "금요일": "fri"
+        "금요일": "fri",
+        // 축약형도 지원
+        "월": "mon",
+        "화": "tue",
+        "수": "wed", 
+        "목": "thu",
+        "금": "fri",
+        // 복합형 지원
+        "월수": "mon", // 월수는 월요일로 처리 (첫 번째 요일)
+        "화목": "tue", // 화목은 화요일로 처리
+        "수금": "wed"  // 수금은 수요일로 처리
     };
 
     // 3. 각 과목 행에 학점 데이터 속성 추가
@@ -616,37 +626,51 @@
             const startHour = parseInt(startTime.split(':')[0]);
             const endHour = parseInt(endTime.split(':')[0]);
 
-            // 해당 요일의 접두사 가져오기
-            const prefix = dayPrefix[day];
-            if (!prefix) {
-                console.log("DEBUG PREVIEW: No prefix for day:", day);
-                return;
-            }
-
-            // 시작 시간부터 종료 시간까지 각 시간 셀에 과목 추가
-            for (let hour = startHour; hour < endHour; hour++) {
-                const cellId = `${prefix}-${hour}`;
-                const cell = document.getElementById(cellId);
-
-                if (cell) {
-                    const courseBlock = document.createElement('div');
-                    courseBlock.className = 'course-block';
-
-                    const courseName = document.createElement('div');
-                    courseName.className = 'course-name';
-                    courseName.textContent = subjectName;
-
-                    const courseRoom = document.createElement('div');
-                    courseRoom.className = 'course-room';
-                    courseRoom.textContent = room;
-
-                    courseBlock.appendChild(courseName);
-                    courseBlock.appendChild(courseRoom);
-                    cell.appendChild(courseBlock);
-                    
-                    console.log("DEBUG PREVIEW: Added course to cell", cellId, subjectName);
+            // 복합 요일 처리 (월수, 화목 등)
+            let daysToProcess = [];
+            if (day === "월수") {
+                daysToProcess = ["mon", "wed"];
+            } else if (day === "화목") {
+                daysToProcess = ["tue", "thu"];
+            } else if (day === "수금") {
+                daysToProcess = ["wed", "fri"];
+            } else {
+                // 단일 요일 처리
+                const prefix = dayPrefix[day];
+                if (!prefix) {
+                    console.log("DEBUG PREVIEW: No prefix for day:", day);
+                    return;
                 }
+                daysToProcess = [prefix];
             }
+
+            // 각 요일에 대해 시간표에 추가
+            daysToProcess.forEach(function(prefix) {
+                // 시작 시간부터 종료 시간까지 각 시간 셀에 과목 추가
+                for (let hour = startHour; hour < endHour; hour++) {
+                    const cellId = `${prefix}-${hour}`;
+                    const cell = document.getElementById(cellId);
+
+                    if (cell) {
+                        const courseBlock = document.createElement('div');
+                        courseBlock.className = 'course-block';
+
+                        const courseName = document.createElement('div');
+                        courseName.className = 'course-name';
+                        courseName.textContent = subjectName;
+
+                        const courseRoom = document.createElement('div');
+                        courseRoom.className = 'course-room';
+                        courseRoom.textContent = room;
+
+                        courseBlock.appendChild(courseName);
+                        courseBlock.appendChild(courseRoom);
+                        cell.appendChild(courseBlock);
+                        
+                        console.log("DEBUG PREVIEW: Added course to cell", cellId, subjectName);
+                    }
+                }
+            });
         });
     }
 
