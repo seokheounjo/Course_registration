@@ -80,9 +80,8 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         
-        # Save and transfer Docker image
-        docker save course-registration:latest | gzip > course-registration.tar.gz
-        scp -o StrictHostKeyChecking=no -i private_key course-registration.tar.gz ${USER_NAME}@${HOSTNAME}:/tmp/
+        # Transfer JAR file directly instead of Docker image
+        scp -o StrictHostKeyChecking=no -i private_key build/libs/*.jar ${USER_NAME}@${HOSTNAME}:/tmp/app.jar
         
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
           # Install Docker if not exists
@@ -94,25 +93,23 @@ jobs:
             sudo usermod -a -G docker ubuntu
           fi
           
-          # Stop and remove existing container
-          sudo docker stop course-registration || true
-          sudo docker rm course-registration || true
-          sudo docker rmi course-registration:latest || true
+          # Install Java if not exists
+          if ! command -v java &> /dev/null; then
+            sudo apt update -y
+            sudo apt install -y openjdk-17-jdk
+          fi
           
-          # Load new image
-          sudo docker load -i /tmp/course-registration.tar.gz
+          # Stop existing application
+          sudo pkill -f "java.*app.jar" || true
           
-          # Run new container
-          sudo docker run -d --name course-registration -p 80:8087 \
-            -e SPRING_PROFILES_ACTIVE=prod \
-            -e DB_HOST=${{ secrets.DB_HOST }} \
-            -e DB_PORT=${{ secrets.DB_PORT }} \
-            -e DB_NAME=${{ secrets.DB_NAME }} \
-            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -v /home/ubuntu/uploads:/app/uploads \
-            course-registration:latest
+          # Run new application
+          nohup sudo java -jar /tmp/app.jar \
+            --spring.profiles.active=prod \
+            --spring.datasource.url=jdbc:mysql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC \
+            --spring.datasource.username=${{ secrets.DB_USERNAME }} \
+            --spring.datasource.password=${{ secrets.DB_PASSWORD }} \
+            --server.port=8087 > /tmp/app.log 2>&1 &
             
           # Clean up
-          rm /tmp/course-registration.tar.gz
+          rm /tmp/app.jar
         '
