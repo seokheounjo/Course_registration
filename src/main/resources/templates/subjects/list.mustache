@@ -33,14 +33,70 @@
         </div>
     </div>
 
+    <!-- 검색 폼 -->
+    <div class="search-container" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <form method="get" action="/subjects" style="display: flex; gap: 15px; align-items: end; flex-wrap: wrap;">
+            <div>
+                <input type="text" id="name" name="name" value="{{searchName}}" placeholder="과목명" 
+                       style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
+            </div>
+            <div>
+                <input type="text" id="code" name="code" value="{{searchCode}}" placeholder="과목코드" 
+                       style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
+            </div>
+            <div>
+                <input type="text" id="department" name="department" value="{{searchDepartment}}" placeholder="학과명" 
+                       style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 150px;">
+            </div>
+            <div>
+                <select id="size" name="size" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <option value="10">10개씩</option>
+                    <option value="20" selected>20개씩</option>
+                    <option value="50">50개씩</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-primary">검색</button>
+                <a href="/subjects" class="btn" style="background-color: #6c757d; color: white;">초기화</a>
+            </div>
+            <input type="hidden" name="sortBy" value="{{sortBy}}">
+            <input type="hidden" name="sortDir" value="{{sortDir}}">
+        </form>
+    </div>
+
     <table>
         <thead>
         <tr>
-            <th>ID</th>
-            <th>과목 코드</th>
-            <th>과목명</th>
-            <th>학점</th>
-            <th>학과</th>
+            <th>
+                <a href="?sortBy=id&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&code={{searchCode}}&department={{searchDepartment}}" 
+                   style="color: inherit; text-decoration: none;">
+                    ID
+                </a>
+            </th>
+            <th>
+                <a href="?sortBy=code&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&code={{searchCode}}&department={{searchDepartment}}" 
+                   style="color: inherit; text-decoration: none;">
+                    과목 코드
+                </a>
+            </th>
+            <th>
+                <a href="?sortBy=name&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&code={{searchCode}}&department={{searchDepartment}}" 
+                   style="color: inherit; text-decoration: none;">
+                    과목명
+                </a>
+            </th>
+            <th>
+                <a href="?sortBy=credits&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&code={{searchCode}}&department={{searchDepartment}}" 
+                   style="color: inherit; text-decoration: none;">
+                    학점
+                </a>
+            </th>
+            <th>
+                <a href="?sortBy=department&sortDir={{reverseSortDir}}&page={{currentPage}}&size={{size}}&name={{searchName}}&code={{searchCode}}&department={{searchDepartment}}" 
+                   style="color: inherit; text-decoration: none;">
+                    학과
+                </a>
+            </th>
             <th>담당교수</th>
             <th>관리</th>
         </tr>
@@ -73,7 +129,7 @@
     <div class="pagination" style="margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 10px;">
         <!-- 이전 페이지 -->
         {{#hasPrevious}}
-        <a href="?page={{previousPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}" 
+        <a href="?page={{previousPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&name={{searchName}}&code={{searchCode}}&department={{searchDepartment}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">이전</a>
         {{/hasPrevious}}
         {{^hasPrevious}}
@@ -88,7 +144,7 @@
 
         <!-- 다음 페이지 -->
         {{#hasNext}}
-        <a href="?page={{nextPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}" 
+        <a href="?page={{nextPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&name={{searchName}}&code={{searchCode}}&department={{searchDepartment}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">다음</a>
         {{/hasNext}}
         {{^hasNext}}

@@ -27,13 +27,16 @@ public class SubjectController {
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDir,
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") String code,
+            @RequestParam(defaultValue = "") String department,
             Model model, HttpSession session) {
         // 로그인 확인 (관리자만 접근 가능)
         if (!"admin".equals(session.getAttribute("user"))) {
             return "redirect:/login";
         }
 
-        Page<Subject> subjectsPage = subjectService.getAllSubjects(page, size, sortBy, sortDir);
+        Page<Subject> subjectsPage = subjectService.searchSubjects(name, code, department, page, size, sortBy, sortDir);
         
         model.addAttribute("subjectsPage", subjectsPage);
         model.addAttribute("subjects", subjectsPage.getContent());
@@ -53,6 +56,11 @@ public class SubjectController {
         model.addAttribute("currentPageDisplay", page + 1);
         model.addAttribute("startItem", page * size + 1);
         model.addAttribute("endItem", Math.min((page + 1) * size, (int) subjectsPage.getTotalElements()));
+        
+        // 검색 파라미터 유지
+        model.addAttribute("searchName", name);
+        model.addAttribute("searchCode", code);
+        model.addAttribute("searchDepartment", department);
         
         return "subjects/list";
     }

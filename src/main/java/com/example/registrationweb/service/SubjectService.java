@@ -39,6 +39,24 @@ public class SubjectService {
     }
 
     @Transactional(readOnly = true)
+    public Page<Subject> searchSubjects(String name, String code, String department, int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        if ((name == null || name.trim().isEmpty()) && 
+            (code == null || code.trim().isEmpty()) && 
+            (department == null || department.trim().isEmpty())) {
+            return subjectRepository.findAll(pageable);
+        }
+        
+        return subjectRepository.findByNameContainingIgnoreCaseOrCodeContainingIgnoreCaseOrDepartmentContainingIgnoreCase(
+            name != null ? name : "", 
+            code != null ? code : "", 
+            department != null ? department : "", 
+            pageable);
+    }
+
+    @Transactional(readOnly = true)
     public Subject getSubjectById(Long id) {
         return subjectRepository.findById(id).orElse(null);
     }

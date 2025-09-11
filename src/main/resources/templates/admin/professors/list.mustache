@@ -113,7 +113,7 @@
     <div class="pagination" style="margin-top: 20px; display: flex; justify-content: center; align-items: center; gap: 10px;">
         <!-- 이전 페이지 -->
         {{#hasPrevious}}
-        <a href="?page=0&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&name={{searchName}}&department={{searchDepartment}}" 
+        <a href="?page={{previousPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&name={{searchName}}&department={{searchDepartment}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">이전</a>
         {{/hasPrevious}}
         {{^hasPrevious}}
@@ -128,7 +128,7 @@
 
         <!-- 다음 페이지 -->
         {{#hasNext}}
-        <a href="?page=1&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&name={{searchName}}&department={{searchDepartment}}" 
+        <a href="?page={{nextPage}}&size={{size}}&sortBy={{sortBy}}&sortDir={{sortDir}}&name={{searchName}}&department={{searchDepartment}}" 
            class="btn" style="background-color: #f8f9fa; color: #333;">다음</a>
         {{/hasNext}}
         {{^hasNext}}
