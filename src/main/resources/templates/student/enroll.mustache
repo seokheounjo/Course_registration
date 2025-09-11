@@ -512,6 +512,20 @@
     // 디버그 정보 출력
     console.log("DEBUG: Enrollments data:", enrollments);
     console.log("DEBUG: Enrollments count:", enrollments.length);
+    
+    // Raw Mustache data 디버그
+    console.log("DEBUG: Raw Mustache enrollments:");
+    {{#enrollments}}
+    console.log("DEBUG: - Enrollment found:", {
+        id: "{{id}}",
+        subject: "{{subject.name}}",
+        day: "{{timetable.day}}",
+        startTime: "{{timetable.startTime}}"
+    });
+    {{/enrollments}}
+    {{^enrollments}}
+    console.log("DEBUG: No enrollments in Mustache template");
+    {{/enrollments}}
 
     // 요일별 시간표 셀 ID 접두사
     const dayPrefix = {

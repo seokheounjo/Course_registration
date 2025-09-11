@@ -51,8 +51,8 @@ public class EnrollmentService {
         }
         
         Student student = studentOpt.get();
-        List<Enrollment> enrollments = enrollmentRepository.findByStudentWithDetails(student);
-        System.out.println("DEBUG ENROLLMENT: Found " + enrollments.size() + " enrollments");
+        List<Enrollment> enrollments = enrollmentRepository.findByStudentWithDetails(studentId);
+        System.out.println("DEBUG ENROLLMENT: Found " + enrollments.size() + " enrollments for student ID " + studentId);
         
         for (Enrollment enrollment : enrollments) {
             System.out.println("DEBUG ENROLLMENT: - Subject: " + 
