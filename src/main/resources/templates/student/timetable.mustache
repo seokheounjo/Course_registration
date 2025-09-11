@@ -216,12 +216,12 @@
         const enrollments = [
     {{#enrollments}}
         {
-            subjectName: "{{subjectName}}",
-            professorName: "{{professorName}}",
-            day: "{{day}}",
-            startTime: "{{startTime}}",
-            endTime: "{{endTime}}",
-            room: "{{room}}",
+            subjectName: "{{subject.name}}",
+            professorName: "{{subject.professor.name}}",
+            day: "{{timetable.day}}",
+            startTime: "{{timetable.startTime}}",
+            endTime: "{{timetable.endTime}}",
+            room: "{{timetable.room}}",
             credits: {{subject.credits}} // 학점 정보 추가
         },
     {{/enrollments}}

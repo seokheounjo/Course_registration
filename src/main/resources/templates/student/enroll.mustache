@@ -495,12 +495,12 @@
         const enrollments = [
     {{#enrollments}}
         {
-            subjectName: "{{subjectName}}",
-            professorName: "{{professorName}}",
-            day: "{{day}}",
-            startTime: "{{startTime}}",
-            endTime: "{{endTime}}",
-            room: "{{room}}",
+            subjectName: "{{subject.name}}",
+            professorName: "{{subject.professor.name}}",
+            day: "{{timetable.day}}",
+            startTime: "{{timetable.startTime}}",
+            endTime: "{{timetable.endTime}}",
+            room: "{{timetable.room}}",
             credits: {{subject.credits}},
                     subject: {
             id: "{{subject.id}}" // 과목 ID 추가
