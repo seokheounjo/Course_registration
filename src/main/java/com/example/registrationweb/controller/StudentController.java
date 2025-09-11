@@ -329,12 +329,14 @@ public class StudentController {
         List<Enrollment> enrollments = enrollmentService.getEnrollmentsByStudentId(student.getId());
         
         // 디버깅 로그 추가
-        System.out.println("DEBUG TIMETABLE: Student ID = " + student.getId());
+        System.out.println("DEBUG TIMETABLE: Student found - Name: " + student.getName() + ", ID: " + student.getId() + ", StudentID: " + student.getStudentId());
+        System.out.println("DEBUG TIMETABLE: Session username = " + session.getAttribute("username"));
         System.out.println("DEBUG TIMETABLE: Enrollments count = " + enrollments.size());
         for (Enrollment e : enrollments) {
-            System.out.println("DEBUG TIMETABLE: Enrollment - Subject: " + 
-                (e.getSubject() != null ? e.getSubject().getName() : "NULL") +
-                ", Timetable: " + (e.getTimetable() != null ? e.getTimetable().getDay() : "NULL"));
+            System.out.println("DEBUG TIMETABLE: Enrollment - ID: " + e.getId() + 
+                ", Subject: " + (e.getSubject() != null ? e.getSubject().getName() : "NULL") +
+                ", Timetable: " + (e.getTimetable() != null ? e.getTimetable().getDay() : "NULL") +
+                ", StartTime: " + (e.getTimetable() != null ? e.getTimetable().getStartTime() : "NULL"));
         }
         
         model.addAttribute("enrollments", enrollments);
