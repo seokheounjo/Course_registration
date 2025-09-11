@@ -43,9 +43,24 @@ public class EnrollmentService {
 
     @Transactional(readOnly = true)
     public List<Enrollment> getEnrollmentsByStudentId(Long studentId) {
-        Optional<Student> student = studentRepository.findById(studentId);
-        return student.map(enrollmentRepository::findByStudentWithDetails)
-                .orElse(List.of());
+        System.out.println("DEBUG ENROLLMENT: Getting enrollments for student ID: " + studentId);
+        Optional<Student> studentOpt = studentRepository.findById(studentId);
+        if (studentOpt.isEmpty()) {
+            System.out.println("DEBUG ENROLLMENT: Student not found for ID: " + studentId);
+            return List.of();
+        }
+        
+        Student student = studentOpt.get();
+        List<Enrollment> enrollments = enrollmentRepository.findByStudentWithDetails(student);
+        System.out.println("DEBUG ENROLLMENT: Found " + enrollments.size() + " enrollments");
+        
+        for (Enrollment enrollment : enrollments) {
+            System.out.println("DEBUG ENROLLMENT: - Subject: " + 
+                (enrollment.getSubject() != null ? enrollment.getSubject().getName() : "NULL") +
+                ", Timetable: " + (enrollment.getTimetable() != null ? enrollment.getTimetable().getDay() : "NULL"));
+        }
+        
+        return enrollments;
     }
 
     @Transactional(readOnly = true)
@@ -62,35 +77,45 @@ public class EnrollmentService {
 
     @Transactional
     public Enrollment enrollSubject(Long studentId, Long timetableId) {
+        System.out.println("DEBUG ENROLLMENT: Starting enrollment - StudentID: " + studentId + ", TimetableID: " + timetableId);
+        
         // 학생 정보 가져오기
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
         if (optionalStudent.isEmpty()) {
+            System.out.println("DEBUG ENROLLMENT: Student not found");
             return null;
         }
         Student student = optionalStudent.get();
+        System.out.println("DEBUG ENROLLMENT: Student found - " + student.getName());
 
         // 시간표 정보 가져오기
         Optional<Timetable> optionalTimetable = timetableRepository.findById(timetableId);
         if (optionalTimetable.isEmpty()) {
+            System.out.println("DEBUG ENROLLMENT: Timetable not found");
             return null;
         }
         Timetable timetable = optionalTimetable.get();
+        System.out.println("DEBUG ENROLLMENT: Timetable found - " + timetable.getSubjectName());
 
         // 과목 정보 가져오기
         Subject subject = timetable.getSubject();
         if (subject == null) {
+            System.out.println("DEBUG ENROLLMENT: Subject is null in timetable");
             return null;
         }
+        System.out.println("DEBUG ENROLLMENT: Subject found - " + subject.getName());
 
         // 이미 수강 중인 과목인지 확인
         Optional<Enrollment> existingEnrollment = enrollmentRepository.findByStudentAndSubject(student, subject);
         if (existingEnrollment.isPresent()) {
+            System.out.println("DEBUG ENROLLMENT: Already enrolled in this subject");
             return null;
         }
 
         // 정원 확인
         long currentEnrollmentCount = enrollmentRepository.countByTimetable(timetable);
         if (timetable.getCapacity() != null && currentEnrollmentCount >= timetable.getCapacity()) {
+            System.out.println("DEBUG ENROLLMENT: Capacity exceeded - " + currentEnrollmentCount + "/" + timetable.getCapacity());
             return null; // 정원 초과
         }
 
@@ -98,6 +123,7 @@ public class EnrollmentService {
         List<Enrollment> conflicts = enrollmentRepository.findTimeConflicts(
                 student, timetable.getDay(), timetable.getStartTime(), timetable.getEndTime());
         if (!conflicts.isEmpty()) {
+            System.out.println("DEBUG ENROLLMENT: Time conflict found");
             return null;
         }
 
@@ -107,7 +133,9 @@ public class EnrollmentService {
         enrollment.setSubject(subject);
         enrollment.setTimetable(timetable);
 
-        return enrollmentRepository.save(enrollment);
+        Enrollment saved = enrollmentRepository.save(enrollment);
+        System.out.println("DEBUG ENROLLMENT: Successfully saved enrollment with ID: " + saved.getId());
+        return saved;
     }
 
     @Transactional
