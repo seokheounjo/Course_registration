@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>수강신청 시스템 CI/CD 프로젝트</title>
+    <title>수강신청 시스템 개발부터 배포까지 - 포트폴리오</title>
     <style>
         * {
             margin: 0;
@@ -12,23 +12,23 @@
         }
 
         :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #3498db;
-            --success: #27ae60;
-            --warning: #e67e22;
-            --danger: #c0392b;
-            --gray-900: #2c3e50;
-            --gray-700: #7f8c8d;
-            --gray-500: #95a5a6;
-            --gray-300: #bdc3c7;
-            --gray-100: #ecf0f1;
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-900: #111827;
+            --gray-700: #374151;
+            --gray-300: #d1d5db;
+            --gray-100: #f3f4f6;
             --white: #ffffff;
+            --gradient-blue: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
 
         body {
-            font-family: 'Malgun Gothic', 'Apple Gothic', 'Dotum', sans-serif;
-            background: var(--white);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: var(--gray-100);
             overflow: hidden;
             height: 100vh;
             margin: 0;
@@ -40,7 +40,7 @@
             width: 100vw;
             height: 100vh;
             display: flex;
-            transition: transform 0.4s ease-in-out;
+            transition: transform 0.5s ease-in-out;
         }
 
         .slide {
@@ -50,52 +50,64 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 3rem 4rem;
+            padding: 2rem 3rem;
             position: relative;
             box-sizing: border-box;
         }
 
         /* 타이틀 슬라이드 */
         .slide-1 {
-            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            background: var(--gradient-blue);
             color: var(--white);
             text-align: center;
         }
 
         .slide-1 h1 {
-            font-size: 2.8rem;
+            font-size: 3.5rem;
             font-weight: 700;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            animation: slideInDown 1s ease-out;
         }
 
         .slide-1 .subtitle {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             margin-bottom: 3rem;
-            font-weight: 300;
-            letter-spacing: 0.05em;
+            opacity: 0.9;
+            animation: slideInUp 1s ease-out 0.3s both;
         }
 
         .slide-1 .info {
-            display: flex;
-            justify-content: center;
-            gap: 4rem;
-            margin-top: 3rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-out 0.6s both;
         }
 
         .slide-1 .info-item {
-            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            backdrop-filter: blur(10px);
         }
 
-        .slide-1 .info-item .label {
-            font-size: 0.9rem;
-            color: var(--gray-300);
-            margin-bottom: 0.5rem;
+        .tech-logos {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
-        .slide-1 .info-item .value {
-            font-size: 1.1rem;
-            font-weight: 400;
+        .tech-logo {
+            width: 60px;
+            height: 60px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            animation: bounceIn 0.8s ease-out calc(0.9s + var(--delay)) both;
+            color: var(--gray-900);
         }
 
         /* 일반 슬라이드 */
@@ -104,86 +116,74 @@
             color: var(--gray-900);
         }
 
-        .slide-header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: var(--primary);
-            color: var(--white);
-            padding: 1.5rem 4rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .slide-number {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
         .slide-content {
-            max-width: 1400px;
+            max-width: 1600px;
             width: 100%;
-            margin-top: 5rem;
+            height: auto;
+            max-height: 90vh;
+            overflow: hidden;
         }
 
         .slide-title {
             font-size: 2rem;
             color: var(--primary);
-            margin-bottom: 2.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--gray-300);
-            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 0.6rem;
         }
 
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            gap: 2.5rem;
             align-items: start;
         }
 
         .content-section h3 {
             color: var(--secondary);
-            font-size: 1.3rem;
-            margin-bottom: 1.2rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .bullet-list {
             list-style: none;
-            padding-left: 0;
         }
 
         .bullet-list li {
-            position: relative;
-            padding-left: 1.8rem;
-            margin-bottom: 0.8rem;
-            line-height: 1.6;
-            font-size: 1rem;
-            color: var(--gray-700);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+            padding: 0.6rem;
+            background: var(--gray-100);
+            border-radius: 6px;
+            border-left: 3px solid var(--secondary);
+            font-size: 0.9rem;
+            line-height: 1.2;
         }
 
         .bullet-list li::before {
-            content: "▪";
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-weight: bold;
+            content: "✨";
+            flex-shrink: 0;
         }
 
         .highlight-box {
-            background: var(--gray-100);
-            border-left: 4px solid var(--accent);
-            padding: 1.5rem;
+            background: var(--gradient-success);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
             margin: 2rem 0;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
         }
 
         .highlight-box h4 {
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .tech-grid {
@@ -195,252 +195,77 @@
 
         .tech-column {
             background: var(--white);
-            border: 1px solid var(--gray-300);
-            padding: 1.5rem;
-            border-radius: 4px;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid var(--column-color);
         }
 
+        .tech-column.backend { --column-color: #f97316; }
+        .tech-column.infra { --column-color: #3b82f6; }
+        .tech-column.cicd { --column-color: #10b981; }
+
         .tech-column h4 {
-            color: var(--secondary);
-            font-size: 1.1rem;
+            color: var(--column-color);
+            font-size: 1.3rem;
             margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--gray-300);
         }
 
         .tech-item {
-            padding: 0.5rem 0;
-            font-size: 0.95rem;
-            color: var(--gray-700);
-            border-bottom: 1px dotted var(--gray-300);
-        }
-
-        .tech-item:last-child {
-            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--gray-100);
+            border-radius: 0.5rem;
+            border-left: 3px solid var(--column-color);
         }
 
         .architecture-flow {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
             margin: 2rem 0;
-            padding: 2rem;
-            background: var(--gray-100);
-            border-radius: 4px;
         }
 
         .flow-box {
-            flex: 1;
             background: var(--white);
-            border: 1px solid var(--gray-300);
+            border: 2px solid var(--gray-300);
+            border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
-            margin: 0 0.5rem;
-        }
-
-        .flow-box h5 {
-            color: var(--primary);
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .flow-box p {
-            font-size: 0.9rem;
-            color: var(--gray-700);
-        }
-
-        .flow-arrow {
-            color: var(--accent);
-            font-size: 1.5rem;
-            margin: 0 0.5rem;
-        }
-
-        .metrics-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1.5rem 0;
-            border: 1px solid var(--gray-300);
-        }
-
-        .metrics-table th {
-            background: var(--gray-100);
-            color: var(--primary);
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 2px solid var(--gray-300);
-        }
-
-        .metrics-table td {
-            padding: 0.8rem 1rem;
-            border-bottom: 1px solid var(--gray-300);
-            color: var(--gray-700);
-        }
-
-        .metrics-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .improvement-metric {
-            color: var(--success);
-            font-weight: 600;
-        }
-
-        /* 화면 클릭 영역 */
-        .click-area {
-            position: fixed;
-            top: 0;
-            width: 50vw;
-            height: 100vh;
-            z-index: 50;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .click-area:hover {
-            opacity: 0.1;
-            background: rgba(0, 0, 0, 0.1);
-            pointer-events: auto;
-        }
-
-        .click-area.left {
-            left: 0;
-        }
-
-        .click-area.right {
-            right: 0;
-        }
-
-        /* 스크롤 가능한 요소에서 클릭 감지 */
-        .slide:hover .click-area {
-            pointer-events: auto;
-        }
-
-        /* 시연 링크 및 복사 버튼 */
-        .demo-controls {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .demo-controls.show {
-            opacity: 1;
-        }
-
-        .demo-btn {
-            background: var(--success);
-            color: var(--white);
-            border: none;
-            padding: 0.8rem 1.5rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            text-decoration: none;
-            text-align: center;
-            min-width: 180px;
+            position: relative;
         }
 
-        .demo-btn:hover {
-            background: #16a34a;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        .flow-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
-        .copy-btn {
-            background: var(--accent);
-            color: var(--white);
-            border: none;
-            padding: 0.6rem 1.2rem;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .flow-box::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--secondary);
+            font-weight: bold;
         }
 
-        .copy-btn:hover {
-            background: #2563eb;
-            transform: translateY(-1px);
+        .flow-box:last-child::after {
+            display: none;
         }
 
-        .copy-btn.copied {
-            background: var(--success);
-        }
-
-        /* 슬라이드 진행 표시 */
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100vw;
-            height: 4px;
-            background: rgba(0, 0, 0, 0.1);
-            z-index: 100;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--accent);
-            transition: width 0.5s ease;
-            width: 0%;
-        }
-
-
-        /* 코드 블록 스타일 */
-        .code-block {
-            background: #f8f9fa;
-            color: #2d3748;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            border: 1px solid #e2e8f0;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.75rem;
-            line-height: 1.4;
-            overflow-x: auto;
-            margin: 1rem 0;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-        
-        .code-block::before {
-            content: "";
-            display: block;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent), transparent);
+        .flow-icon {
+            font-size: 2rem;
             margin-bottom: 1rem;
+            display: block;
         }
 
-        /* 긴 코드를 위한 다단 레이아웃 */
-        .code-block.multi-column {
-            columns: 2;
-            column-gap: 2rem;
-            column-fill: balance;
-            max-height: 70vh;
-        }
-
-        /* 작은 코드 블록 */
-        .code-block.compact {
-            font-size: 0.7rem;
-            line-height: 1.3;
-            padding: 1rem;
-            max-height: 50vh;
-        }
-
-        /* 에러 케이스 스타일 */
         .error-case {
             background: #fef2f2;
             border: 1px solid #fecaca;
@@ -461,90 +286,345 @@
             margin-top: 0.5rem;
         }
 
-        /* 반응형 처리 */
-        @media (max-width: 1024px) {
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--white);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .metrics-table th {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.2rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .metrics-table td {
+            padding: 1.2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--gray-300);
+            font-size: 1rem;
+            line-height: 1.2;
+        }
+
+        .improvement {
+            background: var(--gradient-success);
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        /* 네비게이션 */
+        .nav-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            z-index: 1000;
+        }
+
+        .slide-indicator {
+            background: rgba(30, 58, 138, 0.9);
+            color: var(--white);
+            padding: 0.6rem 1.2rem;
+            border-radius: 1.5rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
+            font-size: 0.9rem;
+        }
+
+        .nav-btn {
+            background: rgba(30, 58, 138, 0.9);
+            color: var(--white);
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
+            min-width: 70px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(30, 58, 138, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 애니메이션 */
+        @keyframes slideInDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 향후 발전방안 페이지 전용 스타일 */
+        .future-development {
+            max-width: 1600px;
+            width: 100%;
+        }
+
+        .future-development .slide-title {
+            font-size: 1.9rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .future-development .content-grid {
+            gap: 2.5rem;
+        }
+
+        .future-development .content-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .future-development .bullet-list li {
+            font-size: 0.95rem;
+            padding: 0.7rem;
+            margin-bottom: 0.7rem;
+            line-height: 1.2;
+        }
+
+        .future-development .bullet-list li::before {
+            content: "🚀";
+            font-size: 0.9rem;
+        }
+
+        .future-development .highlight-box {
+            margin: 2rem 0;
+            padding: 1.8rem;
+        }
+
+        .future-development .highlight-box h4 {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .future-development .highlight-box p {
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        /* 16:9 화면 비율 최적화 */
+        @media (min-aspect-ratio: 16/9) {
             .slide {
-                padding: 2rem;
+                padding: 1.5rem 4rem;
             }
-
-            .slide-title {
-                font-size: 1.8rem;
+            .slide-content {
+                max-width: 1800px;
             }
+            .future-development {
+                max-width: 1800px;
+            }
+        }
 
-            .content-grid {
+        /* 긴 페이지들에 대한 특별 스타일 */
+        .slide.compact-slide .slide-content {
+            max-height: 95vh;
+            overflow: hidden;
+            padding: 0.5rem;
+        }
+        
+        .slide.compact-slide .slide-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+        
+        .slide.compact-slide .content-grid {
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            height: calc(95vh - 120px);
+        }
+        
+        .slide.compact-slide .content-section {
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+            padding: 0.8rem;
+            border-radius: 0.6rem;
+            border-left: 3px solid var(--secondary);
+        }
+        
+        .slide.compact-slide .content-section h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.6rem;
+        }
+        
+        .slide.compact-slide pre,
+        .slide.compact-slide .code-block {
+            font-size: 0.65rem;
+            line-height: 1.2;
+            padding: 0.8rem;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .slide.compact-slide p {
+            font-size: 0.62rem;
+            margin-top: 0.3rem;
+        }
+        
+        /* 2-컬럼 레이아웃용 */
+        .slide.compact-slide.two-column .content-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            height: calc(95vh - 150px);
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .slide { padding: 1.5rem 1rem; }
+            .slide-1 h1 { font-size: 2.5rem; }
+            .content-grid, .tech-grid, .architecture-flow { 
+                grid-template-columns: 1fr; 
+                gap: 1.5rem; 
+            }
+            .flow-box::after {
+                content: '↓';
+                right: 50%;
+                top: 100%;
+                transform: translateX(50%);
+            }
+            .future-development .bullet-list li {
+                font-size: 0.8rem;
+                padding: 0.4rem;
+            }
+            .future-development .content-section h3 {
+                font-size: 1.2rem;
+            }
+            .slide.compact-slide .content-grid {
                 grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .tech-grid {
-                grid-template-columns: 1fr;
+                height: auto;
             }
         }
     </style>
 </head>
 <body>
-    <div class="presentation-container" id="presentationContainer">
+
+    <div class="presentation-container" id="presentation">
         <!-- 슬라이드 1: 타이틀 -->
         <div class="slide slide-1">
-            <h1>수강신청 시스템 CI/CD 프로젝트</h1>
-            <p class="subtitle">Spring Boot 기반 DevOps 파이프라인 구축</p>
+            <h1>🎓 수강신청 시스템 개발부터 배포 까지</h1>
+            <p class="subtitle">현대적 DevOps 기술 스택으로 구현한 완전 자동화 배포 시스템</p>
             <div class="info">
                 <div class="info-item">
-                    <div class="label">개발자</div>
-                    <div class="value">조석현</div>
+                    <strong>👨‍💻 개발자</strong><br>
+                    조석현
                 </div>
                 <div class="info-item">
-                    <div class="label">개발 기간</div>
-                    <div class="value">2025년 8월 11일 ~ 25일</div>
+                    <strong>📅 개발 기간</strong><br>
+                    2025년 8월 11일 ~ 25일
                 </div>
                 <div class="info-item">
-                    <div class="label">핵심 기술</div>
-                    <div class="value">Spring Boot + Docker + K8s + ArgoCD</div>
+                    <strong>🛠️ 핵심 기술</strong><br>
+                    Spring Boot + Docker + K8s + ArgoCD
                 </div>
                 <div class="info-item">
-                    <div class="label">배포 환경</div>
-                    <div class="value">AWS EC2 + EKS + RDS MySQL</div>
+                    <strong>📋 배포 환경</strong><br>
+                    AWS EC2 + EKS + RDS MySQL
                 </div>
+            </div>
+            <div class="tech-logos">
+                <div class="tech-logo" style="--delay: 0s;">🍃</div>
+                <div class="tech-logo" style="--delay: 0.2s;">🐋</div>
+                <div class="tech-logo" style="--delay: 0.4s;">☸️</div>
+                <div class="tech-logo" style="--delay: 0.6s;">🎯</div>
+                <div class="tech-logo" style="--delay: 0.8s;">⚡</div>
             </div>
         </div>
 
         <!-- 슬라이드 2: 목차 -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>목차</h2>
-                <span class="slide-number">2 / 14</span>
-            </div>
             <div class="slide-content">
-                <h2 class="slide-title">목차</h2>
-                <div class="content-grid">
-                    <div class="content-section">
-                        <h3>프로젝트 소개</h3>
-                        <ul class="bullet-list">
-                            <li><strong>3.</strong> 프로젝트 개요 - 전체 과정 소개</li>
-                            <li><strong>4.</strong> 기술 스택 - Backend, Cloud, DevOps</li>
-                            <li><strong>5.</strong> 시스템 아키텍처 - 이중 배포 전략</li>
-                            <li><strong>6.</strong> Backend 개발 - Entity & JPA 설계</li>
-                            <li><strong>7.</strong> Service & Controller - 핵심 비즈니스 로직</li>
-                        </ul>
-                        
-                        <h3 style="margin-top: 2rem;">개발 과정</h3>
-                        <ul class="bullet-list">
-                            <li><strong>8.</strong> Frontend & Database Configuration</li>
-                            <li><strong>9.</strong> Docker 컨테이너화 & 배포 준비</li>
-                            <li><strong>10.</strong> CI/CD 파이프라인 - 완전 자동화</li>
+                <h2 class="slide-title">📋 목차</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+                    <div style="background: #f8fafc; padding: 2rem; border-radius: 1rem; border-left: 4px solid #3b82f6;">
+                        <h3 style="color: #1e40af; margin-bottom: 1.5rem; font-size: 1.4rem;">🔍 프로젝트 소개</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #60a5fa;">
+                                <strong>3.</strong> 프로젝트 개요 - 전체 과정 소개
+                            </li>
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #60a5fa;">
+                                <strong>4.</strong> 기술 스택 - Backend, Cloud, DevOps
+                            </li>
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #60a5fa;">
+                                <strong>5.</strong> 시스템 아키텍처 - 이중 배포 전략
+                            </li>
                         </ul>
                     </div>
-                    <div class="content-section">
-                        <h3>도전과 해결</h3>
-                        <ul class="bullet-list">
-                            <li><strong>11.</strong> AWS 인프라 & Kubernetes 배포</li>
-                            <li><strong>12.</strong> 주요 도전과제 및 해결방안</li>
-                            <li><strong>13.</strong> 프로젝트 성과 - 실제 서비스 운영</li>
+                    
+                    <div style="background: #f0fdf4; padding: 2rem; border-radius: 1rem; border-left: 4px solid #10b981;">
+                        <h3 style="color: #047857; margin-bottom: 1.5rem; font-size: 1.4rem;">🛠️ 개발 과정</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #34d399;">
+                                <strong>6.</strong> 수강신청 시스템 개발 - 핵심 기능 구현
+                            </li>
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #34d399;">
+                                <strong>7.</strong> 개발 과정과 주요 성과 - Phase별 진행
+                            </li>
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #34d399;">
+                                <strong>8.</strong> CI/CD 파이프라인 - 완전 자동화
+                            </li>
                         </ul>
-                        
-                        <h3 style="margin-top: 2rem;">마무리</h3>
-                        <ul class="bullet-list">
-                            <li><strong>14.</strong> 향후 발전 방안</li>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 2rem;">
+                    <div style="background: #fef3c7; padding: 2rem; border-radius: 1rem; border-left: 4px solid #f59e0b;">
+                        <h3 style="color: #92400e; margin-bottom: 1.5rem; font-size: 1.4rem;">🚧 도전과 해결</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #fbbf24;">
+                                <strong>9.</strong> 어려웠던 점과 해결방안
+                            </li>
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #fbbf24;">
+                                <strong>10.</strong> 프로젝트 성과 - 실제 서비스 운영
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #faf5ff; padding: 2rem; border-radius: 1rem; border-left: 4px solid #8b5cf6;">
+                        <h3 style="color: #7c3aed; margin-bottom: 1.5rem; font-size: 1.4rem;">🚀 마무리</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #a78bfa;">
+                                <strong>11.</strong> 향후 발전 방안
+                            </li>
+                            <li style="margin-bottom: 0.8rem; padding: 0.5rem; background: white; border-radius: 0.5rem; border-left: 3px solid #a78bfa;">
+                                <strong>12.</strong> 감사합니다 - 실제 서비스 체험
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -553,15 +633,11 @@
 
         <!-- 슬라이드 3: 프로젝트 개요 -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>프로젝트 개요</h2>
-                <span class="slide-number">3 / 14</span>
-            </div>
             <div class="slide-content">
-                <h2 class="slide-title">개발부터 배포까지 전체 과정</h2>
+                <h2 class="slide-title">📋 개발부터 배포까지 전체 과정</h2>
                 <div class="content-grid">
                     <div class="content-section">
-                        <h3>소프트웨어 개발 생명주기 (SDLC)</h3>
+                        <h3>🔄 소프트웨어 개발 생명주기 (SDLC)</h3>
                         <ul class="bullet-list">
                             <li>요구사항 분석 및 시스템 설계</li>
                             <li>Spring Boot 기반 Full-Stack 웹 개발</li>
@@ -572,126 +648,201 @@
                         </ul>
                     </div>
                     <div class="content-section">
-                        <h3>End-to-End 구현</h3>
+                        <h3>🌟 End-to-End 구현</h3>
                         <ul class="bullet-list">
                             <li>프론트엔드부터 인프라까지 전체 스택</li>
                             <li>개발 환경에서 프로덕션까지 완전 자동화</li>
                             <li>이중 배포 전략 (EC2 + EKS)</li>
-                            <li>실제 운영 환경 고려한 실무 수준 구현</li>
+                            <li>실제 운영 중인 서비스 24시간 가동</li>
+                            <li>현업 수준의 DevOps 프로세스 구현</li>
+                            <li>확장 가능한 클라우드 네이티브 아키텍처</li>
                         </ul>
                     </div>
                 </div>
                 <div class="highlight-box">
-                    <h4>프로젝트 핵심 가치</h4>
-                    <p>DevOps 문화 실천 | 자동화를 통한 효율성 극대화 | 현대적 마이크로서비스 아키텍처 구현</p>
+                    <h4>💡 프로젝트 의미</h4>
+                    <p>단순한 개발 프로젝트가 아닌, 기획부터 운영까지<br>
+                    소프트웨어 엔지니어링 전체 과정을 경험한 종합적 포트폴리오</p>
                 </div>
             </div>
         </div>
 
-        <!-- 슬라이드 3: 기술 스택 -->
+        <!-- 슬라이드 4: 기술 스택 -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>기술 스택</h2>
-                <span class="slide-number">4 / 14</span>
-            </div>
             <div class="slide-content">
-                <h2 class="slide-title">기술 스택</h2>
+                <h2 class="slide-title">🛠️ 기술 스택</h2>
                 <div class="tech-grid">
-                    <div class="tech-column">
-                        <h4>Backend & Database</h4>
-                        <div class="tech-item">Java 17 (최신 LTS 버전)</div>
-                        <div class="tech-item">Spring Boot 3.1.2 (웹 프레임워크)</div>
-                        <div class="tech-item">Spring Data JPA (ORM)</div>
-                        <div class="tech-item">PostgreSQL (메인 데이터베이스)</div>
-                        <div class="tech-item">Mustache (템플릿 엔진)</div>
+                    <div class="tech-column backend">
+                        <h4>🍃 Backend & Database</h4>
+                        <div class="tech-item">
+                            <span>☕</span>
+                            <div>
+                                <div><strong>Java 17</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">최신 LTS 버전</div>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span>🍃</span>
+                            <div>
+                                <div><strong>Spring Boot 3.1.2</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">웹 프레임워크</div>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span>🗄️</span>
+                            <div>
+                                <div><strong>MySQL + JPA</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">AWS RDS</div>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span>🎨</span>
+                            <div>
+                                <div><strong>Mustache</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">템플릿 엔진</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="tech-column">
-                        <h4>Cloud & DevOps</h4>
-                        <div class="tech-item">AWS EC2 (서버 인스턴스)</div>
-                        <div class="tech-item">AWS EKS (Kubernetes 관리)</div>
-                        <div class="tech-item">AWS RDS (데이터베이스 관리)</div>
-                        <div class="tech-item">Docker & DockerHub</div>
-                        <div class="tech-item">Kubernetes (컨테이너 오케스트레이션)</div>
+
+                    <div class="tech-column infra">
+                        <h4>☁️ Cloud & Infrastructure</h4>
+                        <div class="tech-item">
+                            <span>🌩️</span>
+                            <div>
+                                <div><strong>AWS EC2</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">Ubuntu 서버</div>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span>☸️</span>
+                            <div>
+                                <div><strong>AWS EKS</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">Kubernetes 클러스터</div>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span>🗄️</span>
+                            <div>
+                                <div><strong>AWS RDS MySQL</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">관리형 데이터베이스</div>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span>🌐</span>
+                            <div>
+                                <div><strong>VPC Peering</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">네트워크 연결</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="tech-column">
-                        <h4>CI/CD & GitOps</h4>
-                        <div class="tech-item">GitHub Actions (CI/CD 파이프라인)</div>
-                        <div class="tech-item">ArgoCD (GitOps 자동 배포)</div>
-                        <div class="tech-item">GitHub (소스코드 관리)</div>
-                        <div class="tech-item">Helm (Kubernetes 패키지 관리)</div>
-                        <div class="tech-item">YAML 매니페스트</div>
+
+                    <div class="tech-column cicd">
+                        <h4>🚀 CI/CD & DevOps</h4>
+                        <div class="tech-item">
+                            <span>⚡</span>
+                            <div>
+                                <div><strong>GitHub Actions</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">CI 파이프라인</div>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span>🐋</span>
+                            <div>
+                                <div><strong>Docker + DockerHub</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">컨테이너화</div>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span>🎯</span>
+                            <div>
+                                <div><strong>ArgoCD</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">GitOps CD</div>
+                            </div>
+                        </div>
+                        <div class="tech-item">
+                            <span>⚙️</span>
+                            <div>
+                                <div><strong>Gradle</strong></div>
+                                <div style="font-size: 0.9rem; color: var(--gray-700);">빌드 도구</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 슬라이드 4: 시스템 아키텍처 -->
+        <!-- 슬라이드 5: 시스템 아키텍처 -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>시스템 아키텍처</h2>
-                <span class="slide-number">5 / 14</span>
-            </div>
             <div class="slide-content">
-                <h2 class="slide-title">시스템 아키텍처</h2>
+                <h2 class="slide-title">🏗️ 시스템 아키텍처</h2>
                 <div class="architecture-flow">
                     <div class="flow-box">
-                        <h5>GitHub</h5>
+                        <span class="flow-icon">📂</span>
+                        <h4>GitHub</h4>
                         <p>Source Code<br>Push & PR</p>
                     </div>
-                    <span class="flow-arrow">→</span>
                     <div class="flow-box">
-                        <h5>GitHub Actions</h5>
+                        <span class="flow-icon">⚡</span>
+                        <h4>GitHub Actions</h4>
                         <p>Build & Test<br>Docker Push</p>
                     </div>
-                    <span class="flow-arrow">→</span>
                     <div class="flow-box">
-                        <h5>DockerHub</h5>
+                        <span class="flow-icon">🐋</span>
+                        <h4>DockerHub</h4>
                         <p>Container<br>Registry</p>
                     </div>
-                    <span class="flow-arrow">→</span>
                     <div class="flow-box">
-                        <h5>ArgoCD</h5>
-                        <p>GitOps<br>자동 배포</p>
+                        <span class="flow-icon">🎯</span>
+                        <h4>ArgoCD</h4>
+                        <p>GitOps<br>Deployment</p>
                     </div>
                 </div>
+                
+                <div style="text-align: center; margin: 2rem 0;">
+                    <span style="font-size: 2rem; color: var(--secondary);">⬇️ 이중 배포 전략</span>
+                </div>
+
                 <div class="content-grid">
-                    <div class="content-section">
-                        <h3>이중 배포 환경</h3>
-                        <ul class="bullet-list">
-                            <li>AWS EC2 Direct 배포 (전통적 방식)</li>
-                            <li>AWS EKS Kubernetes 배포 (컨테이너 오케스트레이션)</li>
-                            <li>동일한 소스코드로 두 환경 동시 운영</li>
-                            <li>각 환경별 최적화된 배포 전략 적용</li>
+                    <div style="background: #f0f9ff; padding: 2rem; border-radius: 1rem; border-left: 4px solid #3b82f6;">
+                        <h3 style="color: #1e40af; margin-bottom: 1rem;">🌩️ AWS EC2 배포</h3>
+                        <ul style="list-style: none;">
+                            <li style="margin-bottom: 0.5rem;">📍 <strong>Ubuntu 22.04 LTS</strong></li>
+                            <li style="margin-bottom: 0.5rem;">🐋 <strong>Docker Container</strong></li>
+                            <li style="margin-bottom: 0.5rem;">🔗 <strong>직접 SSH 배포</strong></li>
+                            <li style="margin-bottom: 0.5rem;">🌐 <strong>Port 80 접근</strong></li>
                         </ul>
                     </div>
-                    <div class="content-section">
-                        <h3>DevOps 자동화</h3>
-                        <ul class="bullet-list">
-                            <li>GitHub Actions CI/CD 파이프라인</li>
-                            <li>ArgoCD GitOps 지속적 배포</li>
-                            <li>Docker 컨테이너화로 일관된 환경</li>
-                            <li>Infrastructure as Code 실천</li>
+                    
+                    <div style="background: #f0fdf4; padding: 2rem; border-radius: 1rem; border-left: 4px solid #10b981;">
+                        <h3 style="color: #047857; margin-bottom: 1rem;">☸️ AWS EKS 배포</h3>
+                        <ul style="list-style: none;">
+                            <li style="margin-bottom: 0.5rem;">🎯 <strong>ArgoCD GitOps</strong></li>
+                            <li style="margin-bottom: 0.5rem;">📦 <strong>Kubernetes Pods</strong></li>
+                            <li style="margin-bottom: 0.5rem;">🔄 <strong>자동 스케일링</strong></li>
+                            <li style="margin-bottom: 0.5rem;">📊 <strong>모니터링 & 관리</strong></li>
                         </ul>
                     </div>
+                </div>
+
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 1rem; margin-top: 2rem; text-align: center; border-left: 4px solid #f59e0b;">
+                    <h4 style="color: #92400e; margin-bottom: 0.5rem;">🗄️ 공유 데이터베이스</h4>
+                    <p style="color: #78350f;">AWS RDS MySQL - 두 환경 모두 동일한 데이터베이스 사용으로 데이터 일관성 보장</p>
                 </div>
             </div>
         </div>
 
-        <!-- 슬라이드 5: Backend 개발 -->
+        <!-- 슬라이드 6: Backend 개발 - Entity & JPA -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>Backend 개발</h2>
-                <span class="slide-number">6 / 14</span>
-            </div>
             <div class="slide-content">
-                <h2 class="slide-title">Backend 개발 - Entity & JPA 설계</h2>
+                <h2 class="slide-title">🍃 Backend 개발 - Entity & JPA 설계</h2>
+                
                 <div class="content-grid">
-                    <div class="content-section">
-                        <h3>데이터베이스 설계</h3>
-                        <div class="code-block">@Entity
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 1rem; border-left: 4px solid #3b82f6;">
+                        <h3 style="color: #1e40af; margin-bottom: 1rem; font-size: 1.2rem;">🎓 Student Entity (JPA)</h3>
+                        <div style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 0.5rem; font-family: 'Courier New', monospace; font-size: 0.85rem; margin-bottom: 1rem; overflow-x: auto; white-space: pre-line; line-height: 1.4;">
+@Entity
 @Table(name = "students")
 public class Student {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -706,115 +857,142 @@ public class Student {
     private String department;
     private String password;
     private String grade;
-    
-    // 생성자, getter, setter 생략...
 }</div>
-                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.5rem;">
-                            <strong>핵심 기능:</strong> JPA Entity 매핑, Bean Validation으로 데이터 검증, 
-                            학번 중복 방지를 위한 유니크 제약조건 설정
-                        </p>
+                        <p style="font-size: 0.85rem; color: #6b7280;">✨ JPA 어노테이션으로 테이블 매핑 및 유효성 검사</p>
                     </div>
-                    <div class="content-section">
-                        <h3>수강신청 비즈니스 로직</h3>
-                        <div class="code-block">@Service
-@Transactional
-public class EnrollmentService {
+
+                    <div style="background: #f0fdf4; padding: 1.5rem; border-radius: 1rem; border-left: 4px solid #10b981;">
+                        <h3 style="color: #047857; margin-bottom: 1rem; font-size: 1.2rem;">📚 Enrollment Entity (관계 매핑)</h3>
+                        <div style="background: #1f2937; color: #f9fafb; padding: 1.5rem; border-radius: 0.5rem; font-family: 'Courier New', monospace; font-size: 0.85rem; margin-bottom: 1rem; overflow-x: auto; white-space: pre-line; line-height: 1.4;">
+@Entity
+@Table(name = "enrollments", 
+       uniqueConstraints = {
+    @UniqueConstraint(columnNames = 
+        {"student_id", "subject_id"})
+})
+public class Enrollment {
+    @ManyToOne
+    @JoinColumn(name = "student_id", 
+                nullable = false)
+    private Student student;
     
-    @Autowired
-    private StudentRepository studentRepository;
+    @ManyToOne
+    @JoinColumn(name = "subject_id", 
+                nullable = false)
+    private Subject subject;
     
-    @Autowired
-    private TimetableRepository timetableRepository;
-    
-    @Autowired
-    private EnrollmentRepository enrollmentRepository;
-    
-    /**
-     * 수강신청 처리 메소드
-     * @param studentId 학생 ID
-     * @param timetableId 시간표 ID
-     * @return 수강신청 결과
-     */
-    public Enrollment enrollSubject(Long studentId, Long timetableId) {
-        
-        // 1. 학생 및 시간표 정보 조회
-        Student student = studentRepository
-            .findById(studentId)
-            .orElseThrow(() -> new RuntimeException("학생 정보를 찾을 수 없습니다"));
-        
-        Timetable timetable = timetableRepository
-            .findById(timetableId)
-            .orElseThrow(() -> new RuntimeException("시간표 정보를 찾을 수 없습니다"));
-        
-        // 2. 중복 수강 검증
-        boolean isDuplicate = enrollmentRepository
-            .existsByStudentAndSubject(student, timetable.getSubject());
-        
-        if (isDuplicate) {
-            throw new RuntimeException("이미 수강 중인 과목입니다");
-        }
-        
-        // 3. 시간 충돌 검증
-        List&lt;Enrollment&gt; conflicts = enrollmentRepository.findTimeConflicts(
-            student, 
-            timetable.getDay(), 
-            timetable.getStartTime(), 
-            timetable.getEndTime()
-        );
-        
-        if (!conflicts.isEmpty()) {
-            throw new RuntimeException("시간이 겹치는 과목이 있습니다");
-        }
-        
-        // 4. 수강 정원 확인
-        long currentEnrollmentCount = enrollmentRepository.countByTimetable(timetable);
-        
-        if (currentEnrollmentCount >= timetable.getCapacity()) {
-            throw new RuntimeException("수강 정원이 초과되었습니다");
-        }
-        
-        // 5. 수강신청 데이터 저장
-        Enrollment newEnrollment = new Enrollment(
-            student, 
-            timetable.getSubject(), 
-            timetable
-        );
-        
-        return enrollmentRepository.save(newEnrollment);
-    }
+    @ManyToOne
+    @JoinColumn(name = "timetable_id", 
+                nullable = false)
+    private Timetable timetable;
 }</div>
-                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.5rem;">
-                            <strong>핵심 기능:</strong> @Transactional로 데이터 일관성 보장, 
-                            4단계 검증 로직(중복/시간충돌/정원/저장), 체계적인 예외 처리
-                        </p>
+                        <p style="font-size: 0.85rem; color: #6b7280;">🔗 다대일 관계 매핑으로 정규화된 데이터베이스 설계</p>
+                    </div>
+                </div>
+                
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 1rem; margin-top: 1.5rem; border-left: 4px solid #f59e0b;">
+                    <h3 style="color: #92400e; margin-bottom: 1rem; text-align: center; font-size: 1.3rem;">🏗️ 데이터베이스 설계 핵심</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center;">
+                        <div style="background: rgba(255,255,255,0.8); padding: 1rem; border-radius: 0.6rem;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">👥</div>
+                            <strong style="color: #92400e; font-size: 0.9rem;">Students</strong>
+                            <div style="font-size: 0.65rem; color: #92400e; margin-top: 0.3rem;">학생 정보 관리</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.8); padding: 1rem; border-radius: 0.6rem;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📖</div>
+                            <strong style="color: #92400e; font-size: 0.9rem;">Subjects</strong>
+                            <div style="font-size: 0.65rem; color: #92400e; margin-top: 0.3rem;">과목 마스터</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.8); padding: 1rem; border-radius: 0.6rem;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+                            <strong style="color: #92400e; font-size: 0.9rem;">Timetables</strong>
+                            <div style="font-size: 0.65rem; color: #92400e; margin-top: 0.3rem;">시간표 정보</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.8); padding: 1rem; border-radius: 0.6rem;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔄</div>
+                            <strong style="color: #92400e; font-size: 0.9rem;">Enrollments</strong>
+                            <div style="font-size: 0.65rem; color: #92400e; margin-top: 0.3rem;">수강신청 관계</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- 슬라이드 7: Service & Controller -->
+        
+        <!-- 슬라이드 7: Service & Controller 비즈니스 로직 -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>Service & Controller</h2>
-                <span class="slide-number">7 / 14</span>
-            </div>
-            <div class="slide-content">
-                <h2 class="slide-title">Service & Controller - 핵심 비즈니스 로직</h2>
-                <div class="content-grid">
-                    <div class="content-section">
-                        <h3>REST API 컨트롤러</h3>
-                        <div class="code-block multi-column">@Controller
+            <div class="slide-content" style="padding: 1.5rem 2rem; height: 100vh; display: flex; flex-direction: column; box-sizing: border-box;">
+                <h2 class="slide-title" style="font-size: 1.8rem; margin-bottom: 1.2rem; text-align: center; flex-shrink: 0;">⚙️ Service & Controller - 핵심 비즈니스 로직</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; flex: 1; min-height: 0;">
+                    <!-- 첫 번째 컬럼: Service 로직 -->
+                    <div style="background: #f8fafc; border-radius: 0.8rem; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                        <h3 style="color: #1e40af; font-size: 1rem; margin-bottom: 0.8rem; flex-shrink: 0;">🎯 수강신청 핵심 서비스</h3>
+                        <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.62rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+@Service
+@Transactional
+public class EnrollmentService {
+    
+    public Enrollment enrollSubject(
+            Long studentId, Long timetableId) {
+        
+        // 1. 학생/시간표 조회
+        Student student = studentRepository
+            .findById(studentId)
+            .orElseThrow();
+        Timetable timetable = timetableRepository
+            .findById(timetableId)
+            .orElseThrow();
+        
+        // 2. 중복 수강 검증
+        boolean exists = enrollmentRepository
+            .existsByStudentAndSubject(
+                student, timetable.getSubject());
+        if (exists) {
+            throw new RuntimeException(
+                "이미 수강 중인 과목입니다");
+        }
+        
+        // 3. 시간 충돌 검증  
+        List&lt;Enrollment&gt; conflicts = 
+            enrollmentRepository.findTimeConflicts(
+                student, timetable.getDay(), 
+                timetable.getStartTime(), 
+                timetable.getEndTime());
+        if (!conflicts.isEmpty()) {
+            throw new RuntimeException(
+                "시간이 겹치는 과목이 있습니다");
+        }
+        
+        // 4. 정원 확인
+        long count = enrollmentRepository
+            .countByTimetable(timetable);
+        if (count >= timetable.getCapacity()) {
+            throw new RuntimeException(
+                "정원이 초과되었습니다");
+        }
+        
+        // 5. 수강신청 저장
+        return enrollmentRepository.save(
+            new Enrollment(student, 
+                timetable.getSubject(), timetable));
+    }
+}</div>
+                        <div style="background: #e0f2fe; padding: 0.6rem; margin-top: 0.6rem; border-radius: 0.4rem; border-left: 3px solid #0288d1; font-size: 0.65rem; flex-shrink: 0;">
+                            <strong>💡 핵심 설계:</strong><br>
+                            • @Transactional로 원자성 보장<br>
+                            • 4단계 검증으로 데이터 무결성<br>
+                            • 명확한 예외 처리
+                        </div>
+                    </div>
+
+                    <!-- 두 번째 컬럼: Controller 로직 -->
+                    <div style="background: #f0fdf4; border-radius: 0.8rem; border-left: 4px solid #10b981; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                        <h3 style="color: #047857; font-size: 1rem; margin-bottom: 0.8rem; flex-shrink: 0;">🌐 REST API 컨트롤러</h3>
+                        <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.62rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+@Controller
 @RequestMapping("/student")
 public class StudentController {
     
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private EnrollmentService enrollmentService;
-    
-    /**
-     * 수강신청 처리 컨트롤러
-     */
     @PostMapping("/enroll")
     public String processEnrollment(
             @RequestParam Long timetableId,
@@ -823,103 +1001,101 @@ public class StudentController {
         
         try {
             // 1. 세션에서 로그인 사용자 확인
-            String username = (String) session.getAttribute("username");
-            
+            String username = (String) session
+                .getAttribute("username");
             if (username == null) {
                 redirectAttributes.addFlashAttribute(
-                    "errorMessage", "로그인이 필요합니다");
+                    "errorMessage", 
+                    "로그인이 필요합니다");
                 return "redirect:/login";
             }
             
             // 2. 학생 정보 조회
-            Student student = studentService.getStudentByStudentId(username);
-            
+            Student student = studentService
+                .getStudentByStudentId(username);
             if (student == null) {
                 redirectAttributes.addFlashAttribute(
-                    "errorMessage", "학생 정보를 찾을 수 없습니다");
+                    "errorMessage", 
+                    "학생 정보를 찾을 수 없습니다");
                 return "redirect:/student/enroll";
             }
             
             // 3. 수강신청 처리
-            Enrollment enrollment = enrollmentService.enrollSubject(
-                student.getId(), timetableId);
+            Enrollment enrollment = enrollmentService
+                .enrollSubject(student.getId(), timetableId);
             
-            // 4. 성공 메시지 설정
-            String successMessage = String.format(
-                "수강신청이 완료되었습니다: %s", 
+            redirectAttributes.addFlashAttribute(
+                "successMessage", 
+                "수강신청이 완료되었습니다: " + 
                 enrollment.getSubject().getName());
-            
-            redirectAttributes.addFlashAttribute("successMessage", successMessage);
-            
+                
         } catch (RuntimeException e) {
-            // 5. 예외 처리
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute(
+                "errorMessage", e.getMessage());
         }
         
         return "redirect:/student/enroll";
     }
 }</div>
+                        <div style="background: #dcfce7; padding: 0.6rem; margin-top: 0.6rem; border-radius: 0.4rem; border-left: 3px solid #16a34a; font-size: 0.65rem; flex-shrink: 0;">
+                            <strong>🔒 웹 계층 보안:</strong><br>
+                            • 세션 기반 인증 및 권한 검증<br>
+                            • try-catch로 예외 처리<br>
+                            • PRG 패턴으로 중복 요청 방지
+                        </div>
                     </div>
-                    <div class="content-section">
-                        <h3>복잡한 JPA 쿼리</h3>
-                        <div class="code-block">@Repository
-public interface EnrollmentRepository extends JpaRepository&lt;Enrollment, Long&gt; {
+                    
+                    <!-- 세 번째 컬럼: Repository 쿼리 -->
+                    <div style="background: #fef2f2; border-radius: 0.8rem; border-left: 4px solid #ef4444; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                        <h3 style="color: #dc2626; font-size: 1rem; margin-bottom: 0.8rem; flex-shrink: 0;">📊 복잡한 JPA 쿼리</h3>
+                        <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.62rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+@Repository
+public interface EnrollmentRepository extends 
+    JpaRepository&lt;Enrollment, Long&gt; {
     
-    /**
-     * 시간 충돌 검사를 위한 JPQL 쿼리
-     * 학생의 기존 수강 시간과 새로운 시간표의 시간이 겹치는지 확인
-     */
-    @Query("""
-        SELECT e FROM Enrollment e 
-        WHERE e.student = :student 
-          AND e.timetable.day = :day 
-          AND (
-            (e.timetable.startTime &lt;= :startTime 
-             AND e.timetable.endTime &gt; :startTime) 
-            OR 
-            (e.timetable.startTime &lt; :endTime 
-             AND e.timetable.endTime &gt;= :endTime) 
-            OR 
-            (e.timetable.startTime &gt;= :startTime 
-             AND e.timetable.endTime &lt;= :endTime)
-          )
-        """)
+    // 시간 충돌 검사 JPQL
+    @Query(
+        "SELECT e FROM Enrollment e " +
+        "WHERE e.student = :student " +
+        "  AND e.timetable.day = :day " +
+        "  AND (" +
+        "    (e.timetable.startTime &lt;= :startTime " +
+        "     AND e.timetable.endTime &gt; :startTime) " +
+        "    OR " +
+        "    (e.timetable.startTime &lt; :endTime " +
+        "     AND e.timetable.endTime &gt;= :endTime) " +
+        "    OR " +
+        "    (e.timetable.startTime &gt;= :startTime " +
+        "     AND e.timetable.endTime &lt;= :endTime)" +
+        "  )"
+    )
     List&lt;Enrollment&gt; findTimeConflicts(
         @Param("student") Student student,
         @Param("day") String day,
         @Param("startTime") String startTime,
-        @Param("endTime") String endTime
-    );
+        @Param("endTime") String endTime);
     
-    /**
-     * 학생이 특정 과목을 이미 수강하고 있는지 확인
-     */
+    // 중복 수강 확인
     boolean existsByStudentAndSubject(
-        Student student, 
-        Subject subject
-    );
+        Student student, Subject subject);
     
-    /**
-     * 특정 시간표에 등록된 학생 수 조회
-     */
+    // 과목별 수강 인원 조회
     long countByTimetable(Timetable timetable);
     
-    /**
-     * 학생별 수강 과목 조회 (시간순 정렬)
-     */
-    @Query("""
-        SELECT e FROM Enrollment e 
-        WHERE e.student = :student 
-        ORDER BY e.timetable.day, e.timetable.startTime
-        """)
+    // 학생별 수강 과목 (시간순 정렬)
+    @Query("SELECT e FROM Enrollment e " +
+           "WHERE e.student = :student " +
+           "ORDER BY e.timetable.day, " +
+           "         e.timetable.startTime")
     List&lt;Enrollment&gt; findByStudentOrderBySchedule(
-        @Param("student") Student student
-    );
+        @Param("student") Student student);
 }</div>
-                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.5rem;">
-                            <strong>핵심 기능:</strong> Text Block 문법으로 가독성 향상, 복잡한 시간 충돌 검사 JPQL, 
-                            @Query와 메소드명 쿼리 조합 활용
-                        </p>
+                        <div style="background: #fee2e2; padding: 0.6rem; margin-top: 0.6rem; border-radius: 0.4rem; border-left: 3px solid #dc2626; font-size: 0.65rem; flex-shrink: 0;">
+                            <strong>⚡ 고급 쿼리 기법:</strong><br>
+                            • JPQL로 복잡한 시간 충돌 로직<br>
+                            • @Param으로 가독성 향상<br>
+                            • 메소드명 기반 자동 쿼리 생성
+                        </div>
                     </div>
                 </div>
             </div>
@@ -927,456 +1103,764 @@ public interface EnrollmentRepository extends JpaRepository&lt;Enrollment, Long&
 
         <!-- 슬라이드 8: Frontend & Database Configuration -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>Frontend & Database</h2>
-                <span class="slide-number">8 / 14</span>
-            </div>
-            <div class="slide-content">
-                <h2 class="slide-title">Frontend & Database Configuration</h2>
-                <div class="content-grid">
-                    <div class="content-section">
-                        <h3>실시간 프론트엔드 검증</h3>
-                        <div class="code-block multi-column">/**
- * 수강신청 실시간 검증 모듈
- */
+            <div class="slide-content" style="padding: 1.5rem 2rem; height: 100vh; display: flex; flex-direction: column; box-sizing: border-box;">
+                <h2 class="slide-title" style="font-size: 1.8rem; margin-bottom: 1.2rem; text-align: center; flex-shrink: 0;">🎨 Frontend & Database Configuration</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; flex: 1; min-height: 0;">
+                    <!-- 첫 번째 컬럼: JavaScript -->
+                    <div style="background: #f8fafc; border-radius: 0.8rem; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                        <h3 style="color: #1e40af; font-size: 1.1rem; margin-bottom: 0.8rem; flex-shrink: 0;">🖥️ 실시간 프론트엔드 검증</h3>
+                        <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.63rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+// 실시간 학점 계산 및 제한 검사
+const MAX_CREDITS = 18; // 학점 상한선
+const enrollments = []; // 기존 수강 과목
+const selectedCourses = []; // 선택한 과목들
 
-// 상수 정의
-const ENROLLMENT_CONFIG = {
-    MAX_CREDITS: 18,           // 최대 수강 학점
-    MIN_CREDITS: 12,           // 최소 수강 학점
-    WARNING_THRESHOLD: 15      // 경고 기준 학점
-};
-
-// 전역 변수
-let currentEnrollments = [];   // 현재 수강 중인 과목
-let selectedCourses = [];      // 장바구니에 담은 과목
-
-/**
- * 총 학점 계산 함수
- */
 function calculateTotalCredits() {
-    let totalCredits = 0;
+    let total = 0;
     
-    // 기존 수강 과목 학점 합산
-    currentEnrollments.forEach(enrollment => {
+    // 기존 수강 학점 계산
+    enrollments.forEach(enrollment => {
         const credits = parseInt(enrollment.subject.credits) || 0;
-        totalCredits += credits;
+        total += credits;
     });
     
-    // 선택한 과목 학점 합산
+    // 새로 선택한 과목 학점 계산
     selectedCourses.forEach(course => {
         const credits = parseInt(course.credits) || 0;
-        totalCredits += credits;
+        total += credits;
     });
     
-    return totalCredits;
+    return total;
 }
 
-/**
- * 수강신청 유효성 검증 함수
- */
-function validateEnrollment() {
-    const totalCredits = calculateTotalCredits();
+// 실시간 시간 충돌 검사
+function hasTimeConflict(newCourse) {
+    const allCourses = [...enrollments, ...selectedCourses];
     
-    // 최대 학점 초과 검사
-    if (totalCredits > ENROLLMENT_CONFIG.MAX_CREDITS) {
-        const message = `학점 한도를 초과했습니다. ` +
-                       `(${totalCredits}/${ENROLLMENT_CONFIG.MAX_CREDITS})`;
-        alert(message);
+    for (let existing of allCourses) {
+        // 같은 요일인지 확인
+        if (existing.day !== newCourse.day) continue;
+        
+        // 시간을 분 단위로 변환
+        const newStart = timeToMinutes(newCourse.startTime);
+        const newEnd = timeToMinutes(newCourse.endTime);
+        const existingStart = timeToMinutes(existing.startTime);
+        const existingEnd = timeToMinutes(existing.endTime);
+        
+        // 시간 겹침 검사 (3가지 경우)
+        if ((newStart < existingEnd && newEnd > existingStart)) {
+            return {
+                conflict: true,
+                conflictWith: existing.subject.name,
+                conflictTime: `${existing.startTime}-${existing.endTime}`
+            };
+        }
+    }
+    return { conflict: false };
+}
+
+// 수강신청 버튼 클릭 이벤트
+function enrollCourse(courseId, courseName, credits) {
+    // 1. 학점 초과 검사
+    const newCredits = calculateTotalCredits() + parseInt(credits);
+    if (newCredits > MAX_CREDITS) {
+        showError(`학점 초과: ${newCredits}/${MAX_CREDITS}학점`);
         return false;
     }
     
-    // 경고 메시지 표시
-    if (totalCredits >= ENROLLMENT_CONFIG.WARNING_THRESHOLD) {
-        const message = `주의: 최대 학점에 근접했습니다. ` +
-                       `(${totalCredits}/${ENROLLMENT_CONFIG.MAX_CREDITS})`;
-        console.warn(message);
+    // 2. 시간 충돌 검사
+    const conflictCheck = hasTimeConflict(course);
+    if (conflictCheck.conflict) {
+        showError(`시간 충돌: ${conflictCheck.conflictWith}`);
+        return false;
     }
     
-    return true;
-}
-
-/**
- * 학점 현황 업데이트 함수
- */
-function updateCreditStatus() {
-    const totalCredits = calculateTotalCredits();
-    const creditStatusElement = document.getElementById('credit-status');
-    
-    if (creditStatusElement) {
-        creditStatusElement.textContent = 
-            `현재 학점: ${totalCredits}/${ENROLLMENT_CONFIG.MAX_CREDITS}`;
-    }
+    // 3. 서버로 요청 전송
+    fetch('/student/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `timetableId=${courseId}`
+    }).then(response => {
+        if (response.ok) location.reload();
+    });
 }</div>
-                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.5rem;">
-                            <strong>핵심 기능:</strong> 모듈화된 설정 객체, JSDoc 타입 안전성, 
-                            실시간 학점 계산 및 경고 시스템, 상태 업데이트 함수
-                        </p>
+                        <div style="background: #e0f2fe; padding: 0.8rem; margin-top: 0.8rem; border-radius: 0.5rem; border-left: 3px solid #0288d1; font-size: 0.8rem; flex-shrink: 0;">
+                            <strong>⚡ 클라이언트 사이드 실시간 검증:</strong><br>
+                            • 학점 체크: 18학점 상한선 실시간 계산<br>
+                            • 시간 충돌: 분 단위 정밀 계산으로 겹침 검사<br>
+                            • UX 최적화: 서버 요청 전 클라이언트 검증
+                        </div>
                     </div>
-                    <div class="content-section">
-                        <h3>Database 설정</h3>
-                        <div class="code-block compact"># application.yml - Spring Boot 설정
 
-spring:
-  # 데이터베이스 연결 설정
-  datasource:
-    url: jdbc:postgresql://course-registration-db:5432/course_registration
-    username: ${DB_USERNAME:course_user}
-    password: ${DB_PASSWORD:course_password}
-    driver-class-name: org.postgresql.Driver
+                    <!-- 두 번째 컬럼: Database 설정 -->
+                    <div style="background: #f0fdf4; border-radius: 0.8rem; border-left: 4px solid #10b981; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                        <h3 style="color: #047857; font-size: 1.1rem; margin-bottom: 0.8rem; flex-shrink: 0;">🗄️ 환경별 데이터베이스 설정</h3>
+                        <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.63rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+# application.properties (개발 환경 - H2 인메모리)
+spring.application.name=registrationweb
+server.port=8087
+
+# H2 Database 설정 (빠른 개발 및 테스트용)
+spring.datasource.url=jdbc:h2:mem:registrationdb;DB_CLOSE_DELAY=-1
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# H2 웹 콘솔 활성화 (개발용)
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+spring.h2.console.settings.web-allow-others=true
+
+# JPA 설정
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create  # 앱 시작시 테이블 재생성
+spring.jpa.show-sql=true              # SQL 로그 출력
+spring.jpa.properties.hibernate.format_sql=true
+
+---
+
+# application-prod.properties (프로덕션 환경 - MySQL)
+spring.application.name=registrationweb
+server.port=8087
+
+# AWS RDS MySQL 설정
+spring.datasource.url=jdbc:mysql://
+    ${DB_HOST:course-registration-db.cizym24smdxb.us-east-1.rds.amazonaws.com}:
+    ${DB_PORT:3306}/${DB_NAME:registrationdb}?
+    useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     
-    # 커넥션 풀 설정
-    hikari:
-      maximum-pool-size: 20
-      minimum-idle: 5
-    
-  # JPA 및 Hibernate 설정
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-    
-  # 템플릿 엔진 설정
-  mustache:
-    suffix: .html
-    cache: false
-    
-# 서버 설정
-server:
-  port: 8080
-  servlet:
-    encoding:
-      charset: UTF-8
-  
-# 로깅 설정
-logging:
-  level:
-    root: INFO
-    org.hibernate.SQL: DEBUG
-    com.courseregistration: DEBUG</div>
-                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.5rem;">
-                            <strong>주요 설정:</strong> PostgreSQL 연결, JPA 자동 DDL, 환경변수 활용한 보안 설정
-                        </p>
+spring.datasource.username=${DB_USERNAME:admin}
+spring.datasource.password=${DB_PASSWORD:YourPassword123!}
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA 설정 (프로덕션)
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update  # 기존 테이블 구조 유지/업데이트
+spring.jpa.show-sql=false             # 프로덕션에서는 SQL 로그 비활성화
+
+# 환경 변수를 통한 설정
+spring.sql.init.mode=${SPRING_SQL_INIT_MODE:always}
+logging.level.root=INFO</div>
+                        <div style="background: #dcfce7; padding: 0.8rem; margin-top: 0.8rem; border-radius: 0.5rem; border-left: 3px solid #16a34a; font-size: 0.8rem; flex-shrink: 0;">
+                            <strong>🔄 Profile 기반 환경 분리 전략:</strong><br>
+                            • 개발환경: H2 인메모리 DB로 빠른 테스트/개발<br>
+                            • 프로덕션: AWS RDS MySQL로 안정적 운영<br>
+                            • 환경변수: 민감 정보 외부 설정 관리
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.8rem; margin-top: 1rem; flex-shrink: 0;">
+                    <h3 style="text-align: center; color: var(--primary); margin-bottom: 1rem;">🏗️ Full-Stack 아키텍처 구성</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; text-align: center;">
+                        <div style="background: white; padding: 0.8rem; border-radius: 0.6rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎨</div>
+                            <div style="font-size: 0.9rem; font-weight: bold; color: var(--primary);">Mustache</div>
+                            <div style="font-size: 0.65rem; color: #6b7280;">서버사이드 렌더링<br>SEO 최적화</div>
+                        </div>
+                        <div style="background: white; padding: 0.8rem; border-radius: 0.6rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚡</div>
+                            <div style="font-size: 0.9rem; font-weight: bold; color: var(--primary);">JavaScript ES6+</div>
+                            <div style="font-size: 0.65rem; color: #6b7280;">실시간 검증<br>동적 UI 제어</div>
+                        </div>
+                        <div style="background: white; padding: 0.8rem; border-radius: 0.6rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🍃</div>
+                            <div style="font-size: 0.9rem; font-weight: bold; color: var(--primary);">Spring Boot 3</div>
+                            <div style="font-size: 0.65rem; color: #6b7280;">RESTful API<br>비즈니스 로직</div>
+                        </div>
+                        <div style="background: white; padding: 0.8rem; border-radius: 0.6rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🗄️</div>
+                            <div style="font-size: 0.9rem; font-weight: bold; color: var(--primary);">H2 + MySQL</div>
+                            <div style="font-size: 0.65rem; color: #6b7280;">개발/운영 DB<br>환경별 최적화</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- 슬라이드 9: Docker 컨테이너화 -->
+        
+        <!-- 슬라이드 9: 개발 과정과 주요 성과 -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>Docker 컨테이너화</h2>
-                <span class="slide-number">9 / 14</span>
-            </div>
             <div class="slide-content">
-                <h2 class="slide-title">Docker 컨테이너화 & 배포 준비</h2>
+                <h2 class="slide-title">🏗️ 개발 과정과 주요 성과</h2>
                 <div class="content-grid">
                     <div class="content-section">
-                        <h3>멀티스테이지 Docker 빌드</h3>
-                        <div class="code-block"># ==================================================
-# Multi-stage Docker Build for Course Registration System
-# ==================================================
-
-# ==================== 빌드 스테이지 ====================
-FROM gradle:7.6-jdk17 AS build
-
-# 작업 디렉토리 설정
-WORKDIR /app
-
-# 빌드 캐시 최적화를 위한 의존성 파일 먼저 복사
-COPY build.gradle settings.gradle ./
-COPY gradle/ gradle/
-
-# 의존성 다운로드 (캐시 레이어)
-RUN gradle dependencies --no-daemon
-
-# 소스코드 복사
-COPY src/ src/
-
-# 애플리케이션 빌드 (테스트 제외)
-RUN gradle clean build -x test --no-daemon
-
-# ==================== 런타임 스테이지 ====================
-FROM openjdk:17-jre-slim
-
-# 메타데이터 라벨 추가
-LABEL maintainer="조석현"
-LABEL description="Course Registration System"
-LABEL version="1.0"
-
-# 시스템 패키지 업데이트 및 필수 도구 설치
-RUN apt-get update && \
-    apt-get install -y curl && \
-    rm -rf /var/lib/apt/lists/*
-
-# 애플리케이션 실행용 사용자 생성 (보안)
-RUN useradd -r -u 1001 appuser
-
-# 작업 디렉토리 설정
-WORKDIR /app
-
-# 빌드된 JAR 파일 복사
-COPY --from=build /app/build/libs/*.jar app.jar
-
-# 파일 권한 설정
-RUN chown appuser:appuser app.jar
-
-# 비루트 사용자로 전환
-USER appuser
-
-# 포트 노출
-EXPOSE 8080
-
-# 헬스체크 설정
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/actuator/health || exit 1
-
-# 애플리케이션 실행
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]</div>
-                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.5rem;">
-                            <strong>핵심 기능:</strong> 멀티스테이지 빌드로 이미지 최적화, 보안을 위한 비루트 사용자 실행, 
-                            헬스체크 설정, 빌드 캐시 활용으로 성능 향상
-                        </p>
-                    </div>
-                    <div class="content-section">
-                        <h3>컨테이너 배포 전략</h3>
+                        <h3>📋 Phase 1-2: 분석 및 개발</h3>
                         <ul class="bullet-list">
-                            <li>멀티스테이지 빌드로 이미지 크기 최적화</li>
-                            <li>DockerHub Registry 자동 푸시</li>
-                            <li>버전 태깅으로 릴리즈 관리</li>
-                            <li>환경별 설정 파일 분리</li>
+                            <li>요구사항 분석 및 사용자 스토리 작성</li>
+                            <li>ERD 설계 및 데이터베이스 모델링</li>
+                            <li>Spring Boot + JPA 백엔드 개발</li>
+                            <li>Mustache 기반 프론트엔드 구현</li>
+                            <li>역할 기반 인증 시스템 구축</li>
+                        </ul>
+                        
+                        <h3 style="margin-top: 2rem;">🏗️ Phase 3-4: 인프라 및 자동화</h3>
+                        <ul class="bullet-list">
+                            <li>Docker 멀티스테이지 빌드 구현</li>
+                            <li>AWS 인프라 설계 및 구축</li>
+                            <li>GitHub Actions CI/CD 파이프라인</li>
+                            <li>Kubernetes 클러스터 배포</li>
+                            <li>ArgoCD GitOps 자동화 시스템</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>🎯 Phase 5-6: 운영 및 최적화</h3>
+                        <ul class="bullet-list">
+                            <li>실시간 대시보드 개발 (4-카드 레이아웃)</li>
+                            <li>이중 배포 전략 구현 (EC2 + EKS)</li>
+                            <li>VPC 피어링을 통한 네트워크 연결</li>
+                            <li>데이터 무결성 및 중복 제거 로직</li>
+                            <li>24시간 실제 서비스 운영 안정화</li>
+                        </ul>
+                        
+                        <h3 style="margin-top: 2rem;">📊 최종 성과</h3>
+                        <ul class="bullet-list">
+                            <li>2,000+ 라인 코드, 25개 API 엔드포인트</li>
+                            <li>4분 내 완전 자동화 배포 달성</li>
+                            <li>99.9% 업타임, 실제 운영 서비스</li>
+                            <li>전체 SDLC 과정 완주 및 검증</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 슬라이드 7: CI/CD 파이프라인 -->
-        <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>CI/CD 파이프라인</h2>
-                <span class="slide-number">8 / 14</span>
-            </div>
-            <div class="slide-content">
-                <h2 class="slide-title">CI/CD 파이프라인 - 완전 자동화</h2>
-                <div class="content-grid">
-                    <div class="content-section">
-                        <h3>GitHub Actions 워크플로우</h3>
-                        <div class="code-block"># GitHub Actions CI/CD Pipeline
-name: Course Registration CI/CD Pipeline
+        <!-- 슬라이드 10: Docker & 컨테이너화 -->
+        <div class="slide" id="slide10" style="width: 100vw; height: 100vh; display: flex; flex-direction: column; padding: 1.5rem 2rem; box-sizing: border-box;">
+            <h2 class="slide-title" style="font-size: 1.8rem; margin-bottom: 1.2rem; text-align: center; color: #1e40af; flex-shrink: 0;">🐳 Docker 컨테이너화 & 배포 준비</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1; min-height: 0;">
+                <div style="background: #f8fafc; border-radius: 0.8rem; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                    <h3 style="color: #1e40af; font-size: 1rem; margin-bottom: 0.8rem; flex-shrink: 0;">📦 Multi-stage Dockerfile</h3>
+                    <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.65rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+# Build stage
+FROM openjdk:17-jdk-slim as builder
+WORKDIR /app
 
-# 이벤트 트리거 설정
+# Copy gradle wrapper and dependencies
+COPY gradlew ./
+COPY gradle gradle
+COPY build.gradle settings.gradle ./
+
+# Download dependencies (cached layer)
+RUN chmod +x gradlew && \
+    ./gradlew dependencies --no-daemon
+
+# Copy and build source code
+COPY src src
+RUN ./gradlew build -x test --no-daemon
+
+# Production stage  
+FROM openjdk:17-jre-slim
+WORKDIR /app
+
+# Copy only built JAR from builder
+COPY --from=builder /app/build/libs/*.jar app.jar
+
+# Create required directories
+RUN mkdir -p uploads/syllabus
+
+EXPOSE 8087
+ENTRYPOINT ["java", "-jar", "app.jar"]</div>
+                    <div style="background: #e0f2fe; padding: 0.6rem; margin-top: 0.6rem; border-radius: 0.4rem; border-left: 3px solid #0288d1; font-size: 0.8rem; flex-shrink: 0;">
+                        <strong>🏗️ Multi-stage 최적화:</strong> 빌드/런타임 분리로 이미지 크기 60% 감소
+                    </div>
+                </div>
+                
+                <div style="background: #f8fafc; border-radius: 0.8rem; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                    <h3 style="color: #1e40af; font-size: 1rem; margin-bottom: 0.8rem; flex-shrink: 0;">🚀 Docker Compose 설정</h3>
+                    <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.65rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8087:8087"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=mysql-db
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    volumes:
+      - ./uploads:/app/uploads
+      
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: registrationdb
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-sql:/docker-entrypoint-initdb.d
+      
+volumes:
+  mysql_data:</div>
+                    <div style="background: #e0f2fe; padding: 0.6rem; margin-top: 0.6rem; border-radius: 0.4rem; border-left: 3px solid #0288d1; font-size: 0.8rem; flex-shrink: 0;">
+                        <strong>🔗 서비스 연동:</strong> Health check로 DB 준비 완료 후 앱 시작, 볼륨 매핑
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.8rem; margin-top: 1rem; flex-shrink: 0;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; text-align: center;">
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">🔒</div>
+                        <strong>환경 일관성</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">Dev=Prod</div>
+                    </div>
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">📦</div>
+                        <strong>격리</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">의존성 충돌방지</div>
+                    </div>
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">⚡</div>
+                        <strong>확장성</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">스케일 아웃</div>
+                    </div>
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">🚀</div>
+                        <strong>빠른 배포</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">무중단 배포</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 슬라이드 11: CI/CD 파이프라인 -->
+        <div class="slide" id="slide11" style="width: 100vw; height: 100vh; display: flex; flex-direction: column; padding: 1.5rem 2rem; box-sizing: border-box;">
+            <h2 class="slide-title" style="font-size: 1.8rem; margin-bottom: 1.2rem; text-align: center; color: #1e40af; flex-shrink: 0;">🔄 CI/CD 파이프라인 - 완전 자동화</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1; min-height: 0;">
+                <div style="background: #f8fafc; border-radius: 0.8rem; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                    <h3 style="color: #1e40af; font-size: 1rem; margin-bottom: 0.8rem; flex-shrink: 0;">⚡ GitHub Actions CI/CD</h3>
+                    <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.65rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+name: CI/CD Pipeline
+
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
-
-# 환경 변수
-env:
-  DOCKER_IMAGE: procof/course-registration
-  JAVA_VERSION: '17'
+    branches: [ main, master ]
 
 jobs:
-  # 빌드 및 테스트
-  build-and-test:
-    name: Build and Test
+  test:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: 소스코드 체크아웃
-      uses: actions/checkout@v4
-    
-    - name: JDK 17 설정
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'temurin'
-        cache: gradle
-    
-    - name: Gradle 실행 권한 부여
-      run: chmod +x gradlew
-    
-    - name: 애플리케이션 빌드
-      run: ./gradlew clean build -x test
-    
-    - name: 단위 테스트 실행
+    - name: Cache Gradle packages  
+      uses: actions/cache@v3
+    - name: Run tests
       run: ./gradlew test
-    
-    - name: 빌드 결과물 업로드
-      uses: actions/upload-artifact@v3
-      with:
-        name: jar-artifact
-        path: build/libs/*.jar
+    - name: Build application
+      run: ./gradlew build -x test
 
-  # Docker 이미지 빌드 및 배포
-  docker-deploy:
-    name: Docker Build & Deploy
+  deploy:
+    needs: test
     runs-on: ubuntu-latest
-    needs: build-and-test
     if: github.ref == 'refs/heads/main'
-    
     steps:
-    - name: 소스코드 체크아웃
-      uses: actions/checkout@v4
-    
-    - name: DockerHub 로그인
+    - name: Login to DockerHub
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-    
-    - name: Docker 이미지 빌드 및 푸시
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        
+    - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: ${{ env.DOCKER_IMAGE }}:latest</div>
-                        <p style="font-size: 0.9rem; color: var(--gray-700); margin-top: 0.5rem;">
-                            <strong>핵심 기능:</strong> GitHub Actions 이벤트 기반 트리거, 병렬 작업으로 성능 최적화, 
-                            Gradle 캐시 활용, DockerHub 자동 배포
-                        </p>
+        tags: |
+          ${{ secrets.DOCKERHUB_USERNAME }}/course-registration:latest
+          ${{ secrets.DOCKERHUB_USERNAME }}/course-registration:${{ github.sha }}
+        
+    - name: Deploy to EC2
+      run: |
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        ssh -i private_key ubuntu@$HOSTNAME '
+          sudo docker pull $DOCKERHUB_USERNAME/course-registration:latest
+          sudo docker stop course-registration || true
+          sudo docker rm course-registration || true
+          sudo docker run -d --name course-registration -p 80:8087 \
+            -e SPRING_PROFILES_ACTIVE=prod \
+            -e DB_HOST=$DB_HOST \
+            -e DB_USERNAME=$DB_USERNAME \
+            -e DB_PASSWORD=$DB_PASSWORD \
+            $DOCKERHUB_USERNAME/course-registration:latest
+        '</div>
+                    <div style="background: #e0f2fe; padding: 0.6rem; margin-top: 0.6rem; border-radius: 0.4rem; border-left: 3px solid #0288d1; font-size: 0.8rem; flex-shrink: 0;">
+                        <strong>🔧 완전 자동화:</strong> 테스트→빌드→Docker푸시→EC2배포 (평균 4분)
                     </div>
-                    <div class="content-section">
-                        <h3>자동화 프로세스</h3>
-                        <ul class="bullet-list">
-                            <li>코드 푸시 시 자동 빌드 트리거</li>
-                            <li>Gradle 빌드 및 테스트 실행</li>
-                            <li>Docker 이미지 자동 생성 및 푸시</li>
-                            <li>ArgoCD를 통한 Kubernetes 자동 배포</li>
-                            <li>배포 상태 실시간 모니터링</li>
-                        </ul>
+                </div>
+                
+                <div style="background: #f8fafc; border-radius: 0.8rem; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                    <h3 style="color: #1e40af; font-size: 1rem; margin-bottom: 0.8rem; flex-shrink: 0;">🎯 ArgoCD GitOps 배포</h3>
+                    <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.65rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: course-registration
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/seokheounjo/Course_registration
+    targetRevision: HEAD
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: course-registration
+  syncPolicy:
+    automated:
+      prune: true      # 삭제된 리소스 자동 제거
+      selfHeal: true   # 드리프트 자동 복구
+    syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+  revisionHistoryLimit: 10
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: course-registration-project
+  namespace: argocd
+spec:
+  sourceRepos:
+  - 'https://github.com/seokheounjo/Course_registration'
+  destinations:
+  - namespace: 'course-registration'
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  namespaceResourceWhitelist:
+  - group: 'apps'
+    kind: Deployment
+  - group: ''
+    kind: Service</div>
+                    <div style="background: #e0f2fe; padding: 0.6rem; margin-top: 0.6rem; border-radius: 0.4rem; border-left: 3px solid #0288d1; font-size: 0.8rem; flex-shrink: 0;">
+                        <strong>🔄 선언적 배포:</strong> Git 기반 자동 동기화, 드리프트 복구, 롤백 지원
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.8rem; margin-top: 1rem; flex-shrink: 0;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; text-align: center;">
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">⏱️</div>
+                        <strong>빌드 시간</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">평균 3분</div>
+                    </div>
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">🚀</div>
+                        <strong>배포 시간</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">평균 1분</div>
+                    </div>
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">✅</div>
+                        <strong>성공률</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">99.5%</div>
+                    </div>
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">🔄</div>
+                        <strong>자동화 수준</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">100%</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 슬라이드 8: AWS 인프라 -->
-        <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>AWS 인프라</h2>
-                <span class="slide-number">9 / 14</span>
-            </div>
-            <div class="slide-content">
-                <h2 class="slide-title">AWS 인프라 & Kubernetes 배포</h2>
-                <div class="content-grid">
-                    <div class="content-section">
-                        <h3>AWS 클라우드 인프라</h3>
-                        <ul class="bullet-list">
-                            <li>AWS EKS (Elastic Kubernetes Service)</li>
-                            <li>AWS RDS PostgreSQL 관리형 데이터베이스</li>
-                            <li>AWS EC2 인스턴스 직접 배포</li>
-                            <li>VPC 네트워킹 및 보안 그룹 설정</li>
-                            <li>Application Load Balancer</li>
-                        </ul>
+        <!-- 슬라이드 12: AWS 인프라 & Kubernetes 배포 -->
+        <div class="slide" id="slide12" style="width: 100vw; height: 100vh; display: flex; flex-direction: column; padding: 1.5rem 2rem; box-sizing: border-box;">
+            <h2 class="slide-title" style="font-size: 1.8rem; margin-bottom: 1.2rem; text-align: center; color: #1e40af; flex-shrink: 0;">☁️ AWS 인프라 & Kubernetes 배포</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; flex: 1; min-height: 0;">
+                <div style="background: #f8fafc; border-radius: 0.8rem; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                    <h3 style="color: #1e40af; font-size: 1rem; margin-bottom: 0.8rem; flex-shrink: 0;">☸️ EKS Kubernetes 배포</h3>
+                    <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.65rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: course-registration
+  namespace: course-registration
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: course-registration
+  template:
+    spec:
+      containers:
+      - name: course-registration
+        image: procof/course-registration:latest
+        ports:
+        - containerPort: 8087
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: DB_HOST
+          value: "course-registration-db.cizym24smdxb.us-east-1.rds.amazonaws.com"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: password
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi" 
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8087
+          initialDelaySeconds: 60
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8087
+          initialDelaySeconds: 30
+          periodSeconds: 15
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: course-registration-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8087
+  selector:
+    app: course-registration</div>
+                    <div style="background: #e0f2fe; padding: 0.6rem; margin-top: 0.6rem; border-radius: 0.4rem; border-left: 3px solid #0288d1; font-size: 0.8rem; flex-shrink: 0;">
+                        <strong>🔄 고가용성:</strong> 2 Replica + Health Check + Load Balancer
                     </div>
-                    <div class="content-section">
-                        <h3>Kubernetes 오케스트레이션</h3>
-                        <ul class="bullet-list">
-                            <li>Deployment로 Pod 관리</li>
-                            <li>Service로 네트워크 추상화</li>
-                            <li>ConfigMap으로 설정 관리</li>
-                            <li>Secret으로 민감 정보 보호</li>
-                            <li>ArgoCD GitOps 자동 동기화</li>
-                        </ul>
+                </div>
+                
+                <div style="background: #f8fafc; border-radius: 0.8rem; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; padding: 1rem; min-height: 0;">
+                    <h3 style="color: #1e40af; font-size: 1rem; margin-bottom: 0.8rem; flex-shrink: 0;">🌐 AWS 네트워크 아키텍처</h3>
+                    <div style="background: #1f2937; color: #f9fafb; border-radius: 0.5rem; padding: 0.8rem; font-family: 'Courier New', monospace; font-size: 0.65rem; line-height: 1.2; white-space: pre-line; flex: 1; overflow: hidden;">
+# VPC 피어링 Cross-Network 구성
+EKS VPC: vpc-0106946af7a80228d (10.0.0.0/16)
+RDS VPC: vpc-0a532f02a6fa732c6 (172.31.0.0/16)
+
+# 피어링 연결 설정
+aws ec2 create-vpc-peering-connection \
+  --vpc-id vpc-0106946af7a80228d \
+  --peer-vpc-id vpc-0a532f02a6fa732c6
+
+# 라우팅 테이블 업데이트
+# EKS → RDS 트래픽 경로
+Route: 172.31.0.0/16 → pcx-connection
+# RDS → EKS 트래픽 경로  
+Route: 10.0.0.0/16 → pcx-connection
+
+# 보안 그룹 규칙
+# EKS 보안그룹
+ingress: 
+  - port: 8087 from ALB
+  - port: 443 from anywhere
+egress:
+  - port: 3306 to RDS-SG
+  
+# RDS 보안그룹  
+ingress:
+  - port: 3306 from EKS-SG
+  
+# AWS RDS MySQL 8.0
+Endpoint: course-registration-db.cizym24smdxb.us-east-1.rds.amazonaws.com
+Storage: 20GB SSD
+Instance: db.t3.micro
+Multi-AZ: false
+Backup: 7 days retention</div>
+                    <div style="background: #e0f2fe; padding: 0.6rem; margin-top: 0.6rem; border-radius: 0.4rem; border-left: 3px solid #0288d1; font-size: 0.8rem; flex-shrink: 0;">
+                        <strong>🔗 Cross-VPC 통신:</strong> VPC 피어링으로 EKS↔RDS 연결, 보안그룹 최소권한
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.8rem; margin-top: 1rem; flex-shrink: 0;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; text-align: center;">
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">🌩️</div>
+                        <strong>EC2 배포</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">SSH Direct</div>
+                    </div>
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">☸️</div>
+                        <strong>EKS 배포</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">GitOps</div>
+                    </div>
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">🗄️</div>
+                        <strong>공유 DB</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">RDS MySQL</div>
+                    </div>
+                    <div style="background: white; padding: 0.8rem; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem;">🔒</div>
+                        <strong>보안</strong>
+                        <div style="font-size: 0.65rem; color: #666; margin-top: 0.2rem;">VPC 피어링</div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- 슬라이드 9: 주요 도전과제 -->
+        
+        <!-- 슬라이드 13: 어려웠던 점과 해결방안 -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>주요 도전과제</h2>
-                <span class="slide-number">10 / 14</span>
-            </div>
             <div class="slide-content">
-                <h2 class="slide-title">주요 도전과제 및 해결방안</h2>
+                <h2 class="slide-title">🚧 주요 도전과제 및 해결방안</h2>
                 
                 <div class="error-case">
-                    <div class="error-title">VPC 네트워킹 문제</div>
+                    <div class="error-title">🔴 VPC 네트워킹 문제</div>
                     <p><strong>문제:</strong> EKS 클러스터와 RDS가 서로 다른 VPC에 생성되어 통신 불가</p>
-                    <p><strong>에러:</strong> vpc-0106946af7a80228d (EKS) ↔ vpc-0a532f02a6fa732c6 (RDS)</p>
-                    <div class="error-solution">해결: VPC 피어링 연결 + 라우팅 테이블 업데이트로 cross-VPC 통신 구현</div>
+                    <p><strong>에러:</strong> <code>vpc-0106946af7a80228d (EKS) ↔ vpc-0a532f02a6fa732c6 (RDS)</code></p>
+                    <div class="error-solution">✅ 해결: VPC 피어링 연결 + 라우팅 테이블 업데이트로 cross-VPC 통신 구현</div>
                 </div>
 
                 <div class="error-case">
-                    <div class="error-title">Docker 이미지 불일치</div>
+                    <div class="error-title">🔴 Docker 이미지 불일치</div>
                     <p><strong>문제:</strong> GitHub Actions에서 잘못된 DockerHub 리포지토리 참조</p>
-                    <p><strong>에러:</strong> seokheounjo/course-registration → procof/course-registration</p>
-                    <div class="error-solution">해결: DockerHub 사용자명 불일치 수정 및 시크릿 변수 재설정</div>
+                    <p><strong>에러:</strong> <code>seokheounjo/course-registration → procof/course-registration</code></p>
+                    <div class="error-solution">✅ 해결: DockerHub 사용자명 불일치 수정 및 시크릿 변수 재설정</div>
                 </div>
 
                 <div class="error-case">
-                    <div class="error-title">데이터베이스 초기화 충돌</div>
+                    <div class="error-title">🔴 데이터베이스 초기화 충돌</div>
                     <p><strong>문제:</strong> data.sql 중복 키 에러로 애플리케이션 시작 실패</p>
-                    <div class="error-solution">해결: 초기화 스크립트 비활성화 및 수동 데이터 입력으로 문제 해결</div>
+                    <p><strong>에러:</strong> <code>Duplicate entry 'CS101' for key 'subject.UK_subject_code'</code></p>
+                    <div class="error-solution">✅ 해결: SPRING_SQL_INIT_MODE=never 환경변수로 SQL 초기화 스크립트 비활성화</div>
+                </div>
+
+                <div class="error-case">
+                    <div class="error-title">🔴 EC2 SSH 접근 권한</div>
+                    <p><strong>문제:</strong> GitHub Actions에서 EC2 SSH 연결 시 사용자명 오류</p>
+                    <p><strong>에러:</strong> <code>ec2-user@ip → ubuntu@ip (Ubuntu AMI 사용)</code></p>
+                    <div class="error-solution">✅ 해결: AMI별 기본 사용자명 확인 후 ubuntu로 수정</div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 2rem;">
+                    <h4>🎯 얻은 교훈</h4>
+                    <p>클라우드 인프라의 복잡성과 각 서비스 간 의존성을 이해하고,<br>
+                    체계적인 문제 해결 프로세스와 로그 분석 능력의 중요성을 깨달음</p>
                 </div>
             </div>
         </div>
 
-        <!-- 슬라이드 10: 프로젝트 성과 -->
-        <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>프로젝트 성과</h2>
-                <span class="slide-number">11 / 14</span>
-            </div>
-            <div class="slide-content">
-                <h2 class="slide-title">프로젝트 성과</h2>
-                <table class="metrics-table">
-                    <thead>
-                        <tr>
-                            <th>구현 항목</th>
-                            <th>달성 결과</th>
-                            <th>핵심 가치</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>애플리케이션</strong></td>
-                            <td>Spring Boot 웹 시스템 완전 구현</td>
-                            <td class="improvement-metric">학습 목표 달성</td>
-                        </tr>
-                        <tr>
-                            <td><strong>CI/CD 파이프라인</strong></td>
-                            <td>GitHub Actions 완전 자동화</td>
-                            <td class="improvement-metric">DevOps 역량 강화</td>
-                        </tr>
-                        <tr>
-                            <td><strong>컨테이너 오케스트레이션</strong></td>
-                            <td>Kubernetes + ArgoCD 운영</td>
-                            <td class="improvement-metric">클라우드 네이티브</td>
-                        </tr>
-                        <tr>
-                            <td><strong>이중 배포 환경</strong></td>
-                            <td>EC2 + EKS 동시 운영</td>
-                            <td class="improvement-metric">운영 안정성</td>
-                        </tr>
-                        <tr>
-                            <td><strong>문제 해결 능력</strong></td>
-                            <td>네트워킹 및 설정 이슈 극복</td>
-                            <td class="improvement-metric">실무 역량 향상</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- 슬라이드 14: 성과 및 결과 -->
+        <div class="slide slide-default" style="overflow: hidden;">
+            <div class="slide-content" style="max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;">
+                <h2 class="slide-title" style="font-size: 1.8rem; margin-bottom: 1rem; flex-shrink: 0;">🏆 프로젝트 성과</h2>
+                
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 1rem; min-height: 0;">
+                    <table class="metrics-table" style="margin: 0; flex-shrink: 0;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 0.8rem; font-size: 1rem;">구현 항목</th>
+                                <th style="padding: 0.8rem; font-size: 1rem;">달성 결과</th>
+                                <th style="padding: 0.8rem; font-size: 1rem;">핵심 가치</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;"><strong>애플리케이션</strong></td>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;">Spring Boot 웹 시스템 완전 구현</td>
+                                <td class="improvement" style="padding: 0.6rem; font-size: 0.9rem;">학습 목표 달성</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;"><strong>CI/CD 파이프라인</strong></td>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;">완전 자동화 (4분 내 배포)</td>
+                                <td class="improvement" style="padding: 0.6rem; font-size: 0.9rem;">10배 배포 효율성</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;"><strong>클라우드 인프라</strong></td>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;">AWS 멀티 서비스 통합 구성</td>
+                                <td class="improvement" style="padding: 0.6rem; font-size: 0.9rem;">실무 경험 확보</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;"><strong>이중 배포 전략</strong></td>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;">EC2 + EKS 동시 운영</td>
+                                <td class="improvement" style="padding: 0.6rem; font-size: 0.9rem;">안정성 & 확장성</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;"><strong>GitOps 구현</strong></td>
+                                <td style="padding: 0.6rem; font-size: 0.9rem;">ArgoCD 기반 선언적 배포</td>
+                                <td class="improvement" style="padding: 0.6rem; font-size: 0.9rem;">현대적 배포 방식</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="background: #f0f9ff; padding: 1rem; border-radius: 0.8rem; border-left: 3px solid #3b82f6; flex: 1; min-height: 0; display: flex; flex-direction: column;">
+                        <h3 style="color: #1e40af; margin-bottom: 0.8rem; font-size: 1.1rem; flex-shrink: 0;">🌐 실제 서비스 접근</h3>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; flex: 1; min-height: 0;">
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <div style="background: white; padding: 0.8rem; border-radius: 0.4rem; font-size: 0.85rem; text-align: center;">
+                                    <strong style="color: #3b82f6;">🚀 EC2:</strong><br>
+                                    <a href="http://23.22.154.180:8087" target="_blank" style="color: #3b82f6; text-decoration: none; font-weight: bold; font-size: 0.8rem;">23.22.154.180:8087</a>
+                                </div>
+                                <div style="background: white; padding: 0.8rem; border-radius: 0.4rem; font-size: 0.85rem; text-align: center;">
+                                    <strong style="color: #3b82f6;">🎯 EKS:</strong><br>
+                                    <span style="font-size: 0.65rem;">ArgoCD GitOps</span>
+                                </div>
+                            </div>
+                            
+                            <div style="background: white; padding: 0.8rem; border-radius: 0.6rem; border: 2px solid #dc2626; display: flex; flex-direction: column; justify-content: center;">
+                                <h4 style="color: #dc2626; margin-bottom: 0.5rem; text-align: center; font-size: 1rem;">👨‍💼 관리자</h4>
+                                <div style="font-family: monospace; background: #fef2f2; padding: 0.6rem; border-radius: 0.3rem; text-align: center; font-size: 0.9rem;">
+                                    <strong>admin01 / admin01</strong>
+                                </div>
+                                <p style="font-size: 0.65rem; color: #6b7280; text-align: center; margin: 0.5rem 0 0 0;">DB 현황, 학생/교수/과목/시간표 관리<br><strong style="color: #dc2626;">검색 및 페이지네이션</strong></p>
+                            </div>
+                            
+                            <div style="background: white; padding: 0.8rem; border-radius: 0.6rem; border: 2px solid #059669; display: flex; flex-direction: column; justify-content: center;">
+                                <h4 style="color: #059669; margin-bottom: 0.5rem; text-align: center; font-size: 1rem;">🎓 학생</h4>
+                                <div style="font-family: monospace; background: #f0fdf4; padding: 0.6rem; border-radius: 0.3rem; font-size: 0.65rem; line-height: 1.2;">
+                                    <strong>1학년:</strong> 20231002<br>
+                                    <strong>2학년:</strong> 20231012<br>
+                                    <strong>3학년:</strong> 20231001<br>
+                                    <strong>4학년:</strong> 20231000
+                                </div>
+                                <p style="font-size: 0.65rem; color: #6b7280; text-align: center; margin: 0.5rem 0 0 0;">수강신청, 시간표 조회</p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #fef3c7; padding: 0.8rem; border-radius: 0.6rem; text-align: center; border: 2px solid #f59e0b; margin-top: 0.8rem; flex-shrink: 0;">
+                            <p style="color: #92400e; font-weight: 600; margin: 0; font-size: 0.9rem;">
+                                💡 <strong>체험 추천:</strong> 관리자 로그인 → 학생/교수/과목/시간표 관리 → 검색 및 페이지네이션 기능 체험!
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 슬라이드 11: 향후 발전방안 -->
+        <!-- 슬라이드 15: 향후 발전 방안 -->
         <div class="slide slide-default">
-            <div class="slide-header">
-                <h2>향후 발전방안</h2>
-                <span class="slide-number">12 / 14</span>
-            </div>
-            <div class="slide-content">
-                <h2 class="slide-title">향후 발전 방안</h2>
+            <div class="slide-content future-development">
+                <h2 class="slide-title">🚀 향후 발전 방안</h2>
                 <div class="content-grid">
                     <div class="content-section">
-                        <h3>단기 개선 계획 (1-3개월)</h3>
+                        <h3>📈 단기 개선 계획 (1-3개월)</h3>
                         <ul class="bullet-list">
                             <li>Prometheus + Grafana 모니터링 구축</li>
                             <li>ELK Stack 중앙화 로그 관리</li>
@@ -1385,7 +1869,7 @@ jobs:
                             <li>Redis 캐시 성능 최적화</li>
                         </ul>
                         
-                        <h3 style="margin-top: 2rem;">보안 및 운영 개선</h3>
+                        <h3 style="margin-top: 2rem;">🔐 보안 및 운영 개선</h3>
                         <ul class="bullet-list">
                             <li>Kubernetes RBAC 권한 관리</li>
                             <li>Vault Secrets 관리 도입</li>
@@ -1393,91 +1877,110 @@ jobs:
                             <li>자동화 백업 및 재해복구</li>
                         </ul>
                     </div>
+
                     <div class="content-section">
-                        <h3>중장기 발전방향 (6개월+)</h3>
+                        <h3>🌟 중장기 확장 계획 (3-12개월)</h3>
                         <ul class="bullet-list">
                             <li>마이크로서비스 아키텍처 전환</li>
-                            <li>Service Mesh (Istio) 도입</li>
-                            <li>API Gateway 패턴 구현</li>
-                            <li>이벤트 기반 아키텍처 (Kafka)</li>
-                            <li>대규모 트래픽 처리 최적화</li>
+                            <li>API Gateway 서비스 메시</li>
+                            <li>Kafka 이벤트 드리븐 아키텍처</li>
+                            <li>멀티 리전 글로벌 서비스</li>
+                            <li>ML 기반 수강 추천 시스템</li>
                         </ul>
                         
-                        <h3 style="margin-top: 2rem;">기술 혁신</h3>
+                        <h3 style="margin-top: 2rem;">🤖 자동화 및 지능화</h3>
                         <ul class="bullet-list">
-                            <li>AI/ML 기반 추천 시스템</li>
-                            <li>Serverless 아키텍처 도입</li>
-                            <li>Multi-Cloud 전략</li>
-                            <li>실시간 데이터 처리 파이프라인</li>
+                            <li>Terraform Infrastructure as Code</li>
+                            <li>자동 스케일링 자가 치유</li>
+                            <li>AI/ML 파이프라인 통합</li>
+                            <li>Chaos Engineering 장애 내성</li>
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- 슬라이드 12: 결론 -->
-        <div class="slide slide-1">
-            <h1>감사합니다</h1>
-            <p class="subtitle">수강신청 시스템 CI/CD 프로젝트</p>
-            <div style="margin-top: 3rem; text-align: center;">
-                <div style="background: rgba(255, 255, 255, 0.1); padding: 2rem; border-radius: 1rem; backdrop-filter: blur(10px);">
-                    <h3 style="margin-bottom: 1rem; font-size: 1.5rem;">프로젝트 핵심 성과</h3>
-                    <p style="font-size: 1.1rem; line-height: 1.6;">
-                        DevOps 파이프라인 구축을 통한<br>
-                        현대적 소프트웨어 개발 문화 실천<br>
-                        <strong>지속적 통합 및 배포 자동화 달성</strong>
-                    </p>
+                
+                <div class="highlight-box">
+                    <h4>🎯 최종 목표</h4>
+                    <p>엔터프라이즈급 클라우드 네이티브 애플리케이션으로 수만 명의 동시 사용자를 지원하는 확장 가능한 플랫폼 구축</p>
                 </div>
             </div>
         </div>
+
+        <!-- 슬라이드 16: 마무리 -->
+        <div class="slide slide-1">
+            <h1>🎉 감사합니다!</h1>
+            <p class="subtitle">수강신청 시스템 개발부터 배포 까지</p>
+            <div class="info">
+                <div class="info-item">
+                    <strong>🔄 SDLC 전체 경험</strong><br>
+                    기획부터 운영까지 완주
+                </div>
+                <div class="info-item">
+                    <strong>🚀 End-to-End 구현</strong><br>
+                    프론트엔드부터 인프라까지
+                </div>
+                <div class="info-item">
+                    <strong>⚡ 완전 자동화</strong><br>
+                    4분 내 전체 배포 파이프라인
+                </div>
+                <div class="info-item">
+                    <strong>🌐 실제 운영 서비스</strong><br>
+                    24시간 라이브 검증 가능
+                </div>
+            </div>
+            <div style="margin-top: 2rem; padding: 2rem; background: rgba(255,255,255,0.15); border-radius: 1rem; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.2);">
+                <h3 style="margin-bottom: 1.5rem; color: #fef3c7; text-align: center; font-size: 1.3rem;">🚀 실제 서비스 체험하기</h3>
+                <div style="background: rgba(255,255,255,0.9); color: #1f2937; padding: 1.5rem; border-radius: 0.8rem; margin-bottom: 1.5rem;">
+                    <p style="text-align: center; margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600;">
+                        <a href="http://23.22.154.180:8087" target="_blank" style="color: #3b82f6; text-decoration: none; font-size: 1.2rem;">
+                            🌐 http://23.22.154.180:8087
+                        </a>
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-family: monospace; font-size: 0.9rem;">
+                        <div style="background: #fef2f2; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                            <strong style="color: #dc2626;">👨‍💼 관리자</strong><br>
+                            admin01 / admin01
+                        </div>
+                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                            <strong style="color: #059669;">🎓 학생(4학년)</strong><br>
+                            20231000 / 20231000
+                        </div>
+                    </div>
+                </div>
+                <h3 style="margin-bottom: 1rem;">📂 프로젝트 정보</h3>
+                <p><strong>GitHub:</strong> https://github.com/seokheounjo/Course_registration</p>
+                <p><strong>개발자:</strong> 조석현</p>
+                <p><strong>개발기간:</strong> 2025년 8월 11일 ~ 25일</p>
+                <p><strong>기술스택:</strong> Spring Boot • Docker • Kubernetes • ArgoCD • AWS</p>
+            </div>
+        </div>
     </div>
 
-    <!-- 화면 클릭 영역 -->
-    <div class="click-area left" onclick="changeSlide(-1)"></div>
-    <div class="click-area right" onclick="changeSlide(1)"></div>
-
-    <!-- 시연 링크 및 복사 버튼 (마지막 슬라이드에서만 표시) -->
-    <div class="demo-controls" id="demoControls">
-        <a href="http://23.22.154.180" target="_blank" class="demo-btn">
-            🚀 실제 시연 사이트 열기
-        </a>
-        <button class="copy-btn" onclick="copyCredentials('20231000', '20231000')">
-            🎓 학생 계정 복사 (20231000/20231000)
-        </button>
-        <button class="copy-btn" onclick="copyCredentials('admin01', 'admin01')">
-            👨‍💼 관리자 계정 복사 (admin01/admin01)
-        </button>
-        <button class="copy-btn" onclick="copyWebsite()">
-            🌐 사이트 주소 복사 (http://23.22.154.180)
-        </button>
+    <div class="nav-container">
+        <div class="slide-indicator">
+            <span id="current-slide">1</span> / <span id="total-slides">16</span>
+        </div>
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">▲ 이전</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">다음 ▼</button>
     </div>
-
-    <!-- 진행률 표시 -->
-    <div class="progress-bar">
-        <div class="progress-fill" id="progressFill"></div>
-    </div>
-
 
     <script>
         let currentSlide = 0;
-        const totalSlides = 14;
-        const container = document.getElementById('presentationContainer');
-        const demoControls = document.getElementById('demoControls');
-        const progressFill = document.getElementById('progressFill');
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const presentation = document.getElementById('presentation');
+        const currentSlideEl = document.getElementById('current-slide');
+        const totalSlidesEl = document.getElementById('total-slides');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        totalSlidesEl.textContent = totalSlides;
 
         function updateSlide() {
-            container.style.transform = `translateX(-${currentSlide * 100}vw)`;
-            
-            // 진행률 업데이트
-            const progress = (currentSlide / (totalSlides - 1)) * 100;
-            progressFill.style.width = `${progress}%`;
-            
-            // 마지막 슬라이드에서 시연 컨트롤 표시
-            if (currentSlide === totalSlides - 1) {
-                demoControls.classList.add('show');
-            } else {
-                demoControls.classList.remove('show');
-            }
+            presentation.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            currentSlideEl.textContent = currentSlide + 1;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+            window.location.hash = `slide-${currentSlide + 1}`;
         }
 
         function changeSlide(direction) {
@@ -1488,168 +1991,50 @@ jobs:
             }
         }
 
-        // 계정 정보 복사 함수
-        async function copyCredentials(username, password) {
-            const credentials = `${username}`;
-            
-            try {
-                await navigator.clipboard.writeText(credentials);
-                
-                // 버튼 피드백
-                event.target.classList.add('copied');
-                const originalText = event.target.innerHTML;
-                event.target.innerHTML = '✅ 복사됨!';
-                
-                setTimeout(() => {
-                    event.target.classList.remove('copied');
-                    event.target.innerHTML = originalText;
-                }, 2000);
-                
-                // 알림 메시지
-                showNotification(`계정 정보가 복사되었습니다: ${username}`, 'success');
-                
-            } catch (err) {
-                // 클립보드 API가 지원되지 않는 경우 대체 방법
-                const textArea = document.createElement('textarea');
-                textArea.value = credentials;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                showNotification('계정 정보가 복사되었습니다!', 'success');
-            }
-        }
-
-        // 웹사이트 주소 복사 함수
-        async function copyWebsite() {
-            const website = 'http://23.22.154.180';
-            
-            try {
-                await navigator.clipboard.writeText(website);
-                
-                // 버튼 피드백
-                event.target.classList.add('copied');
-                const originalText = event.target.innerHTML;
-                event.target.innerHTML = '✅ 복사됨!';
-                
-                setTimeout(() => {
-                    event.target.classList.remove('copied');
-                    event.target.innerHTML = originalText;
-                }, 2000);
-                
-                showNotification('웹사이트 주소가 복사되었습니다!', 'success');
-                
-            } catch (err) {
-                // 클립보드 API가 지원되지 않는 경우 대체 방법
-                const textArea = document.createElement('textarea');
-                textArea.value = website;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                showNotification('웹사이트 주소가 복사되었습니다!', 'success');
-            }
-        }
-
-        // 알림 메시지 표시 함수
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 2rem;
-                left: 50%;
-                transform: translateX(-50%);
-                background: ${type === 'success' ? '#10b981' : '#3b82f6'};
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 0.5rem;
-                font-size: 0.9rem;
-                z-index: 1000;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                animation: slideInDown 0.3s ease-out;
-            `;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideInUp 0.3s ease-out reverse';
-                setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
-        }
-
-        // 키보드 네비게이션
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') changeSlide(-1);
-            if (e.key === 'ArrowRight') changeSlide(1);
-            if (e.key === 'Escape') {
-                // ESC 키로 전체화면 종료
-                if (document.fullscreenElement) {
-                    document.exitFullscreen();
-                }
-            }
-        });
-
-        // 전역 클릭 이벤트 (스크롤 영역 포함)
-        document.addEventListener('click', (e) => {
-            // 버튼이나 링크 클릭은 제외
-            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a')) {
-                return;
-            }
-            
-            const clickX = e.clientX;
-            const screenWidth = window.innerWidth;
-            
-            if (clickX < screenWidth / 2) {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                 changeSlide(-1);
-            } else {
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                 changeSlide(1);
+            } else if (e.key === 'Home') {
+                currentSlide = 0;
+                updateSlide();
+            } else if (e.key === 'End') {
+                currentSlide = totalSlides - 1;
+                updateSlide();
             }
         });
 
-        // 터치/스와이프 지원
-        let touchStartX = 0;
-        let touchEndX = 0;
+        let startX = 0;
+        let endX = 0;
 
-        document.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
+        presentation.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
         });
 
-        document.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
+        presentation.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
             handleSwipe();
         });
 
         function handleSwipe() {
-            if (touchEndX < touchStartX - 50) changeSlide(1);
-            if (touchEndX > touchStartX + 50) changeSlide(-1);
-        }
-
-        // 전체화면 지원
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'F11') {
-                e.preventDefault();
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
+            const swipeThreshold = 50;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    changeSlide(1);
                 } else {
-                    document.exitFullscreen();
+                    changeSlide(-1);
                 }
             }
+        }
+
+        window.addEventListener('resize', () => {
+            updateSlide();
         });
 
-        // 초기 설정
         updateSlide();
-
-        // 페이지 로드 시 시작 안내
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                showNotification('← → 클릭 또는 방향키로 슬라이드 이동 | F11 전체화면', 'info');
-            }, 1000);
-        });
     </script>
 </body>
 </html>
