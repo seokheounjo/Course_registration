@@ -5,6 +5,7 @@ import com.example.registrationweb.service.ProfessorService;
 import com.example.registrationweb.service.SubjectService;
 import com.example.registrationweb.service.TimetableService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +27,29 @@ public class TimetableController {
     }
 
     @GetMapping
-    public String listTimetables(Model model, HttpSession session) {
+    public String listTimetables(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "day") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            Model model, HttpSession session) {
         // 로그인 확인 (관리자만 접근 가능)
         if (!"admin".equals(session.getAttribute("user"))) {
             return "redirect:/login";
         }
 
-        model.addAttribute("timetables", timetableService.getAllTimetables());
+        Page<Timetable> timetablesPage = timetableService.getAllTimetables(page, size, sortBy, sortDir);
+        
+        model.addAttribute("timetablesPage", timetablesPage);
+        model.addAttribute("timetables", timetablesPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", timetablesPage.getTotalPages());
+        model.addAttribute("totalItems", timetablesPage.getTotalElements());
+        model.addAttribute("size", size);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        
         return "timetable/list";
     }
 

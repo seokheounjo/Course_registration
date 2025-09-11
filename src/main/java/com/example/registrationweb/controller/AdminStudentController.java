@@ -74,6 +74,7 @@ public class AdminStudentController {
         model.addAttribute("id", "");
         model.addAttribute("studentId", "");
         model.addAttribute("name", "");
+        model.addAttribute("email", "");
         model.addAttribute("department", "");
         model.addAttribute("password", "");
         model.addAttribute("grade", "");
@@ -109,6 +110,7 @@ public class AdminStudentController {
         model.addAttribute("id", student.getId());
         model.addAttribute("studentId", student.getStudentId());
         model.addAttribute("name", student.getName());
+        model.addAttribute("email", student.getEmail());
         model.addAttribute("department", student.getDepartment());
         model.addAttribute("password", student.getPassword());
         model.addAttribute("grade", student.getGrade());
