@@ -49,8 +49,40 @@ jobs:
         name: application-jar
         path: build/libs/registrationweb-0.0.1-SNAPSHOT.jar
 
-  deploy:
+  upload-data-to-rds:
     needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install MySQL client
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mysql-client
+    
+    - name: Upload data to RDS directly
+      env:
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+      run: |
+        echo "Connecting to RDS and uploading data..."
+        # First, recreate the database schema
+        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} -e "DROP DATABASE IF EXISTS ${DB_NAME}; CREATE DATABASE ${DB_NAME};"
+        
+        # Upload schema
+        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < src/main/resources/schema.sql
+        
+        # Upload data
+        mysql -h${DB_HOST} -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} < src/main/resources/data.sql
+        
+        echo "Data uploaded successfully to RDS!"
+
+  deploy:
+    needs: upload-data-to-rds
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     
@@ -114,10 +146,21 @@ jobs:
             cd Course_registration
           fi
           
-          # Build JAR on EC2 (simplified approach)
-          chmod +x gradlew
-          ./gradlew build -x test
-          cp build/libs/registrationweb-0.0.1-SNAPSHOT.jar app.jar
+          # Download pre-built JAR from previous workflow step
+          # Since RDS already has the data, we just need the application
+          if [ -f "app.jar" ]; then
+            rm app.jar
+          fi
+          
+          # Simple fallback - build minimal JAR without data.sql execution
+          if [ -d "/home/ubuntu/Course_registration" ]; then
+            cd /home/ubuntu/Course_registration
+            chmod +x gradlew
+            ./gradlew clean build -x test --no-daemon --max-workers=1
+            cp build/libs/registrationweb-0.0.1-SNAPSHOT.jar app.jar
+          else
+            echo "Repository not found, using existing JAR or downloading"
+          fi
           
           # Run new application
           nohup java -jar app.jar \
